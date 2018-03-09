@@ -98,6 +98,9 @@ class ThemeInstaller extends \BackendModule
 				$objFile = new \File($objResponse->file->name);
 				$objFile->write( $strFileResponse );
 				$objFile->close();
+				
+				$this->Template->content .= '<p>File created: '.$objFile->path.'</p>';
+		
 			}
 			
 		}
