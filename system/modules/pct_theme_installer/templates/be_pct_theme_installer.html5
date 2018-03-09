@@ -1,0 +1,18 @@
+
+<div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
+	<!-- category select -->
+	<form action="<?= $this->action; ?>" class="tl_form" method='post'>
+	<input type="hidden" name="FORM_SUBMIT" value="tl_filter">
+	<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+	
+	<div class="tl_formbody">
+		<div id="tl_buttons">
+		  <a href="<?= $this->href ?>" class="header_back" title="<?= $this->title ?>"><?= $this->button ?></a>
+		</div>
+		
+		<?= $this->content; ?>
+		
+		<div class="clear">
+	</div>
+	
+</div>
