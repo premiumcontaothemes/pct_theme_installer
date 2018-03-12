@@ -4,7 +4,7 @@
  * Contao 
  * German translation file 
  * 
- * copyright  Tim Gatzky 2018
+ * copyright  Tim Gatzky 2018 
  * author     Tim Gatzky <info@tim-gatzky.de>
  * Translator:  
  * 
@@ -16,4 +16,6 @@
 /**
  * Errors
  */
-#GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['no_active_pages_found'] 		= 'Keine aktiven Seiten gefunden';
+$GLOBALS['TL_LANG']['pct_theme_installer']['label_key'] 		= 'Lizenzschlüssel / Bestellnummer';
+$GLOBALS['TL_LANG']['pct_theme_installer']['label_email'] 		= 'Bestell-E-Mail-Adresse';
+$GLOBALS['TL_LANG']['pct_theme_installer']['value_submit'] 		= 'Lizenz abfragen';

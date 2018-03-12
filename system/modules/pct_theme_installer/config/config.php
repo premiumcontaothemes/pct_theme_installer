@@ -20,7 +20,9 @@ define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 /**
  * Globals
  */
+$GLOBALS['PCT_THEME_INSTALLER']['base_url'] = 'http://pct-theme-installer.tim-gatzky.de';
 $GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'http://pct-theme-installer.tim-gatzky.de/api.php';
+$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
 
 /**
  * Register backend page / key
