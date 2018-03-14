@@ -1,0 +1,96 @@
+<script type='text/javascript'>
+/* <![CDATA[ */
+
+/**
+ * Class
+ * PCT_ThemeInstaller
+ */
+var PCT_ThemeInstaller = 
+{
+	/**
+	 * Contaos request token
+	 * @var string
+	 */
+	request_token : '<?= REQUEST_TOKEN; ?>',
+	
+	/**
+	 * Misc texts
+	 * @var object json
+	 */
+	texts : <?= $this->texts; ?>,
+	
+	request : function(objData)
+	{
+		if(objData == undefined)
+		{
+			objData = {}
+		}
+		
+		if(objData.REQUEST_TOKEN == undefined)
+		{
+			objData.REQUEST_TOKEN = this.request_token;
+		}
+		
+		var blnReload = false;
+		if(objData.reload === true)
+		{
+			blnReload = true;
+		}
+		
+		var headers = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','Access-Control-Allow-Headers':'Origin, Content-Type, X-Auth-Token'};
+		var objRequest = new Request.Contao(
+		{
+			url:window.location.href,
+			followRedirects:false,
+			method: 'get',
+			// start
+			onRequest: function()
+			{
+		    	//console.log('Start loading: <?= $this->license->file->name; ?>');
+		    	//console.log('Please wait...');
+		    	// show Contaos loading box
+		    	AjaxRequest.displayBox(Contao.lang.loading + ' …');
+		    },
+			// process
+			onProgress: function(event, xhr)
+			{
+		        var loaded = event.loaded, total = event.total;
+			},
+			// request failed
+			onFailure: function(xhr)
+			{
+				console.log('Request failed!');
+				console.log(xhr);
+			},
+		     // loading successful
+			onSuccess: function(response)
+			{
+				// hide Contaos loading box
+				AjaxRequest.hideBox();
+				
+				// redirct on success
+				if(objData.redirectTo != undefined && objData.redirectTo != '')
+				{
+					window.location = objData.redirectTo;
+					return;
+				}
+				
+				// reload on success
+				if(blnReload)
+				{
+					//console.log('File successfully created in: <?= $this->file_target_directory; ?>. You will be redirected...');
+					// reload page
+					location.reload();
+				}
+				else
+				{
+					console.log(response);
+				}
+			},
+		});
+		objRequest.get(objData);
+	}
+}
+
+/* ]]> */
+</script>

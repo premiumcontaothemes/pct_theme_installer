@@ -16,4 +16,5 @@
 /**
  * Errors
  */
-#GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['no_active_pages_found'] 		= 'Keine aktiven Seiten gefunden';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'] 			= 'Das Entpacken der Datei %s ist fehlgeschlagen.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'] 		= 'Pflichtinhalte (%s) in dem entpackten Verzeichnis nicht gefunden.';

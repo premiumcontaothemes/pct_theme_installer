@@ -23,6 +23,10 @@ define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 $GLOBALS['PCT_THEME_INSTALLER']['base_url'] = 'http://pct-theme-installer.tim-gatzky.de';
 $GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'http://pct-theme-installer.tim-gatzky.de/api.php';
 $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
+$GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
+(
+	'mandatory' => array('upload','eclipse contao 3_5.cto','eclipse contao 4_4.cto'), // mandatory zip content on first level
+);
 
 /**
  * Register backend page / key
@@ -34,3 +38,8 @@ $GLOBALS['BE_MOD']['system']['pct_theme_installer'] = array
 	'icon'	 		=> PCT_THEME_INSTALLER_PATH.'/assets/img/icon.jpg',
 	'stylesheet' 	=> PCT_THEME_INSTALLER_PATH.'/assets/css/be_styles.css',
 );
+
+/**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['parseTemplate'][] = array('PCT\ThemeInstaller','injectScripts');

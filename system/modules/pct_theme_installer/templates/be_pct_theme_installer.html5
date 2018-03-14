@@ -1,96 +1,22 @@
-<?php
-#$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/core/1.11.3/jquery.js';
 
-?>
+
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
+			<span class="status">Status: <?= $this->status; ?></span> <?php if($this->step): ?><span class="step">Schritt: <?= $this->step; ?></span><?php endif; ?>
 		  <a href="<?php echo $this->href ?>" class="header_back" title="<?php echo $this->title ?>"><?php echo $this->button ?></a>
 		</div>
 
-		<?php if($this->status == 'FILE_EXISTS'): ?>
-<!-- FILE_EXISTS-->
-		
-		<a href="<?= $this->file->path; ?>" download><?= $this->file->path; ?></a>		
-		<p><a href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
-		
-		
-		<?php elseif($this->status == 'FILE_NOT_EXISTS'): ?>
-<!-- FILE_NOT_EXISTS -->
-		
-		<?php elseif($this->status == 'ACCEPTED'): ?>
-<!-- LICENSE ACCEIPTED... begin loading -->
-
-		<div class="loading_wrapper">
-			<div class="info">Loading...</div>
-			<div class="loader">
-				<div class="percentage"></div>
-				<div class="bar"></div>
-			</div>
-		</div>
-		
-		<?php if(!$this->ajax_running): ?>
-		<script type="text/javascript">
-		/* <![CDATA[ */
-		
-		/**
-		 * Kickstart the file loading with an ajax request to tell the Theme Installer to load and write the file
-		 */
-		window.addEvent('domready', function()
-		{
-			var data = {'action':'<?= $this->ajax_action; ?>','REQUEST_TOKEN':Contao.request_token};	
-			var headers = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','Access-Control-Allow-Headers':'Origin, Content-Type, X-Auth-Token'};
-			var objRequest = new Request.Contao(
-			{
-				url:window.location.href,
-				followRedirects:false,
-				method: 'get',
-				// start
-				onRequest: function()
-				{
-			    	console.log('Start loading: <?= $this->license->file->name; ?>');
-			    	console.log('Please wait...');
-			    	AjaxRequest.displayBox(Contao.lang.loading + ' …');
-			    },
-				// process
-				onProgress: function(event, xhr)
-				{
-			        var loaded = event.loaded, total = event.total;
-				},
-			     // loading successful
-				onSuccess: function(response)
-				{
-					AjaxRequest.hideBox();
-					console.log('Loading completed.');
-					
-					if(response.toString() == '<?= $this->file_written_response; ?>')
-					{
-						console.log('File successfully created in: <?= $this->file_target_directory; ?>. You will be redirected...');
-						// reload page
-						location.reload();
-					}
-					else
-					{
-						console.log(response);
-					}
-				},
-			});
-			objRequest.get(data);
-		});
-		/* ]]> */
-		</script>
-		<?php endif; ?>
-
-		<?php else: ?>
+<?php if($this->status == 'WELCOME'): ?>
 <!-- WELCOME screen -->
 
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
 			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
 			<div class="input_wrapper">
-			<div class="field w50 key">
+			<div class="field w50 license">
 				<label><?= $this->label_key; ?></label>
-				<input type="text" name="key" value="123" placeholder="<?= $this->placeholder_key; ?>">
+				<input type="text" name="license" value="123" placeholder="<?= $this->placeholder_license; ?>">
 			</div>
 			<div class="field w50 email">
 				<label><?= $this->label_email; ?></label>
@@ -103,7 +29,97 @@
 			</div>
 		</form>
 
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'UNZIP'): ?>
+<!-- INSTALLATION : STEP UNZIP (1): Unzip -->
+		
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		<?php if(!$this->ajax_running): ?>
+		<!-- start the unzip command via ajax -->
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		<?php 
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=copy_files'));
+		?>
+		PCT_ThemeInstaller.request({'action':'unzip','redirectTo':'<?= $url; ?>'});
+		/* ]]> */
+		</script>
 		<?php endif; ?>
+
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'COPY_FILES'): ?>
+<!-- INSTALLATION : STEP UNZIP (2): Copy the files -->		
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		<?php if(!$this->ajax_running): ?>
+		<!-- start the file coping via ajax -->
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		<?php 
+		$_url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait'));
+		?>
+		PCT_ThemeInstaller.request({'action':'copy_files','redirectTo':'<?= $url; ?>'});
+		/* ]]> */
+		</script>
+		<?php endif; ?>
+		
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_WAIT'): ?>
+<!-- INSTALLATION : STEP UNZIP (3.1): SQL_TEMPLATE : WAIT FOR USER -->		
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		Junge, willst du wirklich importieren?	
+
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_CONFIRMED'): ?>
+<!-- INSTALLATION : STEP UNZIP (3.2): SQL_TEMPLATE : IMPORT -->		
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		<?php if(!$this->ajax_running): ?>
+		<!-- start the file coping via ajax -->
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		<?php 
+		$_url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=clearCache'));
+		?>
+		PCT_ThemeInstaller.request({'action':'import','redirectTo':'<?= $url; ?>'});
+		/* ]]> */
+		</script>
+		<?php endif; ?>
+
+
+<?php elseif($this->status == 'FILE_EXISTS'): ?>
+<!-- FILE_EXISTS :: Waiting to start for the installation to begin-->
+		
+		<a href="<?= $this->file->path; ?>" download><?= $this->file->path; ?></a>		
+		<p><a class="tl_button reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
+		
+		<p><a class="tl_button installation" href="<?= \Environment::getInstance()->request.'&status=installation&action=unzip'; ?>">Weiter mit der Installation</a></p>
+		
+<?php elseif($this->status == 'FILE_NOT_EXISTS'): ?>
+<!-- FILE_NOT_EXISTS -->
+		<h2>Datei existiert nicht mehr</h2>
+		<p><a class="reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
+		
+<?php elseif($this->status == 'ACCEPTED'): ?>
+<!-- LICENSE ACCEPTED... begin loading -->
+
+		<div class="loading_wrapper">
+			<div class="info">Loading...</div>
+			<div class="loader"></div>
+		</div>
+		
+		<?php if(!\Environment::get('isAjaxRequest')): ?>
+		<!-- start the loading process via ajax -->
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		
+		<?php 
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=unzip'));
+		?>
+		PCT_ThemeInstaller.request({'action':'loading','redirectTo':'<?= $url; ?>'});
+		/* ]]> */
+		</script>
+		<?php endif; ?>
+				
+<?php endif; ?>
 
 		<div class="clear">
 	</div>
