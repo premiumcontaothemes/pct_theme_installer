@@ -248,10 +248,11 @@ class ThemeInstaller extends \BackendModule
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_wait')		
 		{
 			$this->Template->status = 'INSTALLATION';
-			$this->Template->step = 'SQL_TEMPLATE';
+			$this->Template->step = 'SQL_TEMPLATE_WAIT';
 			$this->Template->action = 'WAIT';
 			$this->Template->num_step = 3.1;
 			
+			return;
 		}
 //! status: INSTALLATION | STEP 3.2: SQL template: Confirmed ready for import
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_confirmed')		
@@ -261,6 +262,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->action = 'WAIT';
 			$this->Template->num_step = 3.1;
 			
+			return;
 		}
 
 

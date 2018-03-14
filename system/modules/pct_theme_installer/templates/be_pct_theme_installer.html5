@@ -55,7 +55,7 @@
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$_url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait'));
 		?>
 		PCT_ThemeInstaller.request({'action':'copy_files','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
