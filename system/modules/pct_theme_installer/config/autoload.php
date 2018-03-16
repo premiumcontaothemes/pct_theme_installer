@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2005-2013 Leo Feyer
  *
- * @package pct_autogrid
+ * @package pct_theme_installer
  * @link    https://contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
@@ -25,6 +25,9 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
 	'PCT\ThemeInstaller' 							=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller.php',
+	'PCT\ThemeInstaller\BackendInstall'				=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/BackendInstall.php',
+	'PCT\ThemeInstaller\InstallationController'			=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/InstallationController.php',
+
 ));
 
 /**

@@ -19,6 +19,17 @@ var PCT_ThemeInstaller =
 	 */
 	texts : <?= $this->texts; ?>,
 	
+	/**
+	 * Default delay before redirects
+	 * @var integer
+	 */
+	delay : <?= $this->delay ?: 1000; ?>,
+	
+	
+	/**
+	 * Perform ajax requests
+	 * @var object
+	 */
 	request : function(objData)
 	{
 		if(objData == undefined)
@@ -71,7 +82,7 @@ var PCT_ThemeInstaller =
 				// redirct on success
 				if(objData.redirectTo != undefined && objData.redirectTo != '')
 				{
-					window.location = objData.redirectTo;
+					PCT_ThemeInstaller.redirectTo(objData.redirectTo,PCT_ThemeInstaller.delay)
 					return;
 				}
 				
@@ -89,6 +100,39 @@ var PCT_ThemeInstaller =
 			},
 		});
 		objRequest.get(objData);
+	},
+	
+	
+	/**
+	 * Perform timed redirects
+	 * @var string		The request url
+	 * @var integer		The offset time in ms
+	 */
+	redirectTo : function(strUrl,intDelay)
+	{
+		if(strUrl == undefined || strUrl == '')
+		{
+			return;
+		}
+		
+		if(intDelay == undefined)
+		{
+			intDelay = 0;
+		}
+		
+		if(intDelay >= 50)
+		{
+			// show Contaos loading box
+		   AjaxRequest.displayBox(Contao.lang.loading + ' …');
+		}
+		
+		setTimeout(function()
+		{
+			// hide Contaos loading box
+			AjaxRequest.hideBox();
+			
+			window.location = strUrl;		
+		}, intDelay);
 	}
 }
 

@@ -31,7 +31,7 @@ class ThemeInstaller extends \BackendModule
 	 * The path to the file
 	 * @var string
 	 */
-	protected $strFile = '';
+	protected $strTheme = '';
 
 
 	/**
@@ -45,6 +45,11 @@ class ThemeInstaller extends \BackendModule
 
 		// @var object Session
 		$objSession = \Session::getInstance();
+		if(version_compare(VERSION, '4','>='))
+		{
+			$objSession = \System::getContainer()->get('session');
+		}
+		
 		$arrSession = $objSession->get('pct_theme_installer');
 		$arrErrors = array();
 		$arrParams = array();
@@ -80,6 +85,13 @@ class ThemeInstaller extends \BackendModule
 		
 		$strName = $objLicense->name ?: $objLicense->file->name ?: '';
 		
+		$this->strTheme = '';
+		if($objLicense->file->name)
+		{
+			$this->strTheme = basename($objLicense->file->name,'.zip');
+		}
+
+		
 //! status : WELCOME
 		
 		
@@ -105,7 +117,7 @@ class ThemeInstaller extends \BackendModule
 		}
 
 
-//! status: INSTALLATION | STEP 1: Unpack the zip
+//! status: INSTALLATION | STEP 1.0: Unpack the zip
 	
 	
 		if(\Input::get('status') == 'installation' && \Input::get('step') == 'unzip')
@@ -167,7 +179,7 @@ class ThemeInstaller extends \BackendModule
 			
 			return;
 		}
-//! status: INSTALLATION | STEP 2: Copy files
+//! status: INSTALLATION | STEP 2.0: Copy files
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'copy_files')		
 		{
 			$this->Template->status = 'INSTALLATION';
@@ -244,23 +256,147 @@ class ThemeInstaller extends \BackendModule
 			
 			return ;
 		}
-//! status: INSTALLATION | STEP 3.1: SQL template: Wait for user input
+//! status: INSTALLATION | STEP 3.0 : Clear internal caches
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'clear_cache')		
+		{
+			$this->Template->status = 'INSTALLATION';
+			$this->Template->step = 'CLEAR_CACHE';
+			
+			if(\Input::get('action') == 'clear_cache')
+			{
+				// clear internal cache of Contao 3.5
+				if(version_compare(VERSION, '3.5','<=') && (boolean)\Config::get('bypassCache') === false)
+				{
+					$objAutomator = new \Contao\Automator;
+					$objAutomator->purgeInternalCache();
+					
+					die('Internal cache cleared');
+				}
+				// clear Symphony cache of Contao 4.4
+				else if(version_compare(VERSION, '4.4','>='))
+				{
+					$objContainer = \System::getContainer();
+					$strCacheDir = \StringUtil::stripRootDir($objContainer->getParameter('kernel.cache_dir'));
+					$strRootDir = $objContainer->getParameter('kernel.project_dir');
+					$strWebDir = $objContainer->getParameter('contao.web_dir');
+					$arrBundles = $objContainer->getParameter('kernel.bundles');
+					
+					// @var object Contao\Automator
+					$objAutomator = new \Contao\Automator;
+					// generate symlinks to /assets, /files, /system
+					$objAutomator->generateSymlinks();
+					// generate bundles symlinks
+					$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
+					$arrBundles = array('calendar','comments','core','faq','news','newsletter');
+					foreach($arrBundles as $bundle)
+					{
+						$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle';
+						$to = $strWebDir.'/bundles/contao'.$bundle;
+						$objSymlink::symlink($from, $to,$strRootDir);
+					}
+					
+					// clear the internal cache
+					$objAutomator->purgeInternalCache();
+					// rebuild the internal cache
+					$objAutomator->generateInternalCache();
+					
+					// try to rebuild the symphony cache
+					$objInstallationController = new \PCT\ThemeInstaller\InstallationController;
+					$objInstallationController->call('purgeSymfonyCache');
+					$objInstallationController->call('warmUpSymfonyCache');
+					
+					die('Symlinks created and Symphony cache cleared');
+				}
+			}
+			
+			return;
+		}		
+		
+//! status: INSTALLATION | STEP 4.0 : DB Update for modules
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'db_update_modules')		
+		{
+			$this->Template->status = 'INSTALLATION';
+			$this->Template->step = 'DB_UPDATE_MODULES';
+			$this->Template->num_step = 3.1;
+			
+			// Contao 3.5
+			if(version_compare(VERSION, '3.5','<='))
+			{
+				// @var object \Contao\Database\Installer
+				$objInstaller = new \Contao\Database\Installer;
+				// let Contao generate the database update form
+				$strSqlForm = $objInstaller->generateSqlForm() ?: '';
+				// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
+				$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
+			
+				// place the form in the template and let JS submit it there
+				$this->Template->sql_form = $strSqlForm;
+				
+				// let contao perform the database update
+				if(\Input::post('FORM_SUBMIT') == 'tl_tables' && !empty($strSqlForm))
+				{
+					$objBackendInstall->call('adjustDatabaseTables');
+				}
+			}
+			// Contao 4.4 >=
+			else if(version_compare(VERSION, '4.4','>='))
+			{
+				\Debug::log('wait');
+			}
+			
+			
+			return;
+		}
+//! status: INSTALLATION | STEP 5.0 : SQL_TEMPLATE_WAIT : Wait for user input
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_wait')		
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_WAIT';
-			$this->Template->action = 'WAIT';
-			$this->Template->num_step = 3.1;
 			
 			return;
 		}
-//! status: INSTALLATION | STEP 3.2: SQL template: Confirmed ready for import
-		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_confirmed')		
+//! status: INSTALLATION | STEP 6.0 : SQL_TEMPLATE_IMPORT : Import the sql file
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_import')		
 		{
 			$this->Template->status = 'INSTALLATION';
-			$this->Template->step = 'SQL_TEMPLATE';
-			$this->Template->action = 'WAIT';
-			$this->Template->num_step = 3.1;
+			$this->Template->step = 'SQL_TEMPLATE_IMPORT';
+			
+			$objBackendInstall = null;
+			if(version_compare(VERSION, '3.5','<='))
+			{
+				// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
+				$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
+			}
+			else if(version_compare(VERSION, '4.4','>='))
+			{
+				// @var object \Contao\InstallTool
+				$objBackendInstall = \Contao\InstallationController;
+			}
+			
+			if($objBackendInstall === null)
+			{
+				\System::log('SQL template import failed. Could not find install tool class',__METHOD__,TL_ERROR);
+				die('Could not find install tool class');
+			}
+			
+			if(\Input::get('action') == 'import')
+			{
+				// get the template by contao version
+				$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
+				
+				if(version_compare(VERSION, '3.5','<='))
+				{
+					// simulate user form submit
+					\Input::setPost('template',$strTemplate);
+					\Input::setPost('FORM_SUBMIT','tl_tutorial');
+					// let the install tool import the sql templates
+					$objBackendInstall->call('importExampleWebsite');
+				}
+				else if(version_compare(VERSION, '4.4','>='))
+				{
+					$objBackendInstall->importTemplate($strTemplate);
+				}
+			}
 			
 			return;
 		}
@@ -380,7 +516,7 @@ class ThemeInstaller extends \BackendModule
 					$arrSession['status'] = 'FILE_CREATED';
 					$arrSession['file'] = $objFile->path;
 					$objSession->set('pct_theme_installer',$arrSession);
-
+					
 					// tell ajax that the file has been written
 					die($this->Template->file_written_response);
 
@@ -388,6 +524,8 @@ class ThemeInstaller extends \BackendModule
 					#$this->reload();
 				}
 			}
+			
+			return;
 		}
 	}
 	

@@ -26,6 +26,11 @@ $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 (
 	'mandatory' => array('upload','eclipse contao 3_5.cto','eclipse contao 4_4.cto'), // mandatory zip content on first level
+	'sql_templates' => array
+	(
+		'3.5' => 'eclipse_contao_3_5.sql',
+		'4.4' => 'eclipse_contao_4_4.sql'
+	),
 );
 
 /**

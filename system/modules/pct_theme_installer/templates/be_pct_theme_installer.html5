@@ -55,18 +55,86 @@
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=clear_cache'));
 		?>
 		PCT_ThemeInstaller.request({'action':'copy_files','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'CLEAR_CACHE'): ?>
+<!-- INSTALLATION : STEP : Clear the internal caches -->		
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		<?php if(!$this->ajax_running): ?>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		<?php 
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=db_update_modules'));
+		?>
+		PCT_ThemeInstaller.request({'action':'clear_cache','redirectTo':'<?= $url; ?>'});
+		/* ]]> */
+		</script>
+		<?php endif; ?>
+
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'DB_UPDATE_MODULES'): ?>
+<!-- INSTALLATION : STEP DB_UPDATE_MODULES -->		
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		<?php if($this->sql_form): ?>
+			<form action="<?php echo $this->action; ?>" id="form_update_database" class="tl_form" method="post">
+				<input type="hidden" name="FORM_SUBMIT" value="tl_tables">
+				<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+				<div class="input_wrapper">
+				<?= $this->sql_form; ?>
+				</div>
+			</form>
+	
+			<script type="text/javascript">
+			/* <![CDATA[ */
+			
+			/**
+			 * Let mootools submit the form
+			 */
+			window.addEvent('domready', function() 
+			{
+				var form = $$('form#form_update_database')[0];
+				if(form != undefined)
+				{
+					form.submit();
+				}
+			});
+			
+			/* ]]> */
+			</script>
+		<?php else: ?>
+		
+		Datenbank ist up to date.
+		
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		<?php 
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait'));
+		?>
+		PCT_ThemeInstaller.redirectTo('<?= $url; ?>',3000);
+		/* ]]> */
+		</script>
+		
+		<?php endif; ?>
+
 		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_WAIT'): ?>
 <!-- INSTALLATION : STEP UNZIP (3.1): SQL_TEMPLATE : WAIT FOR USER -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
-		Junge, willst du wirklich importieren?	
+		<h2>Junge, willst du wirklich importieren?</h2>
+		
+		<?php 
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import&action=import'));
+		?>
+		
+		<p><a class="tl_button import" href="<?= $url; ?>">Ja, verdammt!</a></p>
+		<p><a class="tl_button import" href="<?= $this->resetUrl; ?>">Ähh... nee lass mal. Ich bin noch nicht 18!</a></p>
+		
 
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_CONFIRMED'): ?>
 <!-- INSTALLATION : STEP UNZIP (3.2): SQL_TEMPLATE : IMPORT -->		
