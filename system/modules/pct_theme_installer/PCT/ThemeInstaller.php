@@ -28,7 +28,13 @@ class ThemeInstaller extends \BackendModule
 	protected $strTemplate = 'be_pct_theme_installer';
 
 	/**
-	 * The path to the file
+	 * Template for the breadcrumb
+	 * @var string
+	 */
+	protected $strTemplateBreadcrumb = 'pct_theme_installer_breadcrumb';
+	 
+	/**
+	 * The name of the theme
 	 * @var string
 	 */
 	protected $strTheme = '';
@@ -42,6 +48,7 @@ class ThemeInstaller extends \BackendModule
 	protected function compile()
 	{
 		\System::loadLanguageFile('pct_theme_installer');
+		\System::loadLanguageFile('execption');
 
 		// @var object Session
 		$objSession = \Session::getInstance();
@@ -60,6 +67,7 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->action = \Environment::getInstance()->request;
 		$this->Template->formId = $strForm;
 		$this->Template->content = '';
+		$this->Template->breadcrumb = $this->getBreadcrumb(\Input::get('status'), \Input::get('step'));
 		$this->Template->href = $this->getReferer(true);
 		$this->Template->title = specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
@@ -81,11 +89,19 @@ class ThemeInstaller extends \BackendModule
 			$blnAjax = true;
 		}
 		$this->Template->ajax_running = $blnAjax;
-			
 		
-		$strName = $objLicense->name ?: $objLicense->file->name ?: '';
 		
-		$this->strTheme = '';
+//! status : SESSION_LOST
+		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset')))
+		{
+			$this->Template->status = 'SESSION_LOST';
+			$this->Template->content = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'];
+			$this->Template->breadcrumb = '';
+			return;
+		}
+	
+		// the theme or module name of this lizence
+		$this->strTheme = $objLicense->name ?: $objLicense->file->name ?: '';
 		if($objLicense->file->name)
 		{
 			$this->strTheme = basename($objLicense->file->name,'.zip');
@@ -98,7 +114,6 @@ class ThemeInstaller extends \BackendModule
 		if(\Input::get('status') == 'welcome' && !$_POST)
 		{
 			$this->Template->status = 'WELCOME';
-			
 			return;
 		}
 
@@ -113,7 +128,7 @@ class ThemeInstaller extends \BackendModule
 			$objSession->remove('pct_theme_installer');
 
 			// redirect to the beginning
-			$this->redirect( \Backend::addToUrl('status=welcome') );
+			$this->redirect( \Backend::addToUrl('status=welcome',true,array('step')) );
 		}
 
 
@@ -299,6 +314,8 @@ class ThemeInstaller extends \BackendModule
 					$objAutomator->purgeInternalCache();
 					// rebuild the internal cache
 					$objAutomator->generateInternalCache();
+					// purge the whole folder
+					\Files::getInstance()->rrdir($strCacheDir,true);
 					
 					// try to rebuild the symphony cache
 					$objInstallationController = new \PCT\ThemeInstaller\InstallationController;
@@ -319,40 +336,77 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->step = 'DB_UPDATE_MODULES';
 			$this->Template->num_step = 3.1;
 			
-			// Contao 3.5
-			if(version_compare(VERSION, '3.5','<='))
-			{
-				// @var object \Contao\Database\Installer
-				$objInstaller = new \Contao\Database\Installer;
-				// let Contao generate the database update form
-				$strSqlForm = $objInstaller->generateSqlForm() ?: '';
-				// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
-				$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
+			$arrErrors = array();
 			
-				// place the form in the template and let JS submit it there
-				$this->Template->sql_form = $strSqlForm;
-				
-				// let contao perform the database update
-				if(\Input::post('FORM_SUBMIT') == 'tl_tables' && !empty($strSqlForm))
+			try
+			{
+				// Contao 3.5
+				if(version_compare(VERSION, '3.5','<='))
 				{
-					$objBackendInstall->call('adjustDatabaseTables');
+					// @var object \Contao\Database\Installer
+					$objInstaller = new \Contao\Database\Installer;
+					// let Contao generate the database update form
+					$strSqlForm = $objInstaller->generateSqlForm() ?: '';
+					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
+					$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
+				
+					// place the form in the template and let JS submit it there
+					$this->Template->sql_form = $strSqlForm;
+					
+					// let contao perform the database update
+					if(\Input::post('FORM_SUBMIT') == 'tl_tables' && !empty($strSqlForm))
+					{
+						$objBackendInstall->call('adjustDatabaseTables');
+					}
 				}
+				// Contao 4.4 >=
+				else if(version_compare(VERSION, '4.4','>='))
+				{
+					// @var object \PCT\ThemeInstaller\InstallationController
+					#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
+					$objContainer = \System::getContainer();
+					$objInstaller = $objContainer->get('contao.installer');
+					// compile sql
+					$arrSQL = $objInstaller->getCommands();
+					if(!empty($arrSQL) && is_array($arrSQL)) 
+					{
+			    	  	foreach($arrSQL as $operation => $sql)
+			         	{
+				         	// never run deletes
+				         	if($operation == 'DELETE')
+				         	{
+					         	continue;
+				         	}
+				         	
+				         	foreach($sql as $hash => $statement)
+				         	{
+					        	$objInstaller->execCommand($hash);
+				        	}
+			        	}
+				    }
+				}			
 			}
-			// Contao 4.4 >=
-			else if(version_compare(VERSION, '4.4','>='))
+			catch(\Exception $e)
 			{
-				\Debug::log('wait');
+				$arrErrors[] = $e->getMessage();
 			}
 			
-			
+			if(count($arrErrors) > 0)
+			{
+				\System::log('Database update returned errors: '.implode(', ', $arrErrors));
+			}
+						
 			return;
 		}
 //! status: INSTALLATION | STEP 5.0 : SQL_TEMPLATE_WAIT : Wait for user input
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_wait')		
 		{
+			// get the template by contao version
+			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
+			
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_WAIT';
-			
+			$this->Template->sql_template_info = sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['sql_template_info'],$strTemplate);
 			return;
 		}
 //! status: INSTALLATION | STEP 6.0 : SQL_TEMPLATE_IMPORT : Import the sql file
@@ -360,32 +414,21 @@ class ThemeInstaller extends \BackendModule
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_IMPORT';
+			// get the template by contao version
+			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
 			
-			$objBackendInstall = null;
-			if(version_compare(VERSION, '3.5','<='))
+			if(empty($strTemplate))
 			{
-				// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
-				$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
-			}
-			else if(version_compare(VERSION, '4.4','>='))
-			{
-				// @var object \Contao\InstallTool
-				$objBackendInstall = \Contao\InstallationController;
-			}
-			
-			if($objBackendInstall === null)
-			{
-				\System::log('SQL template import failed. Could not find install tool class',__METHOD__,TL_ERROR);
-				die('Could not find install tool class');
+				$this->Template->error = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'];
+				return;
 			}
 			
 			if(\Input::get('action') == 'import')
 			{
-				// get the template by contao version
-				$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
-				
 				if(version_compare(VERSION, '3.5','<='))
 				{
+					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
+					$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
 					// simulate user form submit
 					\Input::setPost('template',$strTemplate);
 					\Input::setPost('FORM_SUBMIT','tl_tutorial');
@@ -394,7 +437,11 @@ class ThemeInstaller extends \BackendModule
 				}
 				else if(version_compare(VERSION, '4.4','>='))
 				{
-					$objBackendInstall->importTemplate($strTemplate);
+					$objContainer = \System::getContainer();
+					$objInstall = $objContainer->get('contao.install_tool');
+					// let the install tool import the sql templates
+					$objInstall->importTemplate($strTemplate);
+					$objInstall->persistConfig('exampleWebsite', time());
 				}
 			}
 			
@@ -550,5 +597,65 @@ class ThemeInstaller extends \BackendModule
 			$objTemplate->javascripts .= $objScripts->parse();
 		}
 	}
-
+	
+	
+	/**
+	 * Generate a breadcrumb
+	 */
+	public function getBreadcrumb($strStatus='',$strStep='')
+	{
+		$strCurrent = $strStatus.($strStep != '' ? '.'.$strStep : '');
+		
+		$arrItems = array();
+		$i = 0;
+		
+		foreach($GLOBALS['PCT_THEME_INSTALLER']['breadcrumb_steps'] as $k => $data)
+		{
+			$status = strtolower($k);
+			
+			// css class
+			$class = array('item',$status);
+			if($data['protected'])
+			{
+				$class[] = 'hidden';
+			}
+			
+			($i%2 == 0 ? $class[] = 'even' : $class[] = 'odd');
+			($i == 0 ? $class[] = 'first' : '');
+			($i == count($GLOBALS['PCT_THEME_INSTALLER']['breadcrumb_steps']) - 1 ? $class[] = 'last' : '');
+			
+			if(!$data['label'])
+			{
+				$data['label'] = $k;
+			}
+			
+			// title
+			if(!$data['title'])
+			{
+				$data['title'] = $data['label'];
+			}
+			
+			// active
+			if($strCurrent == $status)
+			{
+				$data['isActive'] = true;
+				$class[] = 'tl_green';
+				$class[] = 'active';
+			}
+			
+			$data['href'] = \Controller::addToUrl($data['href'].'&rt='.REQUEST_TOKEN,true,array('step'));
+			$data['class'] = implode(' ', $class);
+			
+			$arrItems[ $k ] = $data;
+			
+			$i++;
+		}
+		
+		// @var object
+		$objTemplate = new \BackendTemplate($this->strTemplateBreadcrumb);
+		$objTemplate->items = $arrItems;
+		
+		return $objTemplate->parse();
+	}
+	
 }

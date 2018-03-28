@@ -1,11 +1,21 @@
 
+<?php 
+$arrLang = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER'];
+$strStatus = $arrLang['STATUS'][strtolower($this->status)] ?: $this->status;
+$strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->step)] ?: $this->step;
+?>
 
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
-			<span class="status">Status: <?= $this->status; ?></span> <?php if($this->step): ?><span class="step">Schritt: <?= $this->step; ?></span><?php endif; ?>
+			<span class="status">Status: <?= $strStatus; ?></span> <?php if($this->step): ?><span class="step">Schritt: <?= $strStep; ?></span><?php endif; ?>
 		  <a href="<?php echo $this->href ?>" class="header_back" title="<?php echo $this->title ?>"><?php echo $this->button ?></a>
 		</div>
+		
+		<!-- breadcrumb -->
+		<?php if($this->breadcrumb): ?>
+		<?= $this->breadcrumb; ?>
+		<?php endif; ?>
 
 <?php if($this->status == 'WELCOME'): ?>
 <!-- WELCOME screen -->
@@ -28,6 +38,13 @@
 				<input type="submit" name="validate_license" value="<?= $this->value_submit; ?>">
 			</div>
 		</form>
+
+<?php elseif($this->status == 'SESSION_LOST'): ?>
+<!-- SESSION LOST -->
+
+		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
+		
+		<?= $this->content; ?>
 
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'UNZIP'): ?>
 <!-- INSTALLATION : STEP UNZIP (1): Unzip -->
@@ -128,15 +145,17 @@
 		
 		<h2>Junge, willst du wirklich importieren?</h2>
 		
+		<h3><?= $this->sql_template_info; ?></h3>
+		
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import&action=import'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import'));
 		?>
 		
 		<p><a class="tl_button import" href="<?= $url; ?>">Ja, verdammt!</a></p>
 		<p><a class="tl_button import" href="<?= $this->resetUrl; ?>">Ähh... nee lass mal. Ich bin noch nicht 18!</a></p>
 		
 
-<?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_CONFIRMED'): ?>
+<?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_IMPORT'): ?>
 <!-- INSTALLATION : STEP UNZIP (3.2): SQL_TEMPLATE : IMPORT -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
@@ -145,7 +164,7 @@
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$_url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=clearCache'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=completed'));
 		?>
 		PCT_ThemeInstaller.request({'action':'import','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
@@ -186,8 +205,16 @@
 		/* ]]> */
 		</script>
 		<?php endif; ?>
-				
+
+<?php elseif($this->status == 'NOT_ACCEPTED'): ?>
+<!-- LICENSE NOT_ACCEPTED... -->
+		
+		<p><a class="reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
+		
+		Die Lizenz ist nicht valide
+						
 <?php endif; ?>
+
 
 		<div class="clear">
 	</div>

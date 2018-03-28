@@ -37,4 +37,5 @@ TemplateLoader::addFiles(array
 (
 	'be_pct_theme_installer'					=> 'system/modules/pct_theme_installer/templates',
 	'be_js_pct_theme_installer'					=> 'system/modules/pct_theme_installer/templates',
+	'pct_theme_installer_breadcrumb'			=> 'system/modules/pct_theme_installer/templates',
 ));

@@ -19,3 +19,35 @@
 $GLOBALS['TL_LANG']['pct_theme_installer']['label_key'] 		= 'Lizenzschlüssel / Bestellnummer';
 $GLOBALS['TL_LANG']['pct_theme_installer']['label_email'] 		= 'Bestell-E-Mail-Adresse';
 $GLOBALS['TL_LANG']['pct_theme_installer']['value_submit'] 		= 'Lizenz abfragen';
+$GLOBALS['TL_LANG']['pct_theme_installer']['sql_template_info'] = 'SQL-Template-Datei: %s';
+
+/**
+ * Breadcrumb
+ */
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['welcome'] = 'Start';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['validation'] = 'Lizenzabfrage';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['accepted'] = 'Lizenz valide';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['not_accepted'] = 'Lizenz nicht valide';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['loading'] = 'Lade Daten';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.unzip'] = 'Daten entpacken';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.copy_files'] = 'Daten kopieren';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.clear_cache'] = 'Internen Cache leeren';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.db_update_modules'] = 'Datenbank-Update';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_import'] = 'Installations-Template Import ausführen...';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_wait'] = 'Installations-Template importieren...';
+
+
+/**
+ * Status
+ */
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['welcome'] = 'Start';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['validation'] = 'Lizenzabfrage';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['accepted'] = 'Lizenz valide';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['not_accepted'] = 'Lizenz nicht valide';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['loading'] = 'Lade Daten';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['session_lost'] = 'Lizenz-Session abgelaufen';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.unzip'] = 'Daten entpacken';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.copy_files'] = 'Daten kopieren';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.clear_cache'] = 'Internen Cache leeren';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.db_update_modules'] = 'Datenbank-Update';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.sql_template_import'] = 'Import Demo-Daten (SQL)';

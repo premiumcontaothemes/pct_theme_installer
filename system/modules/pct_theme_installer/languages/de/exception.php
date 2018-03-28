@@ -16,5 +16,7 @@
 /**
  * Errors
  */
-$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'] 			= 'Das Entpacken der Datei %s ist fehlgeschlagen.';
-$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'] 		= 'Pflichtinhalte (%s) in dem entpackten Verzeichnis nicht gefunden.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'] 				= 'Das Entpacken der Datei %s ist fehlgeschlagen.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'] 			= 'Pflichtinhalte (%s) in dem entpackten Verzeichnis nicht gefunden.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'] 				= 'SQL-Installations-Template nicht gefunden.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'] 				= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';
