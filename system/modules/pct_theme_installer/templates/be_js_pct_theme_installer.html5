@@ -66,14 +66,7 @@ var PCT_ThemeInstaller =
 		    	//console.log('Start loading: <?= $this->license->file->name; ?>');
 		    	//console.log('Please wait...');
 		    	// show Contaos loading box
-		    	
-		    	var infotext = Contao.lang.loading + ' …';
-		    	if(PCT_ThemeInstaller.ajax_infotext != '')
-		    	{
-			    	infotext = PCT_ThemeInstaller.ajax_infotext;
-		    	}
-		    	console.log(infotext);
-		    	AjaxRequest.displayBox(infotext);
+		    	PCT_ThemeInstaller.showAjaxInfobox( PCT_ThemeInstaller.ajax_infotext );
 		    },
 			// process
 			onProgress: function(event, xhr)
@@ -136,16 +129,39 @@ var PCT_ThemeInstaller =
 		if(intDelay >= 50)
 		{
 			// show Contaos loading box
-		   AjaxRequest.displayBox(Contao.lang.loading + ' …');
+		    PCT_ThemeInstaller.showAjaxInfobox( PCT_ThemeInstaller.ajax_infotext );
 		}
 		
 		setTimeout(function()
 		{
 			// hide Contaos loading box
-			AjaxRequest.hideBox();
+			PCT_ThemeInstaller.hideAjaxInfobox();
 			
 			window.location = strUrl;		
 		}, intDelay);
+	},
+	
+	
+	/**
+	 * Show loading box
+	 * @var string	The info text
+	 */
+	showAjaxInfobox : function(strText)
+	{
+		if(strText == undefined)
+		{
+			strText = Contao.lang.loading + ' …';
+		}
+		AjaxRequest.displayBox(strText);
+	},
+	
+	
+	/**
+	 * Hide the loading box
+	 */
+	hideAjaxInfobox : function()
+	{
+		AjaxRequest.hideBox();
 	}
 }
 

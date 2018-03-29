@@ -56,8 +56,9 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.sql_template_
  * Ajax infotexts
  */
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['validation'] = 'Lizenz wird abgefragt...';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['loading'] = 'Zip wird geladen...';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['loading'] = 'Datei "%s" wird geladen...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['sql_template_import'] = 'Installations-Template wird importiert...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['clear_cache'] = 'Cache wird geleert...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['copy_files'] = 'Dateien werden kopiert...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['unzip'] = 'Dateien werden entpackt...';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['db_update_modules'] = 'Datenbank wird aktualisiert...';

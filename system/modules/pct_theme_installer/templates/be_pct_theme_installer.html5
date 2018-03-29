@@ -59,7 +59,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=copy_files'));
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['unzip']; ?>';
-		PCT_ThemeInstaller.request({'action':'unzip','redirectTo':'<?= $url; ?>'});
+		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
@@ -76,7 +76,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=clear_cache'));
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['copy_files']; ?>';
-		PCT_ThemeInstaller.request({'action':'copy_files','redirectTo':'<?= $url; ?>'});
+		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
@@ -91,7 +91,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=db_update_modules'));
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['clear_cache']; ?>';
-		PCT_ThemeInstaller.request({'action':'clear_cache','redirectTo':'<?= $url; ?>'});
+		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
@@ -123,7 +123,6 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 					form.submit();
 				}
 			});
-			
 			/* ]]> */
 			</script>
 		<?php else: ?>
@@ -135,6 +134,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait') );
 		?>
+		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['db_update_modules']; ?>';
 		PCT_ThemeInstaller.redirectTo('<?= $url; ?>',3000);
 		/* ]]> */
 		</script>
@@ -170,7 +170,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=completed') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
-		PCT_ThemeInstaller.request({'action':'import','redirectTo':'<?= $url; ?>'});
+		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
@@ -205,8 +205,8 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=unzip') );
 		?>
-		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['loading']; ?>';
-		PCT_ThemeInstaller.request({'action':'loading','redirectTo':'<?= $url; ?>'});
+		PCT_ThemeInstaller.ajax_infotext = '<?= sprintf($arrLang['AJAX_INFO']['loading'],$this->license->name); ?>';
+		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>

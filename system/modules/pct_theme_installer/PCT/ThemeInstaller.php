@@ -210,7 +210,7 @@ class ThemeInstaller extends \BackendModule
 			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
 			$strFolder = $strTargetDir.'/'.basename($arrSession['file'], ".zip");
 			
-			if(\Input::get('action') == 'copy_files' && is_dir(TL_ROOT.'/'.$strFolder))
+			if(\Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
 			{
 				$scan = scandir(TL_ROOT.'/'.$strFolder);
 				
@@ -282,7 +282,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'CLEAR_CACHE';
 			
-			if(\Input::get('action') == 'clear_cache')
+			if(\Input::get('action') == 'run')
 			{
 				// clear internal cache of Contao 3.5
 				if(version_compare(VERSION, '3.5','<=') && (boolean)\Config::get('bypassCache') === false)
@@ -428,7 +428,7 @@ class ThemeInstaller extends \BackendModule
 				return;
 			}
 			
-			if(\Input::get('action') == 'import')
+			if(\Input::get('action') == 'run')
 			{
 				if(version_compare(VERSION, '3.5','<='))
 				{
@@ -533,7 +533,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->license = $objLicense;
 			
 			// coming from ajax request
-			if(\Input::get('action') == 'loading')
+			if(\Input::get('action') == 'run')
 			{
 				$arrParams['email'] = $objLicense->email;
 				$arrParams['license'] = $objLicense->license;
