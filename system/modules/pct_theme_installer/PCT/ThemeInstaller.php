@@ -132,7 +132,7 @@ class ThemeInstaller extends \BackendModule
 		}
 
 
-//! status : COMPLETE
+//! status : COMPLETE (probably never been called)
 				
 		if(\Input::get('status') == 'complete')
 		{
@@ -458,7 +458,7 @@ class ThemeInstaller extends \BackendModule
 					}
 					catch(\Exception $e)
 					{
-						unset($_SESSION['PCT_THEME_INSTALLER']['completed']);
+						unset($_SESSION['PCT_THEME_INSTALLER']);
 					}
 				}
 				else if(version_compare(VERSION, '4.4','>='))
@@ -466,8 +466,19 @@ class ThemeInstaller extends \BackendModule
 					$objContainer = \System::getContainer();
 					$objInstall = $objContainer->get('contao.install_tool');
 					// let the install tool import the sql templates
-					$objInstall->importTemplate($strTemplate);
-					$objInstall->persistConfig('exampleWebsite', time());
+					try
+					{
+						// mark as being completed
+						$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
+						$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+						
+						$objInstall->importTemplate($strTemplate);
+						$objInstall->persistConfig('exampleWebsite', time());
+					}
+					catch(\Exception $e)
+					{
+						unset($_SESSION['PCT_THEME_INSTALLER']);
+					}
 				}
 			}
 			
@@ -715,7 +726,7 @@ class ThemeInstaller extends \BackendModule
 			// clear the url from the referer and redirect with installation information
 			if(\Input::get('referer') != '')
 			{
-				$this->redirect( \Controller::addToUrl('&installation_completed='.$strName,true,array('referer','rt','ref')) );
+				$this->redirect( \Controller::addToUrl('&installation_completed='.$strName,false,array('referer','rt','ref')) );
 			}	
 		}
 		// write a backend information message with the installation information
@@ -726,7 +737,7 @@ class ThemeInstaller extends \BackendModule
 			// add backend message
 			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],$strName) );
 			
-			$this->redirect( \Controller::addToUrl('',true,array('installation_completed')) );
+			$this->redirect( \Controller::addToUrl('',false,array('installation_completed')) );
 		}
 	}
 	
