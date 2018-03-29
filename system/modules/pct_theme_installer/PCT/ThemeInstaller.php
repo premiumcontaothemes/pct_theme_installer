@@ -133,7 +133,12 @@ class ThemeInstaller extends \BackendModule
 
 
 //! status: INSTALLATION | STEP 1.0: Unpack the zip
-	
+		
+		if(\Input::get('status') == 'installation' && \Input::get('step') == '')
+		{
+			// redirect to the beginning
+			$this->redirect( \Backend::addToUrl('status=reset',true,array('step')) );
+		}
 	
 		if(\Input::get('status') == 'installation' && \Input::get('step') == 'unzip')
 		{
