@@ -25,6 +25,12 @@ var PCT_ThemeInstaller =
 	 */
 	delay : <?= $this->delay ?: 1000; ?>,
 	
+	/**
+	 * Contao ajax info text
+	 * @var string
+	 */
+	ajax_infotext : '',
+	
 	
 	/**
 	 * Perform ajax requests
@@ -60,7 +66,14 @@ var PCT_ThemeInstaller =
 		    	//console.log('Start loading: <?= $this->license->file->name; ?>');
 		    	//console.log('Please wait...');
 		    	// show Contaos loading box
-		    	AjaxRequest.displayBox(Contao.lang.loading + ' …');
+		    	
+		    	var infotext = Contao.lang.loading + ' …';
+		    	if(PCT_ThemeInstaller.ajax_infotext != '')
+		    	{
+			    	infotext = PCT_ThemeInstaller.ajax_infotext;
+		    	}
+		    	console.log(infotext);
+		    	AjaxRequest.displayBox(infotext);
 		    },
 			// process
 			onProgress: function(event, xhr)

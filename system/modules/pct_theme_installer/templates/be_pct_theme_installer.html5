@@ -58,13 +58,14 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=copy_files'));
 		?>
+		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['unzip']; ?>';
 		PCT_ThemeInstaller.request({'action':'unzip','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
 
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'COPY_FILES'): ?>
-<!-- INSTALLATION : STEP UNZIP (2): Copy the files -->		
+<!-- ! INSTALLATION : STEP UNZIP (2): Copy the files -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
 		<?php if(!$this->ajax_running): ?>
@@ -74,12 +75,13 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=clear_cache'));
 		?>
+		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['copy_files']; ?>';
 		PCT_ThemeInstaller.request({'action':'copy_files','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'CLEAR_CACHE'): ?>
-<!-- INSTALLATION : STEP : Clear the internal caches -->		
+<!-- ! INSTALLATION : STEP : Clear the internal caches -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
 		<?php if(!$this->ajax_running): ?>
@@ -88,13 +90,14 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=db_update_modules'));
 		?>
+		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['clear_cache']; ?>';
 		PCT_ThemeInstaller.request({'action':'clear_cache','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
 		<?php endif; ?>
 
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'DB_UPDATE_MODULES'): ?>
-<!-- INSTALLATION : STEP DB_UPDATE_MODULES -->		
+<!-- ! INSTALLATION : STEP DB_UPDATE_MODULES -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
 		<?php if($this->sql_form): ?>
@@ -130,7 +133,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait') );
 		?>
 		PCT_ThemeInstaller.redirectTo('<?= $url; ?>',3000);
 		/* ]]> */
@@ -140,7 +143,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 
 		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_WAIT'): ?>
-<!-- INSTALLATION : STEP UNZIP (3.1): SQL_TEMPLATE : WAIT FOR USER -->		
+<!-- ! INSTALLATION : STEP UNZIP (3.1): SQL_TEMPLATE : WAIT FOR USER -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
 		<h2>Junge, willst du wirklich importieren?</h2>
@@ -148,7 +151,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<h3><?= $this->sql_template_info; ?></h3>
 		
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import') );
 		?>
 		
 		<p><a class="tl_button import" href="<?= $url; ?>">Ja, verdammt!</a></p>
@@ -156,7 +159,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		
 
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_IMPORT'): ?>
-<!-- INSTALLATION : STEP UNZIP (3.2): SQL_TEMPLATE : IMPORT -->		
+<!-- ! INSTALLATION : STEP UNZIP (3.2): SQL_TEMPLATE : IMPORT -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
 		<?php if(!$this->ajax_running): ?>
@@ -164,8 +167,9 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=completed'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=completed') );
 		?>
+		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
 		PCT_ThemeInstaller.request({'action':'import','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
@@ -173,7 +177,7 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 
 
 <?php elseif($this->status == 'FILE_EXISTS'): ?>
-<!-- FILE_EXISTS :: Waiting to start for the installation to begin-->
+<!-- ! FILE_EXISTS :: Waiting to start for the installation to begin-->
 		
 		<a href="<?= $this->file->path; ?>" download><?= $this->file->path; ?></a>		
 		<p><a class="tl_button reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
@@ -181,12 +185,12 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		<p><a class="tl_button installation" href="<?= \Environment::getInstance()->request.'&status=installation&action=unzip'; ?>">Weiter mit der Installation</a></p>
 		
 <?php elseif($this->status == 'FILE_NOT_EXISTS'): ?>
-<!-- FILE_NOT_EXISTS -->
+<!-- ! FILE_NOT_EXISTS -->
 		<h2>Datei existiert nicht mehr</h2>
 		<p><a class="reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
 		
 <?php elseif($this->status == 'ACCEPTED'): ?>
-<!-- LICENSE ACCEPTED... begin loading -->
+<!-- ! LICENSE ACCEPTED... begin loading -->
 
 		<div class="loading_wrapper">
 			<div class="info">Loading...</div>
@@ -199,8 +203,9 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		/* <![CDATA[ */
 		
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=unzip'));
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=unzip') );
 		?>
+		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['loading']; ?>';
 		PCT_ThemeInstaller.request({'action':'loading','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>
