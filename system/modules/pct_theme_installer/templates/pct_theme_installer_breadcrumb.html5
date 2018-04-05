@@ -1,14 +1,32 @@
 
 <div class="breadcrumb">
-	<ul class="items">
-	<?php foreach($this->items as $item): ?>
-	<li class="<?= $item['class']; ?>">
-		<?php if($item['isActive']): ?>
-		<span><?= $item['label']; ?></span>
-		<?php else: ?>
-		<a href="<?= $item['href']; ?>" title="<?= $item['title']; ?>"><?= $item['label']; ?></a>
-		<?php endif; ?>
-	</li>
-	<?php endforeach; ?>
-	</ul>
+	<table>
+		<thead>
+			<tr>
+				<th class="col1">Status</th>
+				<th class="col2">Job</th>
+				<th class="col3">Beschreibung</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<?php foreach($this->items as $item): ?>
+			
+			<tr class="<?= $item['class']; ?><?php if($item['isActive']): ?> active<?php endif; ?>">
+				<td><i class="fa fa-check"></i></td>
+				<td>
+					<?php if($item['isActive']): ?>
+					<span><?= $item['label']; ?></span>
+					<?php else: ?>
+					<a href="<?= $item['href']; ?>" title="<?= $item['title']; ?>"><?= $item['label']; ?></a>
+					<?php endif; ?>
+				</td>
+				<td>Hier kommt noch die Beschreibung rein</td>
+			</tr>
+			
+			<?php endforeach; ?>
+		</tbody>
+	</table>
 </div>
+	
+		
