@@ -12,34 +12,48 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 		  <a href="<?php echo $this->href ?>" class="header_back" title="<?php echo $this->title ?>"><?php echo $this->button ?></a>
 		</div>
 		
-		<!-- breadcrumb -->
-		<?php if($this->breadcrumb): ?>
-		<?= $this->breadcrumb; ?>
-		<?php endif; ?>
+		<div class="tl_message">
+			<p class="tl_info">Theme wurde erfolgreich installiert</p>
+		</div>
 
-<?php if($this->status == 'WELCOME'): ?>
+		<div class="backend_explanation">Das Theme Eclipse laden und installieren</div>
+		
+
 <!-- WELCOME screen -->
 
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
 			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
-			<div class="input_wrapper">
-			<div class="field w50 license">
-				<label><?= $this->label_key; ?></label>
-				<input type="text" name="license" value="123" placeholder="<?= $this->placeholder_license; ?>">
+			
+			<div class="tl_formbody_top">
+				<div class="input_wrapper licence_check">
+					<div class="widget field w50 license">
+						<h3><?= $this->label_key; ?></h3>
+						<input type="text" name="license" value="123" class="tl_text" placeholder="<?= $this->placeholder_license; ?>">
+						<p class="tl_help tl_tip">Die Bestellnummer finden Sie auf Ihrer Rechnung oder in Ihrem Kundenaccount.</p>
+					</div>
+					<div class="widget field w50 email">
+						<h3><?= $this->label_email; ?></h3>
+						<input type="text" name="email" value="email@email.com" class="tl_text" placeholder="<?= $this->placeholder_email; ?>">
+						<p class="tl_help tl_tip">Geben Sie die E-Mail Adresse Ihres Kundenaccounts an.</p>
+					</div>
+				</div>
 			</div>
-			<div class="field w50 email">
-				<label><?= $this->label_email; ?></label>
-				<input type="text" name="email" value="test@test.test" placeholder="<?= $this->placeholder_email; ?>">
-			</div>
+			
+			<div class="tl_formbody_middle">
+				<?php if($this->breadcrumb): ?>
+					<?= $this->breadcrumb; ?>
+				<?php endif; ?>
 			</div>
 
-			<div class="submit_wrapper">
-				<input type="submit" name="validate_license" value="<?= $this->value_submit; ?>">
+			<div class="tl_formbody_bottom tl_formbody_submit">
+				<div class="tl_submit_container">
+					<input type="submit" name="validate_license" class="tl_submit" value="<?= $this->value_submit; ?>">
+				</div>
 			</div>
 		</form>
 
-<?php elseif($this->status == 'SESSION_LOST'): ?>
+<?php if($this->status == 'SESSION_LOST'): ?>
 <!-- SESSION LOST -->
 
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>

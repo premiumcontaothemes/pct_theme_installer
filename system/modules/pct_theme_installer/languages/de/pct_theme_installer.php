@@ -18,7 +18,7 @@
  */
 $GLOBALS['TL_LANG']['pct_theme_installer']['label_key'] 		= 'Lizenzschlüssel / Bestellnummer';
 $GLOBALS['TL_LANG']['pct_theme_installer']['label_email'] 		= 'Bestell-E-Mail-Adresse';
-$GLOBALS['TL_LANG']['pct_theme_installer']['value_submit'] 		= 'Lizenz abfragen';
+$GLOBALS['TL_LANG']['pct_theme_installer']['value_submit'] 		= 'Installation starten';
 $GLOBALS['TL_LANG']['pct_theme_installer']['sql_template_info'] = 'SQL-Template-Datei: %s';
 
 /**
