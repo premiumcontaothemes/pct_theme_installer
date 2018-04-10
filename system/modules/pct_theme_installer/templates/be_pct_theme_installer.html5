@@ -1,25 +1,34 @@
 
 <?php 
+$this->l_status = strtolower($this->status);
+$this->l_step = strtolower($this->step);
+$this->l_status_step = strtolower($this->status).'.'.strtolower($this->step);
+
 $arrLang = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER'];
-$strStatus = $arrLang['STATUS'][strtolower($this->status)] ?: $this->status;
-$strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->step)] ?: $this->step;
+$arrLangTpl = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE'];
+$strStatus = $arrLang['STATUS'][$this->l_status];
+$strStep = $arrLang['STATUS'][$this->l_status_step];
 ?>
 
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
-			<span class="status">Status: <?= $strStatus; ?></span> <?php if($this->step): ?><span class="step">Schritt: <?= $strStep; ?></span><?php endif; ?>
+			<?php if($strStatus): ?>
+			<span class="status"><?= sprintf($arrLangTpl['label_status'],$strStatus); ?></span> <?php if($this->step): ?><span class="step"><?= sprintf($arrLangTpl['label_status'],$strStep); ?></span><?php endif; ?>
+			<?php endif; ?>
 		  <a href="<?php echo $this->href ?>" class="header_back" title="<?php echo $this->title ?>"><?php echo $this->button ?></a>
 		</div>
 		
+		<!-- 
 		<div class="tl_message">
 			<p class="tl_info">Theme wurde erfolgreich installiert</p>
 		</div>
+		-->
 
-		<div class="backend_explanation">Das Theme Eclipse laden und installieren</div>
-		
+		<div class="backend_explanation"><?= $arrLang['BACKEND_DESCRIPTION'][$this->l_status]; ?></div>		
 
-<!-- WELCOME screen -->
+<!-- ! WELCOME screen -->
+<?php if($this->status == 'WELCOME'): ?>
 
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
@@ -28,14 +37,14 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 			<div class="tl_formbody_top">
 				<div class="input_wrapper licence_check">
 					<div class="widget field w50 license">
-						<h3><?= $this->label_key; ?></h3>
+						<h3><?= $arrLangTpl['input_license'][0]; ?></h3>
 						<input type="text" name="license" value="123" class="tl_text" placeholder="<?= $this->placeholder_license; ?>">
-						<p class="tl_help tl_tip">Die Bestellnummer finden Sie auf Ihrer Rechnung oder in Ihrem Kundenaccount.</p>
+						<p class="tl_help tl_tip"><?= $arrLangTpl['input_license'][1]; ?></p>
 					</div>
 					<div class="widget field w50 email">
-						<h3><?= $this->label_email; ?></h3>
+						<h3><?= $arrLangTpl['input_email'][0]; ?></h3>
 						<input type="text" name="email" value="email@email.com" class="tl_text" placeholder="<?= $this->placeholder_email; ?>">
-						<p class="tl_help tl_tip">Geben Sie die E-Mail Adresse Ihres Kundenaccounts an.</p>
+						<p class="tl_help tl_tip"><?= $arrLangTpl['input_email'][1]; ?></p>
 					</div>
 				</div>
 			</div>
@@ -48,20 +57,43 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 
 			<div class="tl_formbody_bottom tl_formbody_submit">
 				<div class="tl_submit_container">
-					<input type="submit" name="validate_license" class="tl_submit" value="<?= $this->value_submit; ?>">
+					<input type="submit" name="validate_license" class="tl_submit" value="<?= $arrLangTpl['submit_license']; ?>">
 				</div>
 			</div>
 		</form>
 
-<?php if($this->status == 'SESSION_LOST'): ?>
-<!-- SESSION LOST -->
+<?php elseif($this->status == 'SESSION_LOST'): ?>
+<!-- ! SESSION LOST -->
 
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
 		<?= $this->content; ?>
 
+<?php elseif($this->status == 'READY'): ?>
+<!-- ! READY_TO_INSTALL -->
+		
+		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
+			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
+			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+			
+			<div class="tl_formbody_top">
+			</div>
+			
+			<div class="tl_formbody_middle">
+				<?php if($this->breadcrumb): ?>
+					<?= $this->breadcrumb; ?>
+				<?php endif; ?>
+			</div>
+
+			<div class="tl_formbody_bottom tl_formbody_submit">
+				<div class="tl_submit_container">
+					<input type="submit" name="install" class="tl_submit" value="<?= $arrLangTpl['submit_install']; ?>">
+				</div>
+			</div>
+		</form>
+		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'UNZIP'): ?>
-<!-- INSTALLATION : STEP UNZIP (1): Unzip -->
+<!-- ! INSTALLATION : STEP UNZIP (1): Unzip -->
 		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
@@ -114,31 +146,8 @@ $strStep = $arrLang['STATUS'][strtolower($this->status).'.'.strtolower($this->st
 <!-- ! INSTALLATION : STEP DB_UPDATE_MODULES -->		
 		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
 		
-		<?php if($this->sql_form): ?>
-			<form action="<?php echo $this->action; ?>" id="form_update_database" class="tl_form" method="post">
-				<input type="hidden" name="FORM_SUBMIT" value="tl_tables">
-				<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
-				<div class="input_wrapper">
-				<?= $this->sql_form; ?>
-				</div>
-			</form>
-	
-			<script type="text/javascript">
-			/* <![CDATA[ */
-			
-			/**
-			 * Let mootools submit the form
-			 */
-			window.addEvent('domready', function() 
-			{
-				var form = $$('form#form_update_database')[0];
-				if(form != undefined)
-				{
-					form.submit();
-				}
-			});
-			/* ]]> */
-			</script>
+		<?php if($this->errors): ?>
+		<p><?= $this->errors; ?></p>
 		<?php else: ?>
 		
 		Datenbank ist up to date.

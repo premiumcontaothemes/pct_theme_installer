@@ -17,17 +17,17 @@ namespace PCT\ThemeInstaller;
 
 /**
  * Class file
- * BackendInstall
+ * Installer_35
  */
-class InstallationController extends \Contao\InstallationBundle\Controller\InstallationController
+class Installer_35 extends \Contao\Database\Installer
 {
-	public function __construct()
-	{
-		if($this->container === null)
-		{
-			$this->container = \System::getContainer();
-		}
-	}
+	#public function __construct()
+	#{
+	#	if($this->Database === null)
+	#	{
+	#		$this->Database = \Database::getInstance();
+	#	}
+	#}
 	
 	
 	/**

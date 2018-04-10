@@ -18,10 +18,10 @@
 					<?php if($item['isActive']): ?>
 					<span><?= $item['label']; ?></span>
 					<?php else: ?>
-					<a href="<?= $item['href']; ?>" title="<?= $item['title']; ?>"><?= $item['label']; ?></a>
+					<span href="<?= $item['href']; ?>" title="<?= $item['title']; ?>"><?= $item['label']; ?></span>
 					<?php endif; ?>
 				</td>
-				<td>Hier kommt noch die Beschreibung rein</td>
+				<td><?= $item['description']; ?></td>
 			</tr>
 			
 			<?php endforeach; ?>

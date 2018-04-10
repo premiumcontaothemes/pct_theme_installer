@@ -38,6 +38,12 @@ class ThemeInstaller extends \BackendModule
 	 * @var string
 	 */
 	protected $strTheme = '';
+	
+	/**
+	 * The session name
+	 * @var string
+	 */
+	protected $strSession = 'pct_theme_installer';
 
 
 	/**
@@ -118,6 +124,7 @@ class ThemeInstaller extends \BackendModule
 		if(\Input::get('status') == 'welcome' && !$_POST)
 		{
 			$this->Template->status = 'WELCOME';
+			$this->Template->breadcrumb = '';	
 			return;
 		}
 
@@ -189,7 +196,7 @@ class ThemeInstaller extends \BackendModule
 
 					// flag that the zip file has been extracted					
 					$arrSession['unzipped'] = true;
-					$objSession->set('pct_theme_installer',$arrSession);
+					$objSession->set($this->strSession,$arrSession);
 					
 					// ajax done
 					die('Zip extracted to: '.$strTargetDir);
@@ -363,20 +370,34 @@ class ThemeInstaller extends \BackendModule
 				if(version_compare(VERSION, '3.5','<='))
 				{
 					// @var object \Contao\Database\Installer
-					$objInstaller = new \Contao\Database\Installer;
+					$objInstaller = new \PCT\ThemeInstaller\Installer_35;
 					// let Contao generate the database update form
-					$strSqlForm = $objInstaller->generateSqlForm() ?: '';
+					#$strSqlForm = $objInstaller->generateSqlForm() ?: '';
 					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
-					$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
-				
-					// place the form in the template and let JS submit it there
-					$this->Template->sql_form = $strSqlForm;
+					#$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
+					$objDatabase = \Database::getInstance();
 					
-					// let contao perform the database update
-					if(\Input::post('FORM_SUBMIT') == 'tl_tables' && !empty($strSqlForm))
+					// compile sql
+					$arrSQL = array_diff_key($objInstaller->call('compileCommands'),array('DELETE','DROP','ALTER_DROP'));
+					if(!empty($arrSQL) && is_array($arrSQL)) 
 					{
-						$objBackendInstall->call('adjustDatabaseTables');
-					}
+			    		$this->Template->sql = $arrSQL;
+			    		
+			    		$arrStatements = array();
+			    	  	foreach($arrSQL as $operation => $sql)
+			         	{
+				         	// never run operations
+				         	if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+				         	{
+					         	continue;
+				         	}
+				         	
+				         	foreach($sql as $statement)
+				         	{
+					        	$objDatabase->prepare($statement)->execute();
+				        	}
+			        	}
+				    }
 				}
 				// Contao 4.4 >=
 				else if(version_compare(VERSION, '4.4','>='))
@@ -391,12 +412,12 @@ class ThemeInstaller extends \BackendModule
 					{
 			    	  	foreach($arrSQL as $operation => $sql)
 			         	{
-				         	// never run deletes
-				         	if($operation == 'DELETE')
+				         	// never run operations
+				         	if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
 				         	{
 					         	continue;
 				         	}
-				         	
+
 				         	foreach($sql as $hash => $statement)
 				         	{
 					        	$objInstaller->execCommand($hash);
@@ -413,7 +434,10 @@ class ThemeInstaller extends \BackendModule
 			if(count($arrErrors) > 0)
 			{
 				\System::log('Database update returned errors: '.implode(', ', $arrErrors));
+				
+				$this->Template->errors = implode(', ', $arrErrors);
 			}
+			
 						
 			return;
 		}
@@ -553,8 +577,24 @@ class ThemeInstaller extends \BackendModule
 
 			// flush post and make session active
 			// redirect to the beginning
-			$this->redirect( \Backend::addToUrl('status=loading',true) );
+			$this->redirect( \Backend::addToUrl('status=ready',true) );
 		}
+
+
+//! status: READY, waiting for installation GO
+		
+		if(\Input::get('status') == 'ready' && $objLicense->status == 'OK' && !empty($objLicense->hash))
+		{
+			$this->Template->status = 'READY';
+			
+			if(\Input::post('install') != '' && \Input::post('FORM_SUBMIT') == $strForm)
+			{
+				$this->redirect( \Backend::addToUrl('status=loading',true) );
+			}
+			
+			
+			return;
+		}		
 
 
 //! status: LICENSE = OK -> LOADING... and FILE CREATION
