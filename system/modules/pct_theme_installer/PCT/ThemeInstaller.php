@@ -97,6 +97,10 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'SESSION_LOST';
 			$this->Template->content = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'];
 			$this->Template->breadcrumb = '';
+			
+			// redirect to the beginning
+			$this->redirect( \Backend::addToUrl('status=reset',true) );
+			
 			return;
 		}
 	
