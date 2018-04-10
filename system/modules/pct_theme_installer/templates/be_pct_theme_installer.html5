@@ -95,6 +95,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'UNZIP'): ?>
 <!-- ! INSTALLATION : STEP UNZIP (1): Unzip -->		
 		
+		<div class="tl_formbody_middle">
+			<?php if($this->breadcrumb): ?>
+				<?= $this->breadcrumb; ?>
+			<?php endif; ?>
+		</div>
+		
 		<?php if(!$this->ajax_running): ?>
 		<!-- start the unzip command via ajax -->
 		<script type="text/javascript">
@@ -111,6 +117,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'COPY_FILES'): ?>
 <!-- ! INSTALLATION : STEP UNZIP (2): Copy the files -->		
 		
+		<div class="tl_formbody_middle">
+			<?php if($this->breadcrumb): ?>
+				<?= $this->breadcrumb; ?>
+			<?php endif; ?>
+		</div>
+		
 		<?php if(!$this->ajax_running): ?>
 		<!-- start the file coping via ajax -->
 		<script type="text/javascript">
@@ -126,6 +138,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'CLEAR_CACHE'): ?>
 <!-- ! INSTALLATION : STEP : Clear the internal caches -->		
+		
+		<div class="tl_formbody_middle">
+			<?php if($this->breadcrumb): ?>
+				<?= $this->breadcrumb; ?>
+			<?php endif; ?>
+		</div>
 		
 		<?php if(!$this->ajax_running): ?>
 		<script type="text/javascript">
@@ -159,7 +177,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		</script>
 		
 		<?php endif; ?>
-
+		
+		<div class="tl_formbody_middle">
+			<?php if($this->breadcrumb): ?>
+				<?= $this->breadcrumb; ?>
+			<?php endif; ?>
+		</div>
 		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_WAIT'): ?>
 <!-- ! INSTALLATION : STEP UNZIP (3.1): SQL_TEMPLATE : WAIT FOR USER -->		
