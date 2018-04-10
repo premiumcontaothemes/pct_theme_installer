@@ -688,6 +688,15 @@ class ThemeInstaller extends \BackendModule
 		$arrItems = array();
 		$i = 0;
 		
+		$objSession = \Session::getInstance();
+		$arrSession = $objSession->get($this->strSession);
+		
+		// store the processed steps
+		if(!is_array($arrSession['BREADCRUMB']['completed']))
+		{
+			$arrSession['BREADCRUMB']['completed'] = array();
+		}
+		
 		foreach($GLOBALS['PCT_THEME_INSTALLER']['breadcrumb_steps'] as $k => $data)
 		{
 			$status = strtolower($k);
@@ -720,15 +729,34 @@ class ThemeInstaller extends \BackendModule
 				$data['isActive'] = true;
 				$class[] = 'tl_green';
 				$class[] = 'active';
+				
+				$arrSession['BREADCRUMB']['completed'][$k] = true;
+			}
+			
+			// completed
+			if($arrSession['BREADCRUMB']['completed'][$k] === true && $strCurrent != $status)
+			{
+				$data['completed'] = true;
+				$class[] = 'completed';
+			}
+			
+			// sill waiting
+			if(!$data['isActive'] && !$data['completed'])
+			{
+				$data['pending'] = true;
+				$class[] = 'pending';
 			}
 			
 			$data['href'] = \Controller::addToUrl($data['href'].'&rt='.REQUEST_TOKEN,true,array('step'));
-			$data['class'] = implode(' ', $class);
+			$data['class'] = implode(' ', array_unique($class));
 			
 			$arrItems[ $k ] = $data;
 			
 			$i++;
 		}
+		
+		// update session
+		$objSession->set($this->strSession,$arrSession);
 		
 		// @var object
 		$objTemplate = new \BackendTemplate($this->strTemplateBreadcrumb);
