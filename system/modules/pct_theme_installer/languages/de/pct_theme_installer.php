@@ -27,6 +27,9 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['input_license'][0] 		= '
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['input_license'][1] 		= 'Die Bestellnummer finden Sie auf Ihrer Rechnung oder in Ihrem Kundenaccount.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_status']			= 'Status: %s';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_step']			= 'Schritt: %s';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][0]		= 'Neustart'; // linktext
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][1]		= 'Die Installation erneut beginnen'; // title
+
 
 /**
  * Breadcrumb
