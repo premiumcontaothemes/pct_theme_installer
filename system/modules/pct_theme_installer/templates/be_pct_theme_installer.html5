@@ -217,15 +217,16 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		<h2>Datei existiert nicht mehr</h2>
 		<p><a class="reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
 		
-<?php elseif($this->status == 'ACCEPTED'): ?>
+<?php elseif($this->status == 'LOADING'): ?>
 <!-- ! LICENSE ACCEPTED... begin loading -->
-
-		<div class="loading_wrapper">
-			<div class="info">Loading...</div>
-			<div class="loader"></div>
+		
+		<div class="tl_formbody_middle">
+			<?php if($this->breadcrumb): ?>
+				<?= $this->breadcrumb; ?>
+			<?php endif; ?>
 		</div>
 		
-		<?php if(!\Environment::get('isAjaxRequest')): ?>
+		<?php if(!$this->ajax_running): ?>
 		<!-- start the loading process via ajax -->
 		<script type="text/javascript">
 		/* <![CDATA[ */

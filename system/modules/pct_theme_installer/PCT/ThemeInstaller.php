@@ -592,7 +592,6 @@ class ThemeInstaller extends \BackendModule
 				$this->redirect( \Backend::addToUrl('status=loading',true) );
 			}
 			
-			
 			return;
 		}		
 
@@ -603,7 +602,7 @@ class ThemeInstaller extends \BackendModule
 		// if all went good and the license etc. is all valid, we get an secured hash and download will be available
 		if(\Input::get('status') == 'loading' && $objLicense->status == 'OK' && !empty($objLicense->hash))
 		{
-			$this->Template->status = 'ACCEPTED';
+			$this->Template->status = 'LOADING';
 			$this->Template->license = $objLicense;
 			
 			// coming from ajax request
