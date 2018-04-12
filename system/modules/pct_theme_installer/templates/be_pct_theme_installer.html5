@@ -38,12 +38,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 				<div class="input_wrapper licence_check">
 					<div class="widget field w50 license">
 						<h3><?= $arrLangTpl['input_license'][0]; ?></h3>
-						<input type="text" name="license" value="123" class="tl_text" placeholder="<?= $this->placeholder_license; ?>">
+						<input type="text" name="license" value="1386089253" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_license'][1]; ?></p>
 					</div>
 					<div class="widget field w50 email">
 						<h3><?= $arrLangTpl['input_email'][0]; ?></h3>
-						<input type="text" name="email" value="email@email.com" class="tl_text" placeholder="<?= $this->placeholder_email; ?>">
+						<input type="text" name="email" value="contaohosting@web-crossing.com" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_email'][1]; ?></p>
 					</div>
 				</div>
@@ -71,6 +71,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 
 <?php elseif($this->status == 'READY'): ?>
 <!-- ! READY  -->
+		
+		<?php if($this->license): ?>
+		<ul class="license_information">
+			<li class="product"><?= $this->license->file->name; ?></li>
+		</ul>
+		<?php endif; ?>
 		
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
@@ -256,7 +262,7 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=unzip') );
 		?>
-		PCT_ThemeInstaller.ajax_infotext = '<?= sprintf($arrLang['AJAX_INFO']['loading'],$this->license->name); ?>';
+		PCT_ThemeInstaller.ajax_infotext = '<?= sprintf($arrLang['AJAX_INFO']['loading'],$this->license->file->name); ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
 		/* ]]> */
 		</script>

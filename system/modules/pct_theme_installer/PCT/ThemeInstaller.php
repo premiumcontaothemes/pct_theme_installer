@@ -81,8 +81,8 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->messages = \Message::generate();
 		$this->Template->label_key = $GLOBALS['TL_LANG']['pct_theme_installer']['label_key'] ?: 'License / Order number';
 		$this->Template->label_email = $GLOBALS['TL_LANG']['pct_theme_installer']['label_email'] ?: 'Order email address';
-		$this->Template->placeholder_license = '123';
-		$this->Template->placeholder_email = 'email@email.com';
+		$this->Template->placeholder_license = '';
+		$this->Template->placeholder_email = '';
 		$this->Template->label_submit = $GLOBALS['TL_LANG']['pct_theme_installer']['label_submit'];
 		$this->Template->value_submit = $GLOBALS['TL_LANG']['pct_theme_installer']['value_submit'];
 		$this->Template->file_written_response = 'file_written';
@@ -144,6 +144,7 @@ class ThemeInstaller extends \BackendModule
 
 
 //! status : COMPLETE (probably never been called)
+
 				
 		if(\Input::get('status') == 'complete')
 		{
@@ -152,14 +153,29 @@ class ThemeInstaller extends \BackendModule
 		}
 
 
+//! status : ACCESS_DENIED
 
-//! status: INSTALLATION | STEP 1.0: Unpack the zip
+
+		if($objLicense->status == 'ACCESS_DENIED' || \Input::get('status') == 'access_denied')
+		{
+			$this->Template->status = 'ACCESS_DENIED';
+			
+			return;
+		}
+
+		
+//! status: INSTALLATION | no step -> reset
+
 		
 		if(\Input::get('status') == 'installation' && \Input::get('step') == '')
 		{
 			// redirect to the beginning
 			$this->redirect( \Backend::addToUrl('status=reset',true,array('step')) );
 		}
+
+
+//! status: INSTALLATION | STEP 1.0: Unpack the zip
+
 	
 		if(\Input::get('status') == 'installation' && \Input::get('step') == 'unzip')
 		{
@@ -554,11 +570,13 @@ class ThemeInstaller extends \BackendModule
 
 			$arrParams = array
 			(
-				'license' => \Input::post('license'),
-				'email' => \Input::post('email')
+				'key' 		=> \Input::post('license'),
+				'email' 	=> \Input::post('email'),
+				'domain'	=> \Environment::get('url'),
 			);
-			$strRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'?'.http_build_query($arrParams);
-
+			
+			$strRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
+			
 			// validate the license
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -569,7 +587,7 @@ class ThemeInstaller extends \BackendModule
 			unset($curl);
 
 			$objLicense = json_decode($strResponse);
-
+			
 			// store the api response in the session
 			$arrSession['status'] = $objLicense->status;
 			$arrSession['license'] = $strResponse;
@@ -586,6 +604,7 @@ class ThemeInstaller extends \BackendModule
 		if(\Input::get('status') == 'ready' && $objLicense->status == 'OK' && !empty($objLicense->hash))
 		{
 			$this->Template->status = 'READY';
+			$this->Template->license = $objLicense;
 			
 			if(\Input::post('install') != '' && \Input::post('FORM_SUBMIT') == $strForm)
 			{
@@ -609,10 +628,11 @@ class ThemeInstaller extends \BackendModule
 			if(\Input::get('action') == 'run')
 			{
 				$arrParams['email'] = $objLicense->email;
-				$arrParams['license'] = $objLicense->license;
+				$arrParams['key'] = $objLicense->key;
 				$arrParams['hash'] = $objLicense->hash;
+				$arrParams['domain'] = $objLicense->domain;
 				$arrParams['sendToAjax'] = 1;
-				$strFileRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'?'.http_build_query($arrParams);
+				$strFileRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
 
 				$curl = curl_init();
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -652,6 +672,7 @@ class ThemeInstaller extends \BackendModule
 			
 			return;
 		}
+
 	}
 	
 	
