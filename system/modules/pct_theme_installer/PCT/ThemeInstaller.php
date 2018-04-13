@@ -606,6 +606,12 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'READY';
 			$this->Template->license = $objLicense;
 			
+			// registration error
+			if($objLicense->registration->hasError)
+			{
+				$this->Template->hasRegistrationError = true;
+			}
+			
 			if(\Input::post('install') != '' && \Input::post('FORM_SUBMIT') == $strForm)
 			{
 				$this->redirect( \Backend::addToUrl('status=loading',true) );

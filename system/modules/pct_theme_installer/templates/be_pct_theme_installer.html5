@@ -73,9 +73,16 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 <!-- ! READY  -->
 		
 		<?php if($this->license): ?>
-		<ul class="license_information">
-			<li class="product"><?= $this->license->file->name; ?></li>
-		</ul>
+		<div class="license_information tl_formbody_middle">
+			<!-- wrong domain registration -->
+			<?php if($this->hasRegistrationError): ?>
+			<div class="tl_message">
+				<p class="tl_info tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain); ?></p>
+			</div>
+			<?php endif; ?>
+			<!-- file information -->
+			<div class="product file"><?= $this->license->file->name; ?></div>	
+		</div>
 		<?php endif; ?>
 		
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
@@ -232,13 +239,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		</script>
 		<?php endif; ?>
 
-
 <?php elseif($this->status == 'FILE_EXISTS'): ?>
 <!-- ! FILE_EXISTS :: Waiting to start for the installation to begin-->
 		
 		<a href="<?= $this->file->path; ?>" download><?= $this->file->path; ?></a>		
 		<p><a class="tl_button reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
-		<p><a class="tl_button installation" href="<?= \Environment::getInstance()->request.'&status=installation&action=unzip'; ?>">Weiter mit der Installation</a></p>
+		<p><a class="tl_button installation" href="<?= \Environment::getInstance()->request.'&status=installation&step=unzip'; ?>">Weiter mit der Installation</a></p>
 		
 <?php elseif($this->status == 'FILE_NOT_EXISTS'): ?>
 <!-- ! FILE_NOT_EXISTS -->
