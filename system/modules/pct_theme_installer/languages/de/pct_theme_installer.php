@@ -29,7 +29,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_status']			= 'Stat
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_step']			= 'Schritt: %s';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][0]		= 'Neustart'; // linktext
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][1]		= 'Die Installation erneut beginnen'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError']	= 'Abweichende Lizenznehmer-Domain (%s) zu anfragender Domain (%s)'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError']	= 'Abweichende Lizenznehmer-Domain (%s) zu anfragender Domain (%s).<br>Bitte updaten Sie Ihre Lizenzregistrierung in Ihrem Kundenbereich.'; // title
 
 
 /**

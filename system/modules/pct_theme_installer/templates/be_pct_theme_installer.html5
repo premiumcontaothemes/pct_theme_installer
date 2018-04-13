@@ -77,7 +77,7 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 			<!-- wrong domain registration -->
 			<?php if($this->hasRegistrationError): ?>
 			<div class="tl_message">
-				<p class="tl_info tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain); ?></p>
+				<p class="tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain); ?></p>
 			</div>
 			<?php endif; ?>
 			<!-- file information -->

@@ -21,15 +21,6 @@ namespace PCT\ThemeInstaller;
  */
 class Installer_35 extends \Contao\Database\Installer
 {
-	#public function __construct()
-	#{
-	#	if($this->Database === null)
-	#	{
-	#		$this->Database = \Database::getInstance();
-	#	}
-	#}
-	
-	
 	/**
 	 * Call methods
 	 * @param string Name of function

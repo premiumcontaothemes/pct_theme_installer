@@ -23,14 +23,10 @@
 #pct_eclipse_installer a.di_submit, #pct_eclipse_installer input.di_submit {transition: All 0.3s ease; -webkit-transition: All 0.3s ease; cursor: pointer; height: 44px; box-sizing: border-box; -webkit-box-sizing: border-box; text-align: center; background: #009dcc; color: #fff; border: 0; padding: 15px 20px; text-shadow: none; display: inline-block; min-width: 130px; border-radius: 3px;}
 #pct_eclipse_installer a.di_submit:hover, #pct_eclipse_installer input.di_submit:hover {opacity: 0.9;}
 #pct_eclipse_installer a.di_submit {background: #e55a37;}
-
 #pct_eclipse_installer #contao_theme_select {border-bottom: 1px solid silver; padding: 10px 20px;}
 #pct_eclipse_installer #contao_theme_select h3 {margin: 0; margin-bottom: 5px;}
 #pct_eclipse_installer #contao_theme_select select, #pct_eclipse_installer #contao_theme_select .tl_select {min-width: 120px;}
-
-
 #pct_eclipse_installer .backend_explanation {padding: 15px; font-family:"Architects Daughter",cursive; font-size:15px; color:#838990; font-size: 19px;}
-
 #pct_eclipse_installer .licence_check {overflow: hidden; border-top: 1px solid silver; padding: 15px 15px 25px 15px;}
 
 #pct_eclipse_installer .breadcrumb table {width: 100%;}
