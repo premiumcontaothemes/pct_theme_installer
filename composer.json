@@ -1,6 +1,6 @@
 {
-	"name":"timgatzky/pct_eclipse_installer",
-	"description":"Install-manager for the PCT Eclipse theme",
+	"name":"timgatzky/pct_theme_installer",
+	"description":"Installation manager for the PCT Eclipse theme. https://www.premium-contao-themes.com/",
 	"keywords":["contao","themes","premiumcontaothemes"],
 	"type":"contao-module",
 	"homepage":"https://github.com/timgatzky/pct_eclipse_installer",
@@ -19,7 +19,6 @@
 	],
 	"support":
 	{
-		"ticket":"https://premiumcontaothemes.zendesk.com/",
 		"issues":"https://github.com/timgatzky/pct_eclipse_installer/issues",
 		"source":"https://github.com/timgatzky/pct_eclipse_installer"
 	},
