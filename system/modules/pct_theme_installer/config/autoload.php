@@ -25,6 +25,7 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
 	'PCT\ThemeInstaller' 							=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller.php',
+	'PCT\ThemeInstaller\SystemCallbacks'			=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/SystemCallbacks.php',
 	'PCT\ThemeInstaller\BackendInstall'				=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/BackendInstall.php',
 	'PCT\ThemeInstaller\Installer_35'				=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/Installer_35.php',
 
