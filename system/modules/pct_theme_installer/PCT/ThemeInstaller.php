@@ -622,6 +622,11 @@ class ThemeInstaller extends \BackendModule
 				'domain'	=> \Environment::get('url'),
 			);
 			
+			if(\Input::post('product') != '')
+			{
+				$arrParams['product'] = \Input::post('product');
+			}
+			
 			$strRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
 			
 			// validate the license
@@ -639,16 +644,36 @@ class ThemeInstaller extends \BackendModule
 			$arrSession['status'] = $objLicense->status;
 			$arrSession['license'] = $strResponse;
 			$objSession->set('pct_theme_installer',$arrSession);
-
+			
 			// flush post and make session active
 			// redirect to the beginning
 			$this->redirect( \Backend::addToUrl('status=ready',true) );
 		}
 
 
+//! status: CHOOSE_PRODUCT, waiting for user to choose the product
+
+		if(\Input::get('status') == 'choose_product' && $objLicense->status == 'OK')
+		{
+			$this->Template->status = 'CHOOSE_PRODUCT';
+			$this->Template->license = $objLicense;
+			$this->Template->breadcrumb = '';
+			
+			// registration error
+			if($objLicense->registration->hasError)
+			{
+				$this->Template->hasRegistrationError = true;
+			}
+			
+			return;
+		}		
+
+
+
 //! status: READY, waiting for installation GO
+
 		
-		if(\Input::get('status') == 'ready' && $objLicense->status == 'OK' && !empty($objLicense->hash))
+		if(\Input::get('status') == 'ready' && $objLicense->status == 'OK')
 		{
 			$this->Template->status = 'READY';
 			$this->Template->license = $objLicense;
@@ -657,6 +682,12 @@ class ThemeInstaller extends \BackendModule
 			if($objLicense->registration->hasError)
 			{
 				$this->Template->hasRegistrationError = true;
+			}
+			
+			// has more than one product to choose
+			if(!empty($objLicense->products))
+			{
+				$this->redirect( \Backend::addToUrl('status=choose_product',true) );
 			}
 			
 			if(\Input::post('install') != '' && \Input::post('FORM_SUBMIT') == $strForm)
@@ -837,59 +868,4 @@ class ThemeInstaller extends \BackendModule
 		
 		return $objTemplate->parse();
 	}
-	
-	
-	/**
-	 * Installation completed when contao quits back to the login screen
-	 * 
-	 * Called from [initializeSystem] Hook
-	 */
-	public function installationCompletedStatus()
-	{
-		if(TL_MODE != 'BE' || \Environment::get('isAjaxRequest'))
-		{
-			return;
-		}
-		
-		$objUser = \BackendUser::getInstance();
-		if($objUser->id > 0)
-		{
-			return;
-		}
-		
-		// load language files
-		\System::loadLanguageFile('default');
-			
-		$intOffset = 3600;
-		
-		// session still exists and the sql template has been imported within the time range
-		if($_SESSION['PCT_THEME_INSTALLER']['completed'] && \Config::get('exampleWebsite') <= time() + $intOffset)
-		{
-			// get the license object
-			$strName = $_SESSION['PCT_THEME_INSTALLER']['license']['name'];
-			$strTemplate = $_SESSION['PCT_THEME_INSTALLER']['sql'];
-			
-			// clear the url from the referer and redirect with installation information
-			if(\Input::get('referer') != '')
-			{
-				$this->redirect( \Controller::addToUrl('&installation_completed='.$strName.'&sql='.$strTemplate,false,array('referer','rt','ref')) );
-			}	
-		}
-		// write a backend information message with the installation information
-		else if(\Input::get('installation_completed') != '' && \Config::get('exampleWebsite') <= time() + $intOffset)
-		{
-			// add backend message
-			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],\Input::get('installation_completed')) );
-			
-			// remove the tmp.SQL file
-			$strTemplate = \Input::get('sql');
-			if(file_exists(TL_ROOT.'/templates/tmp_'.$strTemplate))
-			{
-				\Files::getInstance()->delete('templates/tmp_'.$strTemplate);
-			}
-			
-			$this->redirect( \Controller::addToUrl('',false,array('installation_completed','sql')) );
-		}
-	}
-	
 }

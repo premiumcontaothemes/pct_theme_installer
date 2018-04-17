@@ -31,6 +31,15 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 		'4.4' => 'eclipse_contao_4_4.sql'
 	),
 );
+$GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
+(
+	'mandatory' => array('upload'), // mandatory zip content on first level
+	'sql_templates' => array
+	(
+		'3.5' => 'eclipse_contao_3_5.sql',
+		'4.4' => 'eclipse_contao_4_4.sql'
+	),
+);
 
 // Logic: STATUS.STEP
 $GLOBALS['PCT_THEME_INSTALLER']['status'] = array

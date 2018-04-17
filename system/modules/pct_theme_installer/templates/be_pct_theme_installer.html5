@@ -38,12 +38,12 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 				<div class="input_wrapper licence_check">
 					<div class="widget field w50 license">
 						<h3><?= $arrLangTpl['input_license'][0]; ?></h3>
-						<input type="text" name="license" value="1386089253" class="tl_text" placeholder="">
+						<input type="text" name="license" value="1386089615" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_license'][1]; ?></p>
 					</div>
 					<div class="widget field w50 email">
 						<h3><?= $arrLangTpl['input_email'][0]; ?></h3>
-						<input type="text" name="email" value="contaohosting@web-crossing.com" class="tl_text" placeholder="">
+						<input type="text" name="email" value="thomas.loeschnigg@gmail.com" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_email'][1]; ?></p>
 					</div>
 				</div>
@@ -69,10 +69,9 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		
 		<?= $this->content; ?>
 
-<?php elseif($this->status == 'READY'): ?>
-<!-- ! READY  -->
+<?php elseif($this->status == 'CHOOSE_PRODUCT'): ?>
+<!-- ! CHOOSE_PRODUCT  -->
 		
-		<?php if($this->license): ?>
 		<div class="license_information tl_formbody_middle">
 			<!-- wrong domain registration -->
 			<?php if($this->hasRegistrationError): ?>
@@ -83,14 +82,50 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 			<!-- file information -->
 			<div class="product file"><?= $this->license->file->name; ?></div>	
 		</div>
-		<?php endif; ?>
 		
-		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
+		<form id="form_pct_theme_installer" action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
 			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
-			
+			<input type="hidden" name="license" value="<?= $this->license->key; ?>">
+			<input type="hidden" name="email" value="<?= $this->license->email; ?>">
+
 			<div class="tl_formbody_top">
 			</div>
+			
+			<?php if($this->license->products): ?>
+			<p class="tl_message"><?= $arrLangTpl['choose_product_info']; ?></p>
+			<div class="select_container">
+				<select name="product">
+					<option value="-"><?= $arrLangTpl['product_select_blankOption']; ?></option>
+					<?php foreach($this->license->products as $product): ?>
+					<option value="<?= $product->value; ?>"><?= $product->name; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+			
+			<script type="text/javascript">
+			/* <![CDATA[ */
+			
+			/**
+			 * Autosubmit on select change
+			 */
+			window.addEvent('domready', function() 
+			{
+				$$('#form_pct_theme_installer').addEvents(
+				{
+					'change' : function(e) 
+					{
+						//console.log(e.target.value);
+						this.submit();
+					},	
+				});;
+			});
+			
+			
+			/* ]]> */
+			</script>
+			
+			<?php endif; ?>
 			
 			<div class="tl_formbody_middle">
 				<?php if($this->breadcrumb): ?>
@@ -98,11 +133,41 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 				<?php endif; ?>
 			</div>
 
+		</form>
+
+<?php elseif($this->status == 'READY'): ?>
+<!-- ! READY  -->
+		
+		<div class="license_information tl_formbody_middle">
+			<!-- wrong domain registration -->
+			<?php if($this->hasRegistrationError): ?>
+			<div class="tl_message">
+				<p class="tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain); ?></p>
+			</div>
+			<?php endif; ?>
+			<!-- file information -->
+			<div class="product file"><?= $this->license->file->name; ?></div>	
+		</div>
+		
+		<div class="tl_formbody_middle">
+			<?php if($this->breadcrumb): ?>
+				<?= $this->breadcrumb; ?>
+			<?php endif; ?>
+		</div>
+		
+		<form id="form_pct_theme_installer" action="<?php echo $this->action; ?>" class="tl_form" method="post">
+			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
+			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+			
+			<div class="tl_formbody_top">
+			</div>
+			
 			<div class="tl_formbody_bottom tl_formbody_submit">
 				<div class="tl_submit_container">
 					<input type="submit" name="install" class="tl_submit" value="<?= $arrLangTpl['submit_install']; ?>">
 				</div>
 			</div>
+			
 		</form>
 		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'UNZIP'): ?>
