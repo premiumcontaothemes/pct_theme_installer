@@ -200,16 +200,15 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_WAIT'): ?>
 <!-- ! INSTALLATION : STEP UNZIP (3.1): SQL_TEMPLATE : WAIT FOR USER -->		
 		
-		<h2>Junge, willst du wirklich importieren?</h2>
 		
-		<h3><?= $this->sql_template_info; ?></h3>
+		<h2><?= $arrLangTpl['sql_template_headline']; ?></h2>
+		<h3 class="tl_info"><?= $arrLangTpl['sql_template_subheadline']; ?></h3>
 		
 		<?php 
 		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import') );
 		?>
 		
-		<p><a class="tl_button import" href="<?= $url; ?>">Ja, verdammt!</a></p>
-		<p><a class="tl_button import" href="<?= $this->resetUrl; ?>">Ähh... nee lass mal. Ich bin noch nicht 18!</a></p>
+		<p><a class="tl_button tl_submit button import" href="<?= $url; ?>"><?= $arrLangTpl['button_sql_template_import']; ?></a></p>
 			
 		<div class="tl_formbody_middle">
 			<?php if($this->breadcrumb): ?>
