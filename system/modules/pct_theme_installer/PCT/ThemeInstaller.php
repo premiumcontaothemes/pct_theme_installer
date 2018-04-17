@@ -63,6 +63,7 @@ class ThemeInstaller extends \BackendModule
 			$objSession = \System::getContainer()->get('session');
 		}
 		
+		$objDatabase = \Database::getInstance();
 		$arrSession = $objSession->get('pct_theme_installer');
 		$arrErrors = array();
 		$arrParams = array();
@@ -197,6 +198,16 @@ class ThemeInstaller extends \BackendModule
 			
 			$objFile = new \File($arrSession['file'],true);
 			$this->Template->file = $objFile;
+			
+			// check the file size
+			#if($objFile->__get('size') < 30000)
+			#{
+			#	// log that file is too small
+			#	\System::log('The file '.$objFile->path.' is too small. Please retry or contact us.',__METHOD__,TL_ERROR);
+			#	
+			#	$this->redirect( \Backend::addToUrl('status=reset',true,array('step')) );
+			#	return;
+			#}
 			
 			// the target folder to extract to
 			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
@@ -482,6 +493,40 @@ class ThemeInstaller extends \BackendModule
 				return;
 			}
 			
+			// create a tmp copy
+			$strTmpTemplate = 'tmp_'.$strTemplate;
+			$strOrigTemplate = $strTemplate;
+			if(\Files::getInstance()->copy('templates/'.$strTemplate,'templates/tmp_'.$strTemplate))
+			{
+				$_file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
+				
+				$str = '';
+				while(!feof($_file))
+				{
+					$line = fgets($_file);
+					if(strlen(strpos($line, 'INSERT INTO `tl_user`')) > 0)
+					{
+						continue;
+					}
+					
+					$str .= $line;
+				}
+				fclose($_file);
+				
+				// fetch tl_user information
+				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
+				while($objUsers->next())
+				{
+					$str .= $objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->__get('query') . "\n";
+				}
+
+				$objFile = new \File('templates/tmp_'.$strTemplate);
+				$objFile->write($str);
+				$objFile->close();
+			
+				$strTemplate = $strTmpTemplate;
+			}
+			
 			if(\Input::get('action') == 'run')
 			{
 				if(version_compare(VERSION, '3.5','<='))
@@ -497,6 +542,7 @@ class ThemeInstaller extends \BackendModule
 						// mark as being completed
 						$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
 						$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+						$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
 						
 						$objBackendInstall->call('importExampleWebsite');
 					}
@@ -515,6 +561,7 @@ class ThemeInstaller extends \BackendModule
 						// mark as being completed
 						$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
 						$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+						$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
 						
 						$objInstall->importTemplate($strTemplate);
 						$objInstall->persistConfig('exampleWebsite', time());
@@ -820,22 +867,28 @@ class ThemeInstaller extends \BackendModule
 		{
 			// get the license object
 			$strName = $_SESSION['PCT_THEME_INSTALLER']['license']['name'];
+			$strTemplate = $_SESSION['PCT_THEME_INSTALLER']['sql'];
 			
 			// clear the url from the referer and redirect with installation information
 			if(\Input::get('referer') != '')
 			{
-				$this->redirect( \Controller::addToUrl('&installation_completed='.$strName,false,array('referer','rt','ref')) );
+				$this->redirect( \Controller::addToUrl('&installation_completed='.$strName.'&sql='.$strTemplate,false,array('referer','rt','ref')) );
 			}	
 		}
 		// write a backend information message with the installation information
 		else if(\Input::get('installation_completed') != '' && \Config::get('exampleWebsite') <= time() + $intOffset)
 		{
-			$strName = \Input::get('installation_completed');
-			
 			// add backend message
-			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],$strName) );
+			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],\Input::get('installation_completed')) );
 			
-			$this->redirect( \Controller::addToUrl('',false,array('installation_completed')) );
+			// remove the tmp.SQL file
+			$strTemplate = \Input::get('sql');
+			if(file_exists(TL_ROOT.'/templates/tmp_'.$strTemplate))
+			{
+				\Files::getInstance()->delete('templates/tmp_'.$strTemplate);
+			}
+			
+			$this->redirect( \Controller::addToUrl('',false,array('installation_completed','sql')) );
 		}
 	}
 	
