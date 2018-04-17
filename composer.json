@@ -3,6 +3,7 @@
 	"description":"Installation manager for the PCT Eclipse theme. https://www.premium-contao-themes.com/",
 	"keywords":["contao","themes","premiumcontaothemes"],
 	"type":"contao-module",
+    "license": "LGPL-3.0-or-later",
 	"homepage":"https://github.com/timgatzky/pct_eclipse_installer",
 	"authors":
 	[
@@ -28,12 +29,23 @@
 		"contao/core":">=3.5",
 		"contao-community-alliance/composer-installer":"*",
 	},
-	"autoload":
-	{
-	},
+	"autoload": {
+        "psr-4": {
+            "PCT\\ThemeInstaller\\": "PCT/"
+        },
+        "classmap": [
+            "PCT/"
+        ],
+        "exclude-from-classmap": [
+            "config/",
+            "dca/",
+            "languages/",
+            "templates/"
+        ]
+    },
 	"replace":
 	{
-	},
+	},	
 	"extra":
 	{
 		"contao":
