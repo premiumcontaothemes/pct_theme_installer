@@ -212,7 +212,7 @@ class ThemeInstaller extends \BackendModule
 			// the target folder to extract to
 			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
 			
-			if(\Input::get('action') == 'unzip')
+			if(\Input::get('action') == 'run')
 			{
 				// extract zip
 				$objZip = new \ZipArchive;
@@ -498,12 +498,12 @@ class ThemeInstaller extends \BackendModule
 			$strOrigTemplate = $strTemplate;
 			if(\Files::getInstance()->copy('templates/'.$strTemplate,'templates/tmp_'.$strTemplate))
 			{
-				$_file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
+				$file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
 				
 				$str = '';
-				while(!feof($_file))
+				while(!feof($file))
 				{
-					$line = fgets($_file);
+					$line = fgets($file);
 					if(strlen(strpos($line, 'INSERT INTO `tl_user`')) > 0)
 					{
 						continue;
@@ -511,7 +511,8 @@ class ThemeInstaller extends \BackendModule
 					
 					$str .= $line;
 				}
-				fclose($_file);
+				fclose($file);
+				unset($file);
 				
 				// fetch tl_user information
 				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
@@ -523,8 +524,92 @@ class ThemeInstaller extends \BackendModule
 				$objFile = new \File('templates/tmp_'.$strTemplate);
 				$objFile->write($str);
 				$objFile->close();
+				
+				unset($str);
 			
 				$strTemplate = $strTmpTemplate;
+			}
+			
+			// Eclipse + CustomCatalog sqls
+			$strTemplate = 'pct_eclipse_cc.sql';
+			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/eclipse_cc/'.$strTemplate;
+			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
+			{
+				$file = file($strFileCC);
+				
+				// CREATE
+				$sql = preg_grep('/^CREATE /', $file);
+				foreach($sql as $query)
+				{
+					// skip tables that already exist
+					if(preg_match('/`(.*?)\`/', $query,$result))
+					{
+						if($objDatabase->tableExists($result[1]) === true)
+						{
+							continue;
+						}
+					}
+					else {continue;}
+				}
+				
+				// TRUNCATE and INSERT	
+				$skipTables = array('tl_user','tl_user_group','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
+				$sql = preg_grep('/^INSERT /', $file);
+				
+				$truncated = array();
+				foreach($sql as $query)
+				{
+					// skip tables that already exist
+					if(preg_match('/`(.*?)\`/', $query,$result))
+					{
+						$t = $result[1];
+						
+						// truncate table and insert
+						if($objDatabase->tableExists($t) === true && !in_array($t, $skipTables))
+						{
+							try
+							{
+								if(!in_array($t, $truncated))
+								{
+									// truncate the table
+									$objDatabase->execute('TRUNCATE TABLE '.$t);
+									// mark as truncated
+									$truncated[] = $t;
+								}
+							
+								// refill the table
+								$objDatabase->query($query);
+							}
+							catch(\Exception $e)
+							{
+								$arrErrors[] = $e->getMessage();
+							}
+						}
+					}
+					else {continue;}
+				}
+				
+				unset($skipTables);
+				unset($file);
+				unset($sql);
+				unset($truncated);
+				
+				if(!empty($arrErrors))
+				{
+					\System::log('Theme installation finished with errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+					$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+				}
+				
+				// mark as being completed
+				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
+				$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
+				
+				// log out
+				$objUser = \BackendUser::getInstance();
+				$objUser->logout();
+				
+				return;
 			}
 			
 			if(\Input::get('action') == 'run')
@@ -716,6 +801,8 @@ class ThemeInstaller extends \BackendModule
 				$arrParams['hash'] = $objLicense->hash;
 				$arrParams['domain'] = $objLicense->domain;
 				$arrParams['sendToAjax'] = 1;
+				$arrParams['product'] = $objLicense->file->id;
+				
 				$strFileRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
 
 				$curl = curl_init();

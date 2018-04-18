@@ -82,6 +82,7 @@ var PCT_ThemeInstaller =
 		     // loading successful
 			onSuccess: function(response)
 			{
+				//console.log(response);
 				// hide Contaos loading box
 				AjaxRequest.hideBox();
 				
