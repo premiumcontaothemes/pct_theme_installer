@@ -54,7 +54,7 @@ class ThemeInstaller extends \BackendModule
 	protected function compile()
 	{
 		\System::loadLanguageFile('pct_theme_installer');
-		\System::loadLanguageFile('execption');
+		\System::loadLanguageFile('exception');
 
 		// @var object Session
 		$objSession = \Session::getInstance();
