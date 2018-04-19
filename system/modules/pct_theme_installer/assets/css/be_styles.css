@@ -43,7 +43,7 @@
 #pct_eclipse_installer tr.not_accepted td,
 #pct_eclipse_installer tr.not_accepted td a {color: red;}
 
-#tl_ajaxOverlay {opacity: 0;}
+#tl_ajaxOverlay {opacity: 0 !important;}
 #tl_ajaxBox {display: none !important;}
 
 @media only screen and (max-width: 767px) 
