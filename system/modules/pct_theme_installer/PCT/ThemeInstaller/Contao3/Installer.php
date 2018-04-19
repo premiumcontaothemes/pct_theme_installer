@@ -13,27 +13,14 @@
 /**
  * Namespace
  */
-namespace PCT\ThemeInstaller;
+namespace PCT\ThemeInstaller\Contao3;
 
 /**
  * Class file
- * BackendInstall
+ * Installer
  */
-class BackendInstall extends \Contao\BackendInstall
+class Installer extends \Contao\Database\Installer
 {
-	public function __construct()
-	{
-		if($this->Database === null)
-		{
-			$this->Database = \Database::getInstance();
-		}
-		if($this->Template === null)
-		{
-			$this->Template = new \BackendTemplate('be_install');
-		}
-	}
-	
-	
 	/**
 	 * Call methods
 	 * @param string Name of function

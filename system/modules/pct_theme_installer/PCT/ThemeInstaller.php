@@ -385,7 +385,7 @@ class ThemeInstaller extends \BackendModule
 					\Files::getInstance()->rrdir($strCacheDir,true);
 					
 					// try to rebuild the symphony cache
-					$objInstallationController = new \PCT\ThemeInstaller\InstallationController;
+					$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
 					$objInstallationController->call('purgeSymfonyCache');
 					$objInstallationController->call('warmUpSymfonyCache');
 					
@@ -411,7 +411,7 @@ class ThemeInstaller extends \BackendModule
 				if(version_compare(VERSION, '3.5','<='))
 				{
 					// @var object \Contao\Database\Installer
-					$objInstaller = new \PCT\ThemeInstaller\Installer_35;
+					$objInstaller = new \PCT\ThemeInstaller\Contao3\Installer;
 					// let Contao generate the database update form
 					#$strSqlForm = $objInstaller->generateSqlForm() ?: '';
 					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
@@ -545,7 +545,6 @@ class ThemeInstaller extends \BackendModule
 			}
 			
 			// Eclipse + CustomCatalog sqls
-			$strTemplate = 'pct_eclipse_cc.sql';
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/eclipse_cc/'.$strTemplate;
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
@@ -631,7 +630,7 @@ class ThemeInstaller extends \BackendModule
 				if(version_compare(VERSION, '3.5','<='))
 				{
 					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
-					$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
+					$objBackendInstall = new \PCT\ThemeInstaller\Contao3\BackendInstall;
 					// simulate user form submit
 					\Input::setPost('template',$strTemplate);
 					\Input::setPost('FORM_SUBMIT','tl_tutorial');

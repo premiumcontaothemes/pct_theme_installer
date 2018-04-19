@@ -26,10 +26,24 @@ ClassLoader::addClasses(array
 (
 	'PCT\ThemeInstaller' 							=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller.php',
 	'PCT\ThemeInstaller\SystemCallbacks'			=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/SystemCallbacks.php',
-	'PCT\ThemeInstaller\BackendInstall'				=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/BackendInstall.php',
-	'PCT\ThemeInstaller\Installer_35'				=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/Installer_35.php',
-
 ));
+
+if(version_compare(VERSION, '3.5','<='))
+{
+	ClassLoader::addClasses(array
+	(
+		'PCT\ThemeInstaller\Contao3\BackendInstall'				=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/Contao3/BackendInstall.php',
+		'PCT\ThemeInstaller\Contao3\Installer'					=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/Contao3/Installer.php',
+	));
+}
+
+if(version_compare(VERSION, '4.4','>='))
+{
+	ClassLoader::addClasses(array
+	(
+		'PCT\ThemeInstaller\Contao4\InstallationController'		=> 'system/modules/pct_theme_installer/PCT/ThemeInstaller/Contao4/InstallationController.php',
+	));
+}
 
 /**
  * Register the templates

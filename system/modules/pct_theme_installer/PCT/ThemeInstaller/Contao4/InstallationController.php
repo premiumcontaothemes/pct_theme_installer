@@ -13,14 +13,23 @@
 /**
  * Namespace
  */
-namespace PCT\ThemeInstaller;
+namespace PCT\ThemeInstaller\Contao4;
 
 /**
  * Class file
- * Installer_35
+ * InstallationController
  */
-class Installer_35 extends \Contao\Database\Installer
+class InstallationController extends \Contao\InstallationBundle\Controller\InstallationController
 {
+	public function __construct()
+	{
+		if($this->container === null)
+		{
+			$this->container = \System::getContainer();
+		}
+	}
+	
+	
 	/**
 	 * Call methods
 	 * @param string Name of function
