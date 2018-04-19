@@ -10,6 +10,10 @@ $strStatus = $arrLang['STATUS'][$this->l_status];
 $strStep = $arrLang['STATUS'][$this->l_status_step];
 ?>
 
+<!--
+<script>PCT_ThemeInstaller.showAjaxInfobox(); </script>
+-->
+
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
