@@ -48,8 +48,6 @@ class ThemeInstaller extends \BackendModule
 
 	/**
 	 * Generate the module
-	 *
-	 * @throws \Exception
 	 */
 	protected function compile()
 	{
@@ -260,6 +258,16 @@ class ThemeInstaller extends \BackendModule
 			
 			if(\Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
 			{
+				// backup an existing customize.css
+				$blnCustomizeCss = false;
+				if(file_exists(TL_ROOT.'/'.\Config::get('uploadPath').'/cto_layout/css/customize.css'))
+				{
+					if( \Files::getInstance()->copy(\Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
+					{
+						$blnCustomizeCss = true;
+					}
+				}
+				
 				$scan = scandir(TL_ROOT.'/'.$strFolder);
 				
 				// check for consistancy of the folder. If the unziped folder does not contain the mandatory files, quit
@@ -297,6 +305,12 @@ class ThemeInstaller extends \BackendModule
 					{
 						$arrErrors[] = 'Copy '.$strSource.' to '.$strDestination.' failed';
 					}
+				}
+				
+				// reinstall the customize.css
+				if($blnCustomizeCss)
+				{
+					\Files::getInstance()->copy($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css',\Config::get('uploadPath').'/cto_layout/css/customize.css');
 				}
 				
 				// log errors
