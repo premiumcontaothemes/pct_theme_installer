@@ -8,6 +8,10 @@ $arrLang = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER'];
 $arrLangTpl = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE'];
 $strStatus = $arrLang['STATUS'][$this->l_status];
 $strStep = $arrLang['STATUS'][$this->l_status_step];
+if(isset($this->license->registration->domains) && !is_array($this->license->registration->domains))
+{
+	$this->license->registration->domains = (array)$this->license->registration->domains;
+}		
 ?>
 
 <!--
