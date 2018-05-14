@@ -20,7 +20,7 @@ define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 /**
  * Globals
  */
-$GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'api.premium-contao-themes.com';
+$GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'https://api.premium-contao-themes.com';
 $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 (

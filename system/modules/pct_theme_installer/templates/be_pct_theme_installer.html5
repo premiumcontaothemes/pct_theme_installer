@@ -29,10 +29,11 @@ $strStep = $arrLang['STATUS'][$this->l_status_step];
 		</div>
 		-->
 
-		<div class="backend_explanation"><?= $arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]; ?></div>		
+		<div class="backend_explanation"><?= $arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]; ?></div>
 
 <!-- ! WELCOME screen -->
 <?php if($this->status == 'WELCOME'): ?>
+		<div class="backend_explanation_additional">Tragen Sie Ihre Bestellnummer und Bestell-E-Mail-Adresse ein und klicken Sie "Lizenz abfragen". Anschließend können Sie den 1-Click-Installer starten. Das Theme Eclipse wird automatisch vom Premium Contao Themes Server auf Ihren Server geladen und anschließend installiert.</div>		
 
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">

@@ -26,7 +26,8 @@
 #pct_eclipse_installer #contao_theme_select {border-bottom: 1px solid silver; padding: 10px 20px;}
 #pct_eclipse_installer #contao_theme_select h3 {margin: 0; margin-bottom: 5px;}
 #pct_eclipse_installer #contao_theme_select select, #pct_eclipse_installer #contao_theme_select .tl_select {min-width: 120px;}
-#pct_eclipse_installer .backend_explanation {padding: 15px; font-family:"Architects Daughter",cursive; font-size:15px; color:#838990; font-size: 19px;}
+#pct_eclipse_installer .backend_explanation {padding: 15px; color:#444; font-size: 0.95rem; font-weight: bold;}
+#pct_eclipse_installer .backend_explanation_additional {padding: 15px; margin-bottom: 15px; line-height: 17px; color: #4b85ba; background: #eff5fa;}
 #pct_eclipse_installer .licence_check {overflow: hidden; border-top: 1px solid silver; padding: 15px 15px 25px 15px;}
 
 #pct_eclipse_installer .breadcrumb table {width: 100%;}
@@ -43,8 +44,19 @@
 #pct_eclipse_installer tr.not_accepted td,
 #pct_eclipse_installer tr.not_accepted td a {color: red;}
 
+#pct_eclipse_installer .license_information .file {display: none;}
+
+#pct_eclipse_installer .tl_info,
+#pct_eclipse_installer .tl_message {margin: 15px;}
+
+
 #tl_ajaxOverlay {opacity: 0 !important;}
 #tl_ajaxBox {display: none !important;}
+
+#pct_eclipse_installer .breadcrumb tr.completed td {color: #77AC45;}
+#pct_eclipse_installer .breadcrumb tr.pending td {color: #b0b0b0;}
+#pct_eclipse_installer .breadcrumb tr.active i {background: url(../img/loader.svg) center center no-repeat;	height: 25px; width: 25px; display: block;}
+#pct_eclipse_installer .breadcrumb tr.completed i {background: url(../img/completed.svg) center center no-repeat; background-size: 17px; height: 25px;	width: 25px; display: block;}
 
 @media only screen and (max-width: 767px) 
 {
