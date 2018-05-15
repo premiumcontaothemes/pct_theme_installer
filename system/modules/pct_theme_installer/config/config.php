@@ -123,6 +123,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['breadcrumb_steps'] = array
 		'label'	=> &$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_wait'][0],
 		'description' => &$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_wait'][1],
 		'href'	=> 'status=installation&step=sql_template_wait',
+		'protected'	=> true
 	),
 	'INSTALLATION.SQL_TEMPLATE_IMPORT' => array
 	(
