@@ -554,8 +554,7 @@ class ThemeInstaller extends \BackendModule
 			}
 			
 			// Eclipse + CustomCatalog sqls
-			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/eclipse_cc/'.$strTemplate;
-			
+			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
 				$file = file($strFileCC);
