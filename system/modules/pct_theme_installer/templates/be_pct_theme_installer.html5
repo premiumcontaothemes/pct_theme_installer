@@ -71,6 +71,11 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			</div>
 		</form>
 
+<!-- ! ERROR screen -->
+<?php elseif($this->status == 'ERROR'): ?>
+
+	Installation hat Fehler. Siehe Systemlog
+
 <?php elseif($this->status == 'SESSION_LOST'): ?>
 <!-- ! SESSION LOST -->
 
@@ -279,7 +284,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<h3 class="tl_info"><?= $arrLangTpl['sql_template_subheadline']; ?></h3>
 		
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import') );
+		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import&action=run') );
 		?>
 		
 		<p><a class="tl_button tl_submit button import" href="<?= $url; ?>"><?= $arrLangTpl['button_sql_template_import']; ?></a></p>
