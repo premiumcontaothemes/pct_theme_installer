@@ -115,7 +115,16 @@ class ThemeInstaller extends \BackendModule
 		{
 			$this->strTheme = basename($objLicense->file->name,'.zip');
 		}
+		
 
+//! status : ERROR
+		
+		if(\Input::get('status') == 'error' && !$_POST)
+		{
+			$this->Template->status = 'ERROR';
+			$this->Template->breadcrumb = '';	
+			return;
+		}
 		
 //! status : WELCOME
 		
@@ -546,6 +555,7 @@ class ThemeInstaller extends \BackendModule
 			
 			// Eclipse + CustomCatalog sqls
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/eclipse_cc/'.$strTemplate;
+			
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
 				$file = file($strFileCC);
@@ -589,7 +599,7 @@ class ThemeInstaller extends \BackendModule
 									// mark as truncated
 									$truncated[] = $t;
 								}
-							
+								
 								// refill the table
 								$objDatabase->query($query);
 							}
@@ -805,6 +815,7 @@ class ThemeInstaller extends \BackendModule
 		{
 			$this->Template->status = 'LOADING';
 			$this->Template->license = $objLicense;
+			$arrErrors = array();
 			
 			// coming from ajax request
 			if(\Input::get('action') == 'run')
@@ -825,34 +836,49 @@ class ThemeInstaller extends \BackendModule
 				$strFileResponse = curl_exec($curl);
 				curl_close($curl);
 				unset($curl);
-
-				// response is a json object and not the file content
-				$_test = json_decode($strFileResponse);
-
-				if(json_last_error() === JSON_ERROR_NONE)
+				
+				try
 				{
-					$objResponse = json_decode($strFileResponse);
-					$arrErrors[] = $objResponse->error;
-					// log
-					//\System::log('Theme Installer: '. $objResponse->error,__METHOD__,TL_ERROR);
+					// response is a json object and not the file content
+					$_test = json_decode($strFileResponse);
+
+					if(json_last_error() === JSON_ERROR_NONE)
+					{
+						$objResponse = json_decode($strFileResponse);
+						$arrErrors[] = $objResponse->error;
+						// log
+						//\System::log('Theme Installer: '. $objResponse->error,__METHOD__,TL_ERROR);
+					}
+					else if(!empty($strFileResponse))
+					{
+						$objFile = new \File($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
+						$objFile->write( $strFileResponse );
+						$objFile->close();
+	
+						$arrSession['status'] = 'FILE_CREATED';
+						$arrSession['file'] = $objFile->path;
+						$objSession->set('pct_theme_installer',$arrSession);
+						
+						// tell ajax that the file has been written
+						die($this->Template->file_written_response);
+	
+						#// flush post and make session active
+						#$this->reload();
+					}
 				}
-				elseif(!empty($strFileResponse))
+				catch(\Exception $e)
 				{
-					$objFile = new \File($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
-					$objFile->write( $strFileResponse );
-					$objFile->close();
-
-					$arrSession['status'] = 'FILE_CREATED';
-					$arrSession['file'] = $objFile->path;
-					$objSession->set('pct_theme_installer',$arrSession);
-					
-					// tell ajax that the file has been written
-					die($this->Template->file_written_response);
-
-					#// flush post and make session active
-					#$this->reload();
+					$arrErrors[] = $e->getMessage();
 				}
 			}
+			
+			// log errors and redirect to error page
+			if(count($arrErrors) > 0)
+			{
+				\System::log('Theme Installer: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+			}
+			
 			
 			return;
 		}
