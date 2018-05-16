@@ -25,7 +25,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
 
 if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
 {
-	$GLOBALS['PCT_THEME_INSTALLER']['test_license'] = array('1386089514','k.dold@goldener-zirkel.com');
+	$GLOBALS['PCT_THEME_INSTALLER']['test_license'] = array();
 }
 
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
