@@ -87,6 +87,7 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->file_written_response = 'file_written';
 		$this->Template->file_target_directory = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'];
 		$this->Template->ajax_action = 'theme_installer_loading'; // just a simple action status message
+		$this->Template->test_license = $GLOBALS['PCT_THEME_INSTALLER']['test_license'];
 		
 		$blnAjax = false;
 		if(\Input::get('action') != '')
@@ -97,14 +98,16 @@ class ThemeInstaller extends \BackendModule
 		
 		
 //! status : SESSION_LOST
-		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset')))
+
+
+		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset','error')))
 		{
 			$this->Template->status = 'SESSION_LOST';
 			$this->Template->content = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'];
 			$this->Template->breadcrumb = '';
 			
 			// redirect to the beginning
-			$this->redirect( \Backend::addToUrl('status=reset',true) );
+		#	$this->redirect( \Backend::addToUrl('status=reset',true) );
 			
 			return;
 		}
@@ -119,7 +122,7 @@ class ThemeInstaller extends \BackendModule
 
 //! status : ERROR
 		
-		if(\Input::get('status') == 'error' && !$_POST)
+		if(\Input::get('status') == 'error')
 		{
 			$this->Template->status = 'ERROR';
 			$this->Template->breadcrumb = '';	
@@ -191,10 +194,12 @@ class ThemeInstaller extends \BackendModule
 			if(empty($arrSession['file']) || !file_exists(TL_ROOT.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
-
-				// redirect to welcome
-				#$this->redirect( \Environment::getInstance()->request.'&status=clear' );
-
+				
+				// log
+				\System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
+				// redirect
+				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+				
 				return;
 			}
 			
@@ -481,13 +486,12 @@ class ThemeInstaller extends \BackendModule
 				$arrErrors[] = $e->getMessage();
 			}
 			
+			// log errors and redirect
 			if(count($arrErrors) > 0)
 			{
-				\System::log('Database update returned errors: '.implode(', ', $arrErrors));
-				
-				$this->Template->errors = implode(', ', $arrErrors);
+				\System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors));
+				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 			}
-			
 						
 			return;
 		}
@@ -697,10 +701,12 @@ class ThemeInstaller extends \BackendModule
 			if(!file_exists(TL_ROOT.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
-
-				// redirect to welcome
-				#$this->redirect( \Environment::getInstance()->request.'&status=clear' );
-
+				
+				// log
+				\System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
+				// redirect
+				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+				
 				return;
 			}
 

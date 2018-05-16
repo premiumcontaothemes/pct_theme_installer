@@ -14,10 +14,6 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 }		
 ?>
 
-<!--
-<script>PCT_ThemeInstaller.showAjaxInfobox(); </script>
--->
-
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
@@ -27,18 +23,14 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<a href="<?= $this->resetUrl; ?>" class="tl_button reset header_back" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a>
 		</div>
 		
-		<!-- 
-		<div class="tl_message">
-			<p class="tl_info">Theme wurde erfolgreich installiert</p>
-		</div>
-		-->
-
 		<div class="backend_explanation"><?= $arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]; ?></div>
 
 <!-- ! WELCOME screen -->
 <?php if($this->status == 'WELCOME'): ?>
-		<div class="backend_explanation_additional">Tragen Sie Ihre Bestellnummer und Bestell-E-Mail-Adresse ein und klicken Sie "Lizenz abfragen". Anschließend können Sie den 1-Click-Installer starten. Das Theme Eclipse wird automatisch vom Premium Contao Themes Server auf Ihren Server geladen und anschließend installiert.</div>		
-
+		<div class="backend_explanation_additional">
+			<?= $arrLangTpl['welcome_info']; ?>
+		</div>
+		
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
 			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
@@ -71,18 +63,19 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			</div>
 		</form>
 
-<!-- ! ERROR screen -->
 <?php elseif($this->status == 'ERROR'): ?>
-
-	Installation hat Fehler. Siehe Systemlog
-
+<!-- ! ERROR screen -->
+	
+	<div class="tl_formbody_middle">
+	<p class="tl_message"><a href="<?= \Controller::addToUrl('do=log',true,array('step','status')); ?>" title="<?= $arrLangTpl['button_systemlog'][0]; ?>"><?= $arrLangTpl['button_systemlog'][0]; ?></a></p>
+	<p class="tl_message header_back"><a class="reset" href="<?= \Controller::addToUrl('status=reset',true); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+	</div>
+		
 <?php elseif($this->status == 'SESSION_LOST'): ?>
 <!-- ! SESSION LOST -->
-
-		<p><a class="tl_button reset" href="<?= $this->resetUrl; ?>">Noch mal</a></p>
-		
-		<?= $this->content; ?>
-
+	
+	<p class="tl_message header_back"><a class="reset" href="<?= \Backend::addToUrl('status=reset',true); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+	
 <?php elseif($this->status == 'CHOOSE_PRODUCT'): ?>
 <!-- ! CHOOSE_PRODUCT  -->
 		
@@ -198,7 +191,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=copy_files'));
+		$url = \Backend::addToUrl('status=installation&step=copy_files');
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['unzip']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -220,7 +213,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=clear_cache'));
+		$url = \Backend::addToUrl('status=installation&step=clear_cache');
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['copy_files']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -241,7 +234,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=db_update_modules'));
+		$url = \Backend::addToUrl('status=installation&step=db_update_modules');
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['clear_cache']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -261,7 +254,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_wait') );
+		$url = \Backend::addToUrl('status=installation&step=sql_template_wait');
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['db_update_modules']; ?>';
 		PCT_ThemeInstaller.redirectTo('<?= $url; ?>',3000);
@@ -284,7 +277,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<h3 class="tl_info"><?= $arrLangTpl['sql_template_subheadline']; ?></h3>
 		
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=sql_template_import') );
+		$url = \Backend::addToUrl('status=installation&step=sql_template_import');
 		?>
 		
 		<p><a class="tl_button tl_submit button import" href="<?= $url; ?>"><?= $arrLangTpl['button_sql_template_import']; ?></a></p>
@@ -309,7 +302,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=completed') );
+		$url = \Backend::addToUrl('status=completed');
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -320,15 +313,12 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <?php elseif($this->status == 'FILE_EXISTS'): ?>
 <!-- ! FILE_EXISTS :: Waiting to start for the installation to begin-->
 		
-		<a href="<?= $this->file->path; ?>" download><?= $this->file->path; ?></a>		
-		<p><a class="tl_button reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
-		<p><a class="tl_button installation" href="<?= \Environment::getInstance()->request.'&status=installation&step=unzip'; ?>">Weiter mit der Installation</a></p>
 		
 <?php elseif($this->status == 'FILE_NOT_EXISTS'): ?>
 <!-- ! FILE_NOT_EXISTS -->
-		<h2>Datei existiert nicht mehr</h2>
-		<p><a class="reset" href="<?= \Environment::getInstance()->request.'&status=reset'; ?>">Noch mal</a></p>
 		
+		<p class="tl_message header_back"><a class="reset" href="<?= \Backend::addToUrl('status=reset',true,array('status','step')); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+
 <?php elseif($this->status == 'LOADING'): ?>
 <!-- ! LICENSE ACCEPTED... begin loading -->
 		
@@ -344,7 +334,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		/* <![CDATA[ */
 		
 		<?php 
-		$url = \Environment::get('base').\StringUtil::decodeEntities( \Controller::addToUrl('status=installation&step=unzip') );
+		$url = \Backend::addToUrl('status=installation&step=unzip');
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= sprintf($arrLang['AJAX_INFO']['loading'],$this->license->file->name); ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -355,11 +345,10 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <?php elseif($this->status == 'NOT_ACCEPTED'): ?>
 <!-- LICENSE NOT_ACCEPTED... -->
 		
-		Die Lizenz ist nicht valide
+		
 						
 <?php endif; ?>
 
-		<div class="clear">
 	</div>
 
 </div>
