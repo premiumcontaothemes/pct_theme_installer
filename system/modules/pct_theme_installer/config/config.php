@@ -22,6 +22,12 @@ define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
  */
 $GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'https://api.premium-contao-themes.com';
 $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
+
+if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
+{
+	$GLOBALS['PCT_THEME_INSTALLER']['test_license'] = array('1386089514','k.dold@goldener-zirkel.com');
+}
+
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 (
 	'mandatory' => array('upload','eclipse contao 3_5.cto','eclipse contao 4_4.cto'), // mandatory zip content on first level
