@@ -88,14 +88,15 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->file_target_directory = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'];
 		$this->Template->ajax_action = 'theme_installer_loading'; // just a simple action status message
 		$this->Template->test_license = $GLOBALS['PCT_THEME_INSTALLER']['test_license'];
-		
+		$this->Template->license = $objLicense;
+			
 		$blnAjax = false;
 		if(\Input::get('action') != '')
 		{
 			$blnAjax = true;
 		}
 		$this->Template->ajax_running = $blnAjax;
-		
+	
 		
 //! status : SESSION_LOST
 
@@ -107,7 +108,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->breadcrumb = '';
 			
 			// redirect to the beginning
-		#	$this->redirect( \Backend::addToUrl('status=reset',true) );
+			$this->redirect( \Backend::addToUrl('status=reset') );
 			
 			return;
 		}
@@ -117,10 +118,28 @@ class ThemeInstaller extends \BackendModule
 		if($objLicense->file->name)
 		{
 			$this->strTheme = basename($objLicense->file->name,'.zip');
+			$this->Template->theme = $this->strTheme;
 		}
-		
 
+
+//! status : COMPLETED
+
+	
+		if(\Input::get('status') == 'completed')
+		{
+			#$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
+			#$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+			#$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
+			// redirect to contao login
+			$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?installation_completed=1&theme='.\Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			$this->redirect($url);
+			
+			return;
+		}
+	
+		
 //! status : ERROR
+
 		
 		if(\Input::get('status') == 'error')
 		{
@@ -128,6 +147,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->breadcrumb = '';	
 			return;
 		}
+
 		
 //! status : WELCOME
 		
@@ -556,66 +576,93 @@ class ThemeInstaller extends \BackendModule
 			
 				$strTemplate = $strTmpTemplate;
 			}
-			
+				
+				
 			// Eclipse + CustomCatalog sqls
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
-				$file = file($strFileCC);
+				// find multiline CREATE statements
+				$file = fopen($strFileCC,'r');
 				
-				// CREATE
-				$sql = preg_grep('/^CREATE /', $file);
-				foreach($sql as $query)
+				$sql = array();
+				if($file)
 				{
-					// skip tables that already exist
-					if(preg_match('/`(.*?)\`/', $query,$result))
+					$create_table = '';
+					
+					while(!feof($file)) 
 					{
-						if($objDatabase->tableExists($result[1]) === true)
+				        $line = fgets($file);
+						
+						if(strpos($line, 'CREATE TABLE') !== false)
 						{
-							continue;
+							if(preg_match('/`(.*?)\`/', $line,$result))
+							{
+								if($objDatabase->tableExists($result[1]) === false)
+								{
+									$create_table = $result[1];
+								}
+							
+							}
+						}
+						
+						if(strlen($create_table) > 0)
+						{
+							$sql[ $create_table ] .= trim($line);
+						}
+						
+						if(strpos($line, 'CHARSET=utf8;') !== false)
+						{
+							$create_table = '';
 						}
 					}
-					else 
+				    fclose($file);
+				}
+				
+				foreach($sql as $table => $query)
+				{
+					if($objDatabase->tableExists($table) === false)
 					{
-						$objDatabase->query($query);	
+						$objDatabase->query($query);
 					}
 				}
+				
+				
+				$file = file($strFileCC);
 				
 				// TRUNCATE and INSERT	
 				$skipTables = array('tl_user','tl_user_group','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
 				$sql = preg_grep('/^INSERT /', $file);
 				
-				$truncated = array();
-				foreach($sql as $query)
+				try
 				{
-					// skip tables that already exist
-					if(preg_match('/`(.*?)\`/', $query,$result))
+					// TRUNCATE
+					foreach($sql as $query)
 					{
-						$t = $result[1];
-						
-						// truncate table and insert
-						if($objDatabase->tableExists($t) === true && !in_array($t, $skipTables))
+						if(preg_match('/`(.*?)\`/', $query,$result))
 						{
-							try
+							if($objDatabase->tableExists( $result[1] ) === true && !in_array($result[1], $skipTables))
 							{
-								if(!in_array($t, $truncated))
-								{
-									// truncate the table
-									$objDatabase->execute('TRUNCATE TABLE '.$t);
-									// mark as truncated
-									$truncated[] = $t;
-								}
-								
-								// refill the table
-								$objDatabase->query($query);
+								$objDatabase->execute('TRUNCATE TABLE '.$result[1]);
 							}
-							catch(\Exception $e)
+						}	
+					}
+					
+					// INSERT
+					foreach($sql as $query)
+					{
+						if(preg_match('/`(.*?)\`/', $query,$result))
+						{
+							if($objDatabase->tableExists( $result[1] ) === true && !in_array($result[1], $skipTables))
 							{
-								$arrErrors[] = $e->getMessage();
+								$objDatabase->query($query);
 							}
 						}
 					}
-					else {continue;}
+				}
+				catch(\Exception $e)
+				{
+					$arrErrors[] = $e->getMessage();
 				}
 				
 				unset($skipTables);
@@ -635,8 +682,15 @@ class ThemeInstaller extends \BackendModule
 				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
 				
 				// log out
-				$objUser = \BackendUser::getInstance();
-				$objUser->logout();
+				#$objUser = \BackendUser::getInstance();
+				#$objUser->logout();
+				
+				// redirect to contao login if not from ajax
+				if(!\Environment::get('isAjaxRequest'))
+				{
+					$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?installation_completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
+					$this->redirect($url);
+				}
 				
 				return;
 			}

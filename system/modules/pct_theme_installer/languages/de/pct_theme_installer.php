@@ -111,4 +111,5 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.clear_cache'] 			= 'Contaos interner Cache bzw. Symphony-Cache wird mit den neuen Informationen erstellen.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.db_update_modules'] 	= 'Die Datenbank wird mit den neuen Modulinformationen aktualisiert.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.sql_template_wait'] 	= 'Die Demo-Webseite (Installations-Template) ist bereit installiert zu werden.';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.sql_template_import'] 	= 'Das Installations-Template wird importiert.';
 

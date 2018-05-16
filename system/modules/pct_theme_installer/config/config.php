@@ -30,6 +30,7 @@ if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
 
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 (
+	'label'	=> 'Eclipse',
 	'mandatory' => array('upload','eclipse contao 3_5.cto','eclipse contao 4_4.cto'), // mandatory zip content on first level
 	'sql_templates' => array
 	(
@@ -39,6 +40,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
 (
+	'label'	=> 'Eclipse + CustomCatalog Pro',
 	'mandatory' => array('upload','eclipse_contao_3_5.sql'), // mandatory zip content on first level
 	'sql_templates' => array
 	(

@@ -191,7 +191,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Backend::addToUrl('status=installation&step=copy_files');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=copy_files') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['unzip']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -213,7 +213,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Backend::addToUrl('status=installation&step=clear_cache');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=clear_cache') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['copy_files']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -234,7 +234,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Backend::addToUrl('status=installation&step=db_update_modules');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=db_update_modules') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['clear_cache']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -249,12 +249,12 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<p><?= $this->errors; ?></p>
 		<?php else: ?>
 		
-		Datenbank ist up to date.
+		<p class="hidden">Datenbank ist up to date.</p>
 		
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Backend::addToUrl('status=installation&step=sql_template_wait');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=sql_template_wait') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['db_update_modules']; ?>';
 		PCT_ThemeInstaller.redirectTo('<?= $url; ?>',3000);
@@ -277,7 +277,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<h3 class="tl_info"><?= $arrLangTpl['sql_template_subheadline']; ?></h3>
 		
 		<?php 
-		$url = \Backend::addToUrl('status=installation&step=sql_template_import');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=sql_template_import') );
 		?>
 		
 		<p><a class="tl_button tl_submit button import" href="<?= $url; ?>"><?= $arrLangTpl['button_sql_template_import']; ?></a></p>
@@ -297,12 +297,16 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<?php endif; ?>
 		</div>
 		
+		<?php 
+		\Debug::log($this->license);
+		?>
+		
 		<?php if(!$this->ajax_running): ?>
 		<!-- start the file coping via ajax -->
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \Backend::addToUrl('status=completed');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=completed&theme='.$this->theme) );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -334,7 +338,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		/* <![CDATA[ */
 		
 		<?php 
-		$url = \Backend::addToUrl('status=installation&step=unzip');
+		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=unzip') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= sprintf($arrLang['AJAX_INFO']['loading'],$this->license->file->name); ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});

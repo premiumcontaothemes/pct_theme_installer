@@ -45,24 +45,39 @@ class SystemCallbacks extends \System
 			
 		$intOffset = 3600;
 		
+		if(\Input::get('installation_completed') != '' && \Input::get('theme') != '')
+		{
+			$strName = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][ \Input::get('theme') ]['label'] ?: \Input::get('theme');
+			
+			// add backend message
+			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],$strName) );
+			
+			// remove the tmp.SQL file
+			$strTemplate = \Input::get('sql');
+			if(file_exists(TL_ROOT.'/templates/tmp_'.$strTemplate))
+			{
+				\Files::getInstance()->delete('templates/tmp_'.$strTemplate);
+			}
+		
+			$this->redirect( \Controller::addToUrl('',false,array('installation_completed','theme','sql')) );
+		}
+		
 		// session still exists and the sql template has been imported within the time range
 		if($_SESSION['PCT_THEME_INSTALLER']['completed'] && \Config::get('exampleWebsite') <= time() + $intOffset)
 		{
-			// get the license object
-			$strName = $_SESSION['PCT_THEME_INSTALLER']['license']['name'];
-			$strTemplate = $_SESSION['PCT_THEME_INSTALLER']['sql'];
-			
 			// clear the url from the referer and redirect with installation information
 			if(\Input::get('referer') != '')
 			{
-				$this->redirect( \Controller::addToUrl('&installation_completed='.$strName.'&sql='.$strTemplate,false,array('referer','rt','ref')) );
+				$this->redirect( \Controller::addToUrl('installation_completed=1&theme='.$_SESSION['PCT_THEME_INSTALLER']['license']['name'].'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql'],false,array('referer','rt','ref')) );
 			}	
 		}
 		// write a backend information message with the installation information
 		else if(\Input::get('installation_completed') != '' && \Config::get('exampleWebsite') <= time() + $intOffset)
 		{
+			$strName = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][ \Input::get('theme') ]['label'] ?: \Input::get('theme');
+			
 			// add backend message
-			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],\Input::get('installation_completed')) );
+			\Message::addInfo( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage'],$strName) );
 			
 			// remove the tmp.SQL file
 			$strTemplate = \Input::get('sql');
