@@ -571,7 +571,10 @@ class ThemeInstaller extends \BackendModule
 							continue;
 						}
 					}
-					else {continue;}
+					else 
+					{
+						$objDatabase->query($query);	
+					}
 				}
 				
 				// TRUNCATE and INSERT	
