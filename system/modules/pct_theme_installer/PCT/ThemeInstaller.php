@@ -581,13 +581,13 @@ class ThemeInstaller extends \BackendModule
 
 			// Eclipse + CustomCatalog sqls
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
-
+			
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
 				$skipTables = array('tl_user','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
 
 				$objFile = fopen($strFileCC,'r');
-
+				
 				// find multiline CREATE, ALTER statements
 				$create_sql = array();
 				$alter_sql = array();
@@ -640,7 +640,7 @@ class ThemeInstaller extends \BackendModule
 					unset($create_table);
 					unset($alter_table);
 				}
-
+				
 				try
 				{
 					// DROP tables that will be created anyways
@@ -652,7 +652,7 @@ class ThemeInstaller extends \BackendModule
 						}
 					}
 
-					#// CREATE tables
+					// CREATE tables
 					foreach($create_sql as $table => $query)
 					{
 						if($objDatabase->tableExists($table,null,true) === false)
