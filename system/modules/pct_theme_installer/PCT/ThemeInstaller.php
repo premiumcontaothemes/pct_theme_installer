@@ -527,7 +527,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->sql_template_info = sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['sql_template_info'],$strTemplate);
 			
 			// when not in "update" mode, continue sql template installation
-			if(\Input::get('mode') == 'installation' || \Input::get('mode') == '')
+			if(\Input::get('mode') == 'install' || \Input::get('mode') == '')
 			{
 				$this->redirect( \Backend::addToUrl('status=installation&step=sql_template_import') );
 			}
