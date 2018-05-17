@@ -228,7 +228,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->step = 'UNZIP';
 			$this->Template->num_step = 1;
 
-			$objFile = new \file($arrSession['file'],true);
+			$objFile = new \File($arrSession['file'],true);
 			$this->Template->file = $objFile;
 
 			// check the file size
@@ -576,7 +576,7 @@ class ThemeInstaller extends \BackendModule
 					$str .= $objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->__get('query') . "\n";
 				}
 
-				$objFile = new \file('templates/tmp_'.$strTemplate);
+				$objFile = new \File('templates/tmp_'.$strTemplate);
 				$objFile->write($str);
 				$objFile->close();
 
@@ -803,7 +803,7 @@ class ThemeInstaller extends \BackendModule
 				$this->Template->status = 'FILE_NOT_EXISTS';
 
 				// log
-				\System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
+				\System::log('Theme Installer: File not found or file could not be created',__METHOD__,TL_ERROR);
 				// redirect
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 
@@ -813,7 +813,7 @@ class ThemeInstaller extends \BackendModule
 
 			$this->Template->status = 'FILE_EXISTS';
 
-			$objFile = new \file($arrSession['file'],true);
+			$objFile = new \File($arrSession['file'],true);
 			$this->Template->file = $objFile;
 
 			// set file path
@@ -944,7 +944,7 @@ class ThemeInstaller extends \BackendModule
 				$strFileResponse = curl_exec($curl);
 				curl_close($curl);
 				unset($curl);
-
+				
 				try
 				{
 					// response is a json object and not the file content
@@ -959,7 +959,7 @@ class ThemeInstaller extends \BackendModule
 					}
 					else if(!empty($strFileResponse))
 						{
-							$objFile = new \file($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
+							$objFile = new \File($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
 							$objFile->write( $strFileResponse );
 							$objFile->close();
 
@@ -986,7 +986,6 @@ class ThemeInstaller extends \BackendModule
 				\System::log('Theme Installer: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 			}
-
 
 			return;
 		}
