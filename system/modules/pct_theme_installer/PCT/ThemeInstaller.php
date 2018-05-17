@@ -32,13 +32,13 @@ class ThemeInstaller extends \BackendModule
 	 * @var string
 	 */
 	protected $strTemplateBreadcrumb = 'pct_theme_installer_breadcrumb';
-	 
+
 	/**
 	 * The name of the theme
 	 * @var string
 	 */
 	protected $strTheme = '';
-	
+
 	/**
 	 * The session name
 	 * @var string
@@ -60,7 +60,7 @@ class ThemeInstaller extends \BackendModule
 		{
 			$objSession = \System::getContainer()->get('session');
 		}
-		
+
 		$objDatabase = \Database::getInstance();
 		$arrSession = $objSession->get('pct_theme_installer');
 		$arrErrors = array();
@@ -89,16 +89,16 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->ajax_action = 'theme_installer_loading'; // just a simple action status message
 		$this->Template->test_license = $GLOBALS['PCT_THEME_INSTALLER']['test_license'];
 		$this->Template->license = $objLicense;
-			
+
 		$blnAjax = false;
 		if(\Input::get('action') != '')
 		{
 			$blnAjax = true;
 		}
 		$this->Template->ajax_running = $blnAjax;
-	
-		
-//! status : SESSION_LOST
+
+
+		//! status : SESSION_LOST
 
 
 		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset','error')))
@@ -106,13 +106,13 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'SESSION_LOST';
 			$this->Template->content = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'];
 			$this->Template->breadcrumb = '';
-			
+
 			// redirect to the beginning
 			$this->redirect( \Backend::addToUrl('status=reset') );
-			
+
 			return;
 		}
-	
+
 		// the theme or module name of this lizence
 		$this->strTheme = $objLicense->name ?: $objLicense->file->name ?: '';
 		if($objLicense->file->name)
@@ -124,7 +124,7 @@ class ThemeInstaller extends \BackendModule
 
 //! status : COMPLETED
 
-	
+
 		if(\Input::get('status') == 'completed')
 		{
 			#$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
@@ -133,29 +133,29 @@ class ThemeInstaller extends \BackendModule
 			// redirect to contao login
 			$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?installation_completed=1&theme='.\Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
 			$this->redirect($url);
-			
+
 			return;
 		}
-	
-		
+
+
 //! status : ERROR
 
-		
+
 		if(\Input::get('status') == 'error')
 		{
 			$this->Template->status = 'ERROR';
-			$this->Template->breadcrumb = '';	
+			$this->Template->breadcrumb = '';
 			return;
 		}
 
-		
+
 //! status : WELCOME
-		
-		
+
+
 		if(\Input::get('status') == 'welcome' && !$_POST)
 		{
 			$this->Template->status = 'WELCOME';
-			$this->Template->breadcrumb = '';	
+			$this->Template->breadcrumb = '';
 			return;
 		}
 
@@ -176,7 +176,7 @@ class ThemeInstaller extends \BackendModule
 
 //! status : COMPLETE (probably never been called)
 
-				
+
 		if(\Input::get('status') == 'complete')
 		{
 			$this->Template->status = 'COMPLETE';
@@ -190,14 +190,14 @@ class ThemeInstaller extends \BackendModule
 		if($objLicense->status == 'ACCESS_DENIED' || \Input::get('status') == 'access_denied')
 		{
 			$this->Template->status = 'ACCESS_DENIED';
-			
+
 			return;
 		}
 
-		
+
 //! status: INSTALLATION | no step -> reset
 
-		
+
 		if(\Input::get('status') == 'installation' && \Input::get('step') == '')
 		{
 			// redirect to the beginning
@@ -205,45 +205,45 @@ class ThemeInstaller extends \BackendModule
 		}
 
 
-//! status: INSTALLATION | STEP 1.0: Unpack the zip
+		//! status: INSTALLATION | STEP 1.0: Unpack the zip
 
-	
+
 		if(\Input::get('status') == 'installation' && \Input::get('step') == 'unzip')
 		{
 			// check if file still exists
 			if(empty($arrSession['file']) || !file_exists(TL_ROOT.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
-				
+
 				// log
 				\System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
 				// redirect
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
-				
+
 				return;
 			}
-			
+
 			$this->Template->ajax_action = 'unzip';
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'UNZIP';
 			$this->Template->num_step = 1;
-			
-			$objFile = new \File($arrSession['file'],true);
+
+			$objFile = new \file($arrSession['file'],true);
 			$this->Template->file = $objFile;
-			
+
 			// check the file size
 			#if($objFile->__get('size') < 30000)
 			#{
-			#	// log that file is too small
-			#	\System::log('The file '.$objFile->path.' is too small. Please retry or contact us.',__METHOD__,TL_ERROR);
-			#	
-			#	$this->redirect( \Backend::addToUrl('status=reset',true,array('step')) );
-			#	return;
+			# // log that file is too small
+			# \System::log('The file '.$objFile->path.' is too small. Please retry or contact us.',__METHOD__,TL_ERROR);
+			#
+			# $this->redirect( \Backend::addToUrl('status=reset',true,array('step')) );
+			# return;
 			#}
-			
+
 			// the target folder to extract to
 			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
-			
+
 			if(\Input::get('action') == 'run')
 			{
 				// extract zip
@@ -253,13 +253,13 @@ class ThemeInstaller extends \BackendModule
 					$objZip->extractTo(TL_ROOT.'/'.$strTargetDir);
 					$objZip->close();
 
-					// flag that the zip file has been extracted					
+					// flag that the zip file has been extracted
 					$arrSession['unzipped'] = true;
 					$objSession->set($this->strSession,$arrSession);
-					
+
 					// ajax done
 					die('Zip extracted to: '.$strTargetDir);
-				} 
+				}
 				// zip already extracted
 				elseif($arrSession['unzipped'] && is_dir(TL_ROOT.'/'.$strTargetDir))
 				{
@@ -272,173 +272,174 @@ class ThemeInstaller extends \BackendModule
 					$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'],$arrSession['file']);
 					\System::log($log,__METHOD__,TL_ERROR);
 				}
-				
+
 				// redirect to the beginning
 				#$this->redirect( \Backend::addToUrl('status=installation&step=copy_files') );
 			}
-			
+
 			return;
 		}
-//! status: INSTALLATION | STEP 2.0: Copy files
-		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'copy_files')		
-		{
-			$this->Template->status = 'INSTALLATION';
-			$this->Template->step = 'COPY_FILES';
-			$this->Template->num_step = 2;
-			
-			// the target folder to extract to
-			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
-			$strFolder = $strTargetDir.'/'.basename($arrSession['file'], ".zip");
-			
-			if(\Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
+		//! status: INSTALLATION | STEP 2.0: Copy files
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'copy_files')
 			{
-				// backup an existing customize.css
-				$blnCustomizeCss = false;
-				if(file_exists(TL_ROOT.'/'.\Config::get('uploadPath').'/cto_layout/css/customize.css'))
+				$this->Template->status = 'INSTALLATION';
+				$this->Template->step = 'COPY_FILES';
+				$this->Template->num_step = 2;
+
+				// the target folder to extract to
+				$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
+				$strFolder = $strTargetDir; #$strTargetDir.'/'.basename($arrSession['file'], ".zip");
+
+				if(\Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
 				{
-					if( \Files::getInstance()->copy(\Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
+					// backup an existing customize.css
+					$blnCustomizeCss = false;
+					if(file_exists(TL_ROOT.'/'.\Config::get('uploadPath').'/cto_layout/css/customize.css'))
 					{
-						$blnCustomizeCss = true;
+						if( \Files::getInstance()->copy(\Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
+						{
+							$blnCustomizeCss = true;
+						}
+					}
+
+					$scan = scandir(TL_ROOT.'/'.$strFolder);
+
+					// check for consistancy of the folder. If the unziped folder does not contain the mandatory files, quit
+					if( count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) != count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) )
+					{
+						$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'],implode(', ', $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory']));
+						\System::log($log,__METHOD__,TL_ERROR);
+
+						// ajax done
+						die('Content of the extracted file in '.$strFolder.' does not match the mandatory content');
+					}
+
+					$objFiles = \Files::getInstance();
+					$arrIgnore = array('.ds_store');
+
+					// folder to copy
+					$arrFolders = scan(TL_ROOT.'/'.$strFolder.'/upload');
+
+					foreach($arrFolders as $f)
+					{
+						if(in_array(strtolower($f), $arrIgnore))
+						{
+							continue;
+						}
+
+						//-- copy the /upload/files/ folder
+						$strSource = $strFolder.'/upload/'.$f;
+						$strDestination = $f;
+						if($f == 'files')
+						{
+							$strDestination = \Config::get('uploadPath');
+						}
+
+						if($objFiles->rcopy($strSource,$strDestination) !== true)
+						{
+							$arrErrors[] = 'Copy '.$strSource.' to '.$strDestination.' failed';
+						}
+					}
+
+					// reinstall the customize.css
+					if($blnCustomizeCss)
+					{
+						\Files::getInstance()->copy($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css',\Config::get('uploadPath').'/cto_layout/css/customize.css');
+					}
+
+					// log errors
+					if(count($arrErrors) > 0)
+					{
+						\System::log('Theme Installer: Copy files: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+						$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+					}
+					// no errors
+					else
+					{
+						// write log
+						\System::log( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']),__METHOD__,TL_CRON);
+
+						// ajax done
+						if($blnAjax && \Environment::get('isAjaxRequest'))
+						{
+							die('Coping files completed');
+						}
 					}
 				}
-				
-				$scan = scandir(TL_ROOT.'/'.$strFolder);
-				
-				// check for consistancy of the folder. If the unziped folder does not contain the mandatory files, quit
-				if( count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) != count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) )
-				{
-					$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'],implode(', ', $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory']));
-					\System::log($log,__METHOD__,TL_ERROR);
-					
-					// ajax done
-					die('Content of the extracted file in '.$strFolder.' does not match the mandatory content');
-				}
-				
-				$objFiles = \Files::getInstance();
-				$arrIgnore = array('.ds_store');
-				
-				// folder to copy
-				$arrFolders = scan(TL_ROOT.'/'.$strFolder.'/upload');
-				
-				foreach($arrFolders as $f)
-				{
-					if(in_array(strtolower($f), $arrIgnore))
-					{
-						continue;
-					}
-					
-					//-- copy the /upload/files/ folder
-					$strSource = $strFolder.'/upload/'.$f;
-					$strDestination = $f;
-					if($f == 'files')
-					{
-						$strDestination = \Config::get('uploadPath');
-					}
-					
-					if($objFiles->rcopy($strSource,$strDestination) !== true)
-					{
-						$arrErrors[] = 'Copy '.$strSource.' to '.$strDestination.' failed';
-					}
-				}
-				
-				// reinstall the customize.css
-				if($blnCustomizeCss)
-				{
-					\Files::getInstance()->copy($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css',\Config::get('uploadPath').'/cto_layout/css/customize.css');
-				}
-				
-				// log errors
-				if(count($arrErrors) > 0)
-				{
-					
-				}
-				// no errors
 				else
 				{
-					// write log
-					\System::log( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']),__METHOD__,TL_CRON);	
-					
-					// ajax done
-					if($blnAjax && \Environment::get('isAjaxRequest'))
-					{
-						die('Coping files completed');
-					}
+					#die('Zip folder '.$strTargetDir.'/'.$strFolder.' does not exist or is not a directory');
 				}
+
+				return ;
 			}
-			else
+		//! status: INSTALLATION | STEP 3.0 : Clear internal caches
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'clear_cache')
 			{
-				#die('Zip folder '.$strTargetDir.'/'.$strFolder.' does not exist or is not a directory');
-			}
-			
-			return ;
-		}
-//! status: INSTALLATION | STEP 3.0 : Clear internal caches
-		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'clear_cache')		
-		{
-			$this->Template->status = 'INSTALLATION';
-			$this->Template->step = 'CLEAR_CACHE';
-			
-			if(\Input::get('action') == 'run')
-			{
-				// clear internal cache of Contao 3.5
-				if(version_compare(VERSION, '3.5','<=') && (boolean)\Config::get('bypassCache') === false)
+				$this->Template->status = 'INSTALLATION';
+				$this->Template->step = 'CLEAR_CACHE';
+
+				if(\Input::get('action') == 'run')
 				{
-					$objAutomator = new \Contao\Automator;
-					$objAutomator->purgeInternalCache();
-					
-					die('Internal cache cleared');
-				}
-				// clear Symphony cache of Contao 4.4
-				else if(version_compare(VERSION, '4.4','>='))
-				{
-					$objContainer = \System::getContainer();
-					$strCacheDir = \StringUtil::stripRootDir($objContainer->getParameter('kernel.cache_dir'));
-					$strRootDir = $objContainer->getParameter('kernel.project_dir');
-					$strWebDir = $objContainer->getParameter('contao.web_dir');
-					$arrBundles = $objContainer->getParameter('kernel.bundles');
-					
-					// @var object Contao\Automator
-					$objAutomator = new \Contao\Automator;
-					// generate symlinks to /assets, /files, /system
-					$objAutomator->generateSymlinks();
-					// generate bundles symlinks
-					$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
-					$arrBundles = array('calendar','comments','core','faq','news','newsletter');
-					foreach($arrBundles as $bundle)
+					// clear internal cache of Contao 3.5
+					if(version_compare(VERSION, '3.5','<=') && (boolean)\Config::get('bypassCache') === false)
 					{
-						$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle';
-						$to = $strWebDir.'/bundles/contao'.$bundle;
-						$objSymlink::symlink($from, $to,$strRootDir);
+						$objAutomator = new \Contao\Automator;
+						$objAutomator->purgeInternalCache();
+
+						die('Internal cache cleared');
 					}
-					
-					// clear the internal cache
-					$objAutomator->purgeInternalCache();
-					// rebuild the internal cache
-					$objAutomator->generateInternalCache();
-					// purge the whole folder
-					\Files::getInstance()->rrdir($strCacheDir,true);
-					
-					// try to rebuild the symphony cache
-					$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
-					$objInstallationController->call('purgeSymfonyCache');
-					$objInstallationController->call('warmUpSymfonyCache');
-					
-					die('Symlinks created and Symphony cache cleared');
+					// clear Symphony cache of Contao 4.4
+					else if(version_compare(VERSION, '4.4','>='))
+						{
+							$objContainer = \System::getContainer();
+							$strCacheDir = \StringUtil::stripRootDir($objContainer->getParameter('kernel.cache_dir'));
+							$strRootDir = $objContainer->getParameter('kernel.project_dir');
+							$strWebDir = $objContainer->getParameter('contao.web_dir');
+							$arrBundles = $objContainer->getParameter('kernel.bundles');
+
+							// @var object Contao\Automator
+							$objAutomator = new \Contao\Automator;
+							// generate symlinks to /assets, /files, /system
+							$objAutomator->generateSymlinks();
+							// generate bundles symlinks
+							$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
+							$arrBundles = array('calendar','comments','core','faq','news','newsletter');
+							foreach($arrBundles as $bundle)
+							{
+								$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle';
+								$to = $strWebDir.'/bundles/contao'.$bundle;
+								$objSymlink::symlink($from, $to,$strRootDir);
+							}
+
+							// clear the internal cache
+							$objAutomator->purgeInternalCache();
+							// rebuild the internal cache
+							$objAutomator->generateInternalCache();
+							// purge the whole folder
+							\Files::getInstance()->rrdir($strCacheDir,true);
+
+							// try to rebuild the symphony cache
+							$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
+							$objInstallationController->call('purgeSymfonyCache');
+							$objInstallationController->call('warmUpSymfonyCache');
+
+							die('Symlinks created and Symphony cache cleared');
+						}
 				}
+
+				return;
 			}
-			
-			return;
-		}		
-		
-//! status: INSTALLATION | STEP 4.0 : DB Update for modules
-		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'db_update_modules')		
+
+		//! status: INSTALLATION | STEP 4.0 : DB Update for modules
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'db_update_modules')
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'DB_UPDATE_MODULES';
 			$this->Template->num_step = 3.1;
-			
+
 			$arrErrors = array();
-			
+
 			try
 			{
 				// Contao 3.5
@@ -451,102 +452,102 @@ class ThemeInstaller extends \BackendModule
 					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
 					#$objBackendInstall = new \PCT\ThemeInstaller\BackendInstall;
 					$objDatabase = \Database::getInstance();
-					
+
 					// compile sql
 					$arrSQL = array_diff_key($objInstaller->call('compileCommands'),array('DELETE','DROP','ALTER_DROP'));
-					if(!empty($arrSQL) && is_array($arrSQL)) 
+					if(!empty($arrSQL) && is_array($arrSQL))
 					{
-			    		$this->Template->sql = $arrSQL;
-			    		
-			    		$arrStatements = array();
-			    	  	foreach($arrSQL as $operation => $sql)
-			         	{
-				         	// never run operations
-				         	if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
-				         	{
-					         	continue;
-				         	}
-				         	
-				         	foreach($sql as $statement)
-				         	{
-					        	$objDatabase->prepare($statement)->execute();
-				        	}
-			        	}
-				    }
+						$this->Template->sql = $arrSQL;
+
+						$arrStatements = array();
+						foreach($arrSQL as $operation => $sql)
+						{
+							// never run operations
+							if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+							{
+								continue;
+							}
+
+							foreach($sql as $statement)
+							{
+								$objDatabase->query($statement);
+							}
+						}
+					}
 				}
 				// Contao 4.4 >=
 				else if(version_compare(VERSION, '4.4','>='))
-				{
-					// @var object \PCT\ThemeInstaller\InstallationController
-					#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
-					$objContainer = \System::getContainer();
-					$objInstaller = $objContainer->get('contao.installer');
-					// compile sql
-					$arrSQL = $objInstaller->getCommands();
-					if(!empty($arrSQL) && is_array($arrSQL)) 
 					{
-			    	  	foreach($arrSQL as $operation => $sql)
-			         	{
-				         	// never run operations
-				         	if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
-				         	{
-					         	continue;
-				         	}
+						// @var object \PCT\ThemeInstaller\InstallationController
+						#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
+						$objContainer = \System::getContainer();
+						$objInstaller = $objContainer->get('contao.installer');
+						// compile sql
+						$arrSQL = $objInstaller->getCommands();
+						if(!empty($arrSQL) && is_array($arrSQL))
+						{
+							foreach($arrSQL as $operation => $sql)
+							{
+								// never run operations
+								if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+								{
+									continue;
+								}
 
-				         	foreach($sql as $hash => $statement)
-				         	{
-					        	$objInstaller->execCommand($hash);
-				        	}
-			        	}
-				    }
-				}			
+								foreach($sql as $hash => $statement)
+								{
+									$objInstaller->execCommand($hash);
+								}
+							}
+						}
+					}
+				}
+				catch(\Exception $e)
+				{
+					$arrErrors[] = $e->getMessage();
+				}
+
+				// log errors and redirect
+				if(count($arrErrors) > 0)
+				{
+					\System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+					$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+				}
+
+				return;
 			}
-			catch(\Exception $e)
-			{
-				$arrErrors[] = $e->getMessage();
-			}
-			
-			// log errors and redirect
-			if(count($arrErrors) > 0)
-			{
-				\System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors));
-				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
-			}
-						
-			return;
-		}
-//! status: INSTALLATION | STEP 5.0 : SQL_TEMPLATE_WAIT : Wait for user input
-		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_wait')		
+		//! status: INSTALLATION | STEP 5.0 : SQL_TEMPLATE_WAIT : Wait for user input
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_wait')
 		{
 			// get the template by contao version
 			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
-			
+
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_WAIT';
 			$this->Template->sql_template_info = sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['sql_template_info'],$strTemplate);
 			return;
 		}
-//! status: INSTALLATION | STEP 6.0 : SQL_TEMPLATE_IMPORT : Import the sql file
-		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_import')		
+		//! status: INSTALLATION | STEP 6.0 : SQL_TEMPLATE_IMPORT : Import the sql file
+		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_import')
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_IMPORT';
 			// get the template by contao version
 			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
-			
+
 			if(empty($strTemplate))
 			{
 				$this->Template->error = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'];
 				return;
 			}
-			
+
 			// create a tmp copy
 			$strTmpTemplate = 'tmp_'.$strTemplate;
 			$strOrigTemplate = $strTemplate;
 			if(\Files::getInstance()->copy('templates/'.$strTemplate,'templates/tmp_'.$strTemplate))
 			{
 				$file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
-				
+
 				$str = '';
 				while(!feof($file))
 				{
@@ -555,12 +556,12 @@ class ThemeInstaller extends \BackendModule
 					{
 						continue;
 					}
-					
+
 					$str .= $line;
 				}
 				fclose($file);
 				unset($file);
-				
+
 				// fetch tl_user information
 				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
 				while($objUsers->next())
@@ -568,92 +569,130 @@ class ThemeInstaller extends \BackendModule
 					$str .= $objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->__get('query') . "\n";
 				}
 
-				$objFile = new \File('templates/tmp_'.$strTemplate);
+				$objFile = new \file('templates/tmp_'.$strTemplate);
 				$objFile->write($str);
 				$objFile->close();
-				
+
 				unset($str);
-			
+
 				$strTemplate = $strTmpTemplate;
 			}
-				
-				
+
+
 			// Eclipse + CustomCatalog sqls
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
+
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
-				// find multiline CREATE statements
-				$file = fopen($strFileCC,'r');
-				
-				$sql = array();
-				if($file)
+				$skipTables = array('tl_user','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
+
+				$objFile = fopen($strFileCC,'r');
+
+				// find multiline CREATE, ALTER statements
+				$create_sql = array();
+				$alter_sql = array();
+				if($objFile)
 				{
 					$create_table = '';
-					
-					while(!feof($file)) 
+					$alter_table = '';
+
+					while(!feof($objFile))
 					{
-				        $line = fgets($file);
-						
+						$line = fgets($objFile);
+
+						// CREATE
 						if(strpos($line, 'CREATE TABLE') !== false)
 						{
 							if(preg_match('/`(.*?)\`/', $line,$result))
 							{
-								if($objDatabase->tableExists($result[1]) === false)
-								{
-									$create_table = $result[1];
-								}
-							
+								$create_table = $result[1];
 							}
 						}
-						
+						// ALTER
+						if(strpos($line, 'ALTER TABLE') !== false)
+						{
+							if(preg_match('/`(.*?)\`/', $line,$result))
+							{
+								$alter_table = $result[1];
+							}
+						}
+
 						if(strlen($create_table) > 0)
 						{
-							$sql[ $create_table ] .= trim($line);
+							$create_sql[$create_table] .= trim($line);
 						}
-						
-						if(strpos($line, 'CHARSET=utf8;') !== false)
+
+						if(strlen($alter_table) > 0)
+						{
+							$alter_sql[$alter_table] .= trim($line);
+						}
+
+						if(strpos($line, 'CHARSET=utf8;') !== false && strlen($create_table) > 0)
 						{
 							$create_table = '';
 						}
+						if(strpos($line, ';') !== false && strlen($alter_table) > 0)
+						{
+							$alter_table = '';
+						}
 					}
-				    fclose($file);
+					fclose($objFile);
+					unset($create_table);
+					unset($alter_table);
 				}
-				
-				foreach($sql as $table => $query)
-				{
-					if($objDatabase->tableExists($table) === false)
-					{
-						$objDatabase->query($query);
-					}
-				}
-				
-				
-				$file = file($strFileCC);
-				
-				// TRUNCATE and INSERT	
-				$skipTables = array('tl_user','tl_user_group','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
-				$sql = preg_grep('/^INSERT /', $file);
-				
+
 				try
 				{
-					// TRUNCATE
+					// DROP tables that will be created anyways
+					foreach(array_keys($create_sql) as $table)
+					{
+						if($objDatabase->tableExists($table,null,true) === true)
+						{
+							$objDatabase->execute('DROP TABLE '.$table);
+						}
+					}
+
+					#// CREATE tables
+					foreach($create_sql as $table => $query)
+					{
+						if($objDatabase->tableExists($table,null,true) === false)
+						{
+							$objDatabase->query($query);
+						}
+					}
+
+					// ALTER tables
+					foreach($alter_sql as $table => $query)
+					{
+						if($objDatabase->tableExists($table,null,true) === false)
+						{
+							continue;
+						}
+
+						foreach(array_filter(explode(';', $query)) as $q)
+						{
+							$objDatabase->query($q.';');
+						}
+					}
+					unset($create_sql);
+					unset($alter_sql);
+
+					// TRUNCATE and INSERT
+					$sql = preg_grep('/^INSERT /', file($strFileCC) );
+
+					// TRUNCATE and INSERT
+					$truncated = array();
 					foreach($sql as $query)
 					{
 						if(preg_match('/`(.*?)\`/', $query,$result))
 						{
-							if($objDatabase->tableExists( $result[1] ) === true && !in_array($result[1], $skipTables))
+							if($objDatabase->tableExists( $result[1],null,true ) === true && !in_array($result[1], $truncated))
 							{
 								$objDatabase->execute('TRUNCATE TABLE '.$result[1]);
+								$truncated[] = $result[1];
 							}
-						}	
-					}
-					
-					// INSERT
-					foreach($sql as $query)
-					{
-						if(preg_match('/`(.*?)\`/', $query,$result))
-						{
-							if($objDatabase->tableExists( $result[1] ) === true && !in_array($result[1], $skipTables))
+
+							if($objDatabase->tableExists( $result[1],null,true ) === true && !in_array($result[1], $skipTables))
 							{
 								$objDatabase->query($query);
 							}
@@ -664,37 +703,37 @@ class ThemeInstaller extends \BackendModule
 				{
 					$arrErrors[] = $e->getMessage();
 				}
-				
+
 				unset($skipTables);
-				unset($file);
+				unset($objFile);
 				unset($sql);
 				unset($truncated);
-				
+
 				if(!empty($arrErrors))
 				{
 					\System::log('Theme installation finished with errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
 					$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 				}
-				
+
 				// mark as being completed
 				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
 				$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
 				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-				
+
 				// log out
 				#$objUser = \BackendUser::getInstance();
 				#$objUser->logout();
-				
+
 				// redirect to contao login if not from ajax
 				if(!\Environment::get('isAjaxRequest'))
 				{
 					$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?installation_completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
 					$this->redirect($url);
 				}
-				
+
 				return;
 			}
-			
+
 			if(\Input::get('action') == 'run')
 			{
 				if(version_compare(VERSION, '3.5','<='))
@@ -711,7 +750,7 @@ class ThemeInstaller extends \BackendModule
 						$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
 						$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
 						$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-						
+
 						$objBackendInstall->call('importExampleWebsite');
 					}
 					catch(\Exception $e)
@@ -720,27 +759,27 @@ class ThemeInstaller extends \BackendModule
 					}
 				}
 				else if(version_compare(VERSION, '4.4','>='))
-				{
-					$objContainer = \System::getContainer();
-					$objInstall = $objContainer->get('contao.install_tool');
-					// let the install tool import the sql templates
-					try
 					{
-						// mark as being completed
-						$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-						$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
-						$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-						
-						$objInstall->importTemplate($strTemplate);
-						$objInstall->persistConfig('exampleWebsite', time());
+						$objContainer = \System::getContainer();
+						$objInstall = $objContainer->get('contao.install_tool');
+						// let the install tool import the sql templates
+						try
+						{
+							// mark as being completed
+							$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
+							$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+							$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
+
+							$objInstall->importTemplate($strTemplate);
+							$objInstall->persistConfig('exampleWebsite', time());
+						}
+						catch(\Exception $e)
+						{
+							unset($_SESSION['PCT_THEME_INSTALLER']);
+						}
 					}
-					catch(\Exception $e)
-					{
-						unset($_SESSION['PCT_THEME_INSTALLER']);
-					}
-				}
 			}
-			
+
 			return;
 		}
 
@@ -755,24 +794,24 @@ class ThemeInstaller extends \BackendModule
 			if(!file_exists(TL_ROOT.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
-				
+
 				// log
 				\System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
 				// redirect
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
-				
+
 				return;
 			}
 
-			
+
 			$this->Template->status = 'FILE_EXISTS';
 
-			$objFile = new \File($arrSession['file'],true);
+			$objFile = new \file($arrSession['file'],true);
 			$this->Template->file = $objFile;
 
 			// set file path
 			$this->strFile = $objFile->path;
-			
+
 			// redirect to step: 1 (unzipping) of the installation
 			$this->redirect( \Backend::addToUrl('status=installation') );
 		}
@@ -787,18 +826,18 @@ class ThemeInstaller extends \BackendModule
 
 			$arrParams = array
 			(
-				'key' 		=> \Input::post('license'),
-				'email' 	=> \Input::post('email'),
-				'domain'	=> \Environment::get('url'),
+				'key'   => \Input::post('license'),
+				'email'  => \Input::post('email'),
+				'domain' => \Environment::get('url'),
 			);
-			
+
 			if(\Input::post('product') != '')
 			{
 				$arrParams['product'] = \Input::post('product');
 			}
-			
+
 			$strRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
-			
+
 			// validate the license
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -809,12 +848,12 @@ class ThemeInstaller extends \BackendModule
 			unset($curl);
 
 			$objLicense = json_decode($strResponse);
-			
+
 			// store the api response in the session
 			$arrSession['status'] = $objLicense->status;
 			$arrSession['license'] = $strResponse;
 			$objSession->set('pct_theme_installer',$arrSession);
-			
+
 			// flush post and make session active
 			// redirect to the beginning
 			$this->redirect( \Backend::addToUrl('status=ready',true) );
@@ -828,45 +867,45 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'CHOOSE_PRODUCT';
 			$this->Template->license = $objLicense;
 			$this->Template->breadcrumb = '';
-			
+
 			// registration error
 			if($objLicense->registration->hasError)
 			{
 				$this->Template->hasRegistrationError = true;
 			}
-			
+
 			return;
-		}		
+		}
 
 
 
 //! status: READY, waiting for installation GO
 
-		
+
 		if(\Input::get('status') == 'ready' && $objLicense->status == 'OK')
 		{
 			$this->Template->status = 'READY';
 			$this->Template->license = $objLicense;
-			
+
 			// registration error
 			if($objLicense->registration->hasError)
 			{
 				$this->Template->hasRegistrationError = true;
 			}
-			
+
 			// has more than one product to choose
 			if(!empty($objLicense->products))
 			{
 				$this->redirect( \Backend::addToUrl('status=choose_product',true) );
 			}
-			
+
 			if(\Input::post('install') != '' && \Input::post('FORM_SUBMIT') == $strForm)
 			{
 				$this->redirect( \Backend::addToUrl('status=loading',true) );
 			}
-			
+
 			return;
-		}		
+		}
 
 
 //! status: LICENSE = OK -> LOADING... and FILE CREATION
@@ -878,7 +917,7 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'LOADING';
 			$this->Template->license = $objLicense;
 			$arrErrors = array();
-			
+
 			// coming from ajax request
 			if(\Input::get('action') == 'run')
 			{
@@ -888,7 +927,7 @@ class ThemeInstaller extends \BackendModule
 				$arrParams['domain'] = $objLicense->domain;
 				$arrParams['sendToAjax'] = 1;
 				$arrParams['product'] = $objLicense->file->id;
-				
+
 				$strFileRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
 
 				$curl = curl_init();
@@ -898,7 +937,7 @@ class ThemeInstaller extends \BackendModule
 				$strFileResponse = curl_exec($curl);
 				curl_close($curl);
 				unset($curl);
-				
+
 				try
 				{
 					// response is a json object and not the file content
@@ -912,46 +951,46 @@ class ThemeInstaller extends \BackendModule
 						//\System::log('Theme Installer: '. $objResponse->error,__METHOD__,TL_ERROR);
 					}
 					else if(!empty($strFileResponse))
-					{
-						$objFile = new \File($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
-						$objFile->write( $strFileResponse );
-						$objFile->close();
-	
-						$arrSession['status'] = 'FILE_CREATED';
-						$arrSession['file'] = $objFile->path;
-						$objSession->set('pct_theme_installer',$arrSession);
-						
-						// tell ajax that the file has been written
-						die($this->Template->file_written_response);
-	
-						#// flush post and make session active
-						#$this->reload();
-					}
+						{
+							$objFile = new \file($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
+							$objFile->write( $strFileResponse );
+							$objFile->close();
+
+							$arrSession['status'] = 'FILE_CREATED';
+							$arrSession['file'] = $objFile->path;
+							$objSession->set('pct_theme_installer',$arrSession);
+
+							// tell ajax that the file has been written
+							die($this->Template->file_written_response);
+
+							#// flush post and make session active
+							#$this->reload();
+						}
 				}
 				catch(\Exception $e)
 				{
 					$arrErrors[] = $e->getMessage();
 				}
 			}
-			
+
 			// log errors and redirect to error page
 			if(count($arrErrors) > 0)
 			{
 				\System::log('Theme Installer: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 			}
-			
-			
+
+
 			return;
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * Inject javascript templates in the backend page
 	 * @param object
-	 * 
+	 *
 	 * Called from [parseTemplate] Hook
 	 */
 	public function injectScripts($objTemplate)
@@ -959,7 +998,7 @@ class ThemeInstaller extends \BackendModule
 		if(TL_MODE == 'BE' && $objTemplate->getName() == 'be_main')
 		{
 			$objScripts = new \BackendTemplate('be_js_pct_theme_installer');
-			
+
 			$arrTexts = array
 			(
 				'hallo' => 'welt',
@@ -968,92 +1007,92 @@ class ThemeInstaller extends \BackendModule
 			$objTemplate->javascripts .= $objScripts->parse();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Generate a breadcrumb
 	 */
 	public function getBreadcrumb($strStatus='',$strStep='')
 	{
 		$strCurrent = $strStatus.($strStep != '' ? '.'.$strStep : '');
-		
+
 		$arrItems = array();
 		$i = 0;
-		
+
 		$objSession = \Session::getInstance();
 		$arrSession = $objSession->get($this->strSession);
-		
+
 		// store the processed steps
 		if(!is_array($arrSession['BREADCRUMB']['completed']))
 		{
 			$arrSession['BREADCRUMB']['completed'] = array();
 		}
-		
+
 		foreach($GLOBALS['PCT_THEME_INSTALLER']['breadcrumb_steps'] as $k => $data)
 		{
 			$status = strtolower($k);
-			
+
 			// css class
 			$class = array('item',$status);
 			if($data['protected'])
 			{
 				$class[] = 'hidden';
 			}
-			
+
 			($i%2 == 0 ? $class[] = 'even' : $class[] = 'odd');
 			($i == 0 ? $class[] = 'first' : '');
 			($i == count($GLOBALS['PCT_THEME_INSTALLER']['breadcrumb_steps']) - 1 ? $class[] = 'last' : '');
-			
+
 			if(!$data['label'])
 			{
 				$data['label'] = $k;
 			}
-			
+
 			// title
 			if(!$data['title'])
 			{
 				$data['title'] = $data['label'];
 			}
-			
+
 			// active
 			if($strCurrent == $status)
 			{
 				$data['isActive'] = true;
 				$class[] = 'tl_green';
 				$class[] = 'active';
-				
+
 				$arrSession['BREADCRUMB']['completed'][$k] = true;
 			}
-			
+
 			// completed
 			if($arrSession['BREADCRUMB']['completed'][$k] === true && $strCurrent != $status)
 			{
 				$data['completed'] = true;
 				$class[] = 'completed';
 			}
-			
+
 			// sill waiting
 			if(!$data['isActive'] && !$data['completed'])
 			{
 				$data['pending'] = true;
 				$class[] = 'pending';
 			}
-			
+
 			$data['href'] = \Controller::addToUrl($data['href'].'&rt='.REQUEST_TOKEN,true,array('step'));
 			$data['class'] = implode(' ', array_unique($class));
-			
+
 			$arrItems[ $k ] = $data;
-			
+
 			$i++;
 		}
-		
+
 		// update session
 		$objSession->set($this->strSession,$arrSession);
-		
+
 		// @var object
 		$objTemplate = new \BackendTemplate($this->strTemplateBreadcrumb);
 		$objTemplate->items = $arrItems;
-		
+
 		return $objTemplate->parse();
 	}
 }
