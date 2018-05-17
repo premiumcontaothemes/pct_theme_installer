@@ -291,6 +291,10 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'SQL_TEMPLATE_IMPORT'): ?>
 <!-- ! INSTALLATION : STEP UNZIP (3.2): SQL_TEMPLATE : IMPORT -->		
 		
+		<div class="backend_explanation_additional">
+			<?= $arrLangTpl['sql_template_import_info']; ?>
+		</div>
+		
 		<div class="tl_formbody_middle">
 			<?php if($this->breadcrumb): ?>
 				<?= $this->breadcrumb; ?>
