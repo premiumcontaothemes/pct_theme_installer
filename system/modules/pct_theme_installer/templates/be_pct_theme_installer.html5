@@ -297,10 +297,6 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<?php endif; ?>
 		</div>
 		
-		<?php 
-		\Debug::log($this->license);
-		?>
-		
 		<?php if(!$this->ajax_running): ?>
 		<!-- start the file coping via ajax -->
 		<script type="text/javascript">
