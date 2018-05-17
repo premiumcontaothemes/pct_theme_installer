@@ -346,10 +346,13 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		</script>
 		<?php endif; ?>
 
-<?php elseif($this->status == 'NOT_ACCEPTED'): ?>
-<!-- LICENSE NOT_ACCEPTED... -->
+<?php elseif($this->status == 'NOT_ACCEPTED' || $this->status == 'ACCESS_DENIED'): ?>
+<!-- ! LICENSE NOT_ACCEPTED... -->
 		
-		
+		<p class="backend_explanation_additional error"><?= sprintf($arrLangTpl['access_denied'], $this->license->error); ?></p>
+			
+		<p class="tl_message header_back"><a class="reset" href="<?= \Backend::addToUrl('status=reset',true,array('status','step')); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+
 						
 <?php endif; ?>
 

@@ -190,7 +190,7 @@ class ThemeInstaller extends \BackendModule
 		if($objLicense->status == 'ACCESS_DENIED' || \Input::get('status') == 'access_denied')
 		{
 			$this->Template->status = 'ACCESS_DENIED';
-
+			
 			return;
 		}
 
