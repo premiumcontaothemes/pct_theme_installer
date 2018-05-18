@@ -145,6 +145,7 @@ class ThemeInstaller extends \BackendModule
 		{
 			$this->Template->status = 'ERROR';
 			$this->Template->breadcrumb = '';
+			$this->Template->errors = $arrSession['errors'];
 			return;
 		}
 
@@ -217,6 +218,11 @@ class ThemeInstaller extends \BackendModule
 
 				// log
 				\System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
+				
+				// track error				
+				$arrSession['errors'] = array('File not found');
+				$objSession->set($this->strSession,$arrSession);
+
 				// redirect
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 
@@ -351,6 +357,11 @@ class ThemeInstaller extends \BackendModule
 					if(count($arrErrors) > 0)
 					{
 						\System::log('Theme Installer: Copy files: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+						
+						// track error				
+						$arrSession['errors'] = $arrErrors;
+						$objSession->set($this->strSession,$arrSession);
+
 						$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 					}
 					// no errors
@@ -511,6 +522,11 @@ class ThemeInstaller extends \BackendModule
 				if(count($arrErrors) > 0)
 				{
 					\System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+					
+					// track error				
+					$arrSession['errors'] = $arrErrors;
+					$objSession->set($this->strSession,$arrSession);
+
 					$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 				}
 
@@ -719,6 +735,11 @@ class ThemeInstaller extends \BackendModule
 				if(!empty($arrErrors))
 				{
 					\System::log('Theme installation finished with errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+					
+					// track error				
+					$arrSession['errors'] = $arrErrors;
+					$objSession->set($this->strSession,$arrSession);
+					
 					$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 				}
 
@@ -804,6 +825,11 @@ class ThemeInstaller extends \BackendModule
 
 				// log
 				\System::log('Theme Installer: File not found or file could not be created',__METHOD__,TL_ERROR);
+				
+				// track error				
+				$arrSession['errors'] = array('File not found or file could not be created');
+				$objSession->set($this->strSession,$arrSession);
+				
 				// redirect
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 
@@ -949,7 +975,7 @@ class ThemeInstaller extends \BackendModule
 				{
 					// response is a json object and not the file content
 					$_test = json_decode($strFileResponse);
-
+					
 					if(json_last_error() === JSON_ERROR_NONE)
 					{
 						$objResponse = json_decode($strFileResponse);
@@ -984,6 +1010,11 @@ class ThemeInstaller extends \BackendModule
 			if(count($arrErrors) > 0)
 			{
 				\System::log('Theme Installer: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+				
+				// track error				
+				$arrSession['errors'] = $arrErrors;
+				$objSession->set($this->strSession,$arrSession);
+				
 				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 			}
 

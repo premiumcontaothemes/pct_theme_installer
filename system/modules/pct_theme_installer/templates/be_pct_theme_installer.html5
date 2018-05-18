@@ -67,6 +67,11 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <!-- ! ERROR screen -->
 	
 	<div class="tl_formbody_middle">
+	<?php if($this->errors): ?>
+	<div class="backend_explanation_additional error"><?= implode("\n", $this->errors); ?></div>
+	<?php endif; ?>
+	
+	
 	<p class="tl_message"><a href="<?= \Controller::addToUrl('do=log',true,array('step','status')); ?>" title="<?= $arrLangTpl['button_systemlog'][0]; ?>"><?= $arrLangTpl['button_systemlog'][0]; ?></a></p>
 	<p class="tl_message header_back"><a class="reset" href="<?= \Controller::addToUrl('status=reset',true); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 	</div>
