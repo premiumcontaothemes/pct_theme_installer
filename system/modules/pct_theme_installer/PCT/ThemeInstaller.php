@@ -1058,7 +1058,11 @@ class ThemeInstaller extends \BackendModule
 
 		$objSession = \Session::getInstance();
 		$arrSession = $objSession->get($this->strSession);
-
+		if(version_compare(VERSION, '4','>='))
+		{
+			$objSession = \System::getContainer()->get('session');
+		}
+		
 		// store the processed steps
 		if(!is_array($arrSession['BREADCRUMB']['completed']))
 		{
