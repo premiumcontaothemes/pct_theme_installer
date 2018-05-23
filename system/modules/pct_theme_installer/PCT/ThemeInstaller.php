@@ -60,9 +60,9 @@ class ThemeInstaller extends \BackendModule
 		{
 			$objSession = \System::getContainer()->get('session');
 		}
-
+		$arrSession = $objSession->get($this->strSession);
+		
 		$objDatabase = \Database::getInstance();
-		$arrSession = $objSession->get('pct_theme_installer');
 		$arrErrors = array();
 		$arrParams = array();
 		$objLicense = $arrSession['license'] ? json_decode($arrSession['license']) : null;
@@ -885,8 +885,8 @@ class ThemeInstaller extends \BackendModule
 			// store the api response in the session
 			$arrSession['status'] = $objLicense->status;
 			$arrSession['license'] = $strResponse;
-			$objSession->set('pct_theme_installer',$arrSession);
-
+			$objSession->set($this->strSession,$arrSession);
+			
 			// flush post and make session active
 			// redirect to the beginning
 			$this->redirect( \Backend::addToUrl('status=ready',true) );
@@ -991,7 +991,7 @@ class ThemeInstaller extends \BackendModule
 
 							$arrSession['status'] = 'FILE_CREATED';
 							$arrSession['file'] = $objFile->path;
-							$objSession->set('pct_theme_installer',$arrSession);
+							$objSession->set($this->strSession,$arrSession);
 
 							// tell ajax that the file has been written
 							die($this->Template->file_written_response);
@@ -1057,11 +1057,11 @@ class ThemeInstaller extends \BackendModule
 		$i = 0;
 
 		$objSession = \Session::getInstance();
-		$arrSession = $objSession->get($this->strSession);
 		if(version_compare(VERSION, '4','>='))
 		{
 			$objSession = \System::getContainer()->get('session');
 		}
+		$arrSession = $objSession->get($this->strSession);
 		
 		// store the processed steps
 		if(!is_array($arrSession['BREADCRUMB']['completed']))
