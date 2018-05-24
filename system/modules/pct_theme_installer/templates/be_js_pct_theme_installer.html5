@@ -61,7 +61,7 @@ var PCT_ThemeInstaller =
 			blnReload = true;
 		}
 		
-		var headers = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','Access-Control-Allow-Headers':'Origin, Content-Type, X-Auth-Token'};
+		//var headers = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','Access-Control-Allow-Headers':'Origin, Content-Type, X-Auth-Token'};
 		var objRequest = new Request.Contao(
 		{
 			url:window.location.href,
@@ -84,6 +84,7 @@ var PCT_ThemeInstaller =
 			onFailure: function(xhr)
 			{
 				console.log('Request failed!');
+				console.log(objData);
 				console.log(xhr);
 			},
 		     // loading successful

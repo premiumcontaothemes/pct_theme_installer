@@ -91,7 +91,7 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->license = $objLicense;
 
 		$blnAjax = false;
-		if(\Input::get('action') != '')
+		if(\Input::get('action') != '' && \Environment::get('isAjaxRequest'))
 		{
 			$blnAjax = true;
 		}
@@ -287,160 +287,165 @@ class ThemeInstaller extends \BackendModule
 		}
 		//! status: INSTALLATION | STEP 2.0: Copy files
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'copy_files')
+		{
+			$this->Template->status = 'INSTALLATION';
+			$this->Template->step = 'COPY_FILES';
+			
+			// the target folder to extract to
+			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
+			$strFolder = $strTargetDir; #$strTargetDir.'/'.basename($arrSession['file'], ".zip");
+
+			if(\Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
 			{
-				$this->Template->status = 'INSTALLATION';
-				$this->Template->step = 'COPY_FILES';
-				$this->Template->num_step = 2;
-
-				// the target folder to extract to
-				$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
-				$strFolder = $strTargetDir; #$strTargetDir.'/'.basename($arrSession['file'], ".zip");
-
-				if(\Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
+				// backup an existing customize.css
+				$blnCustomizeCss = false;
+				if(file_exists(TL_ROOT.'/'.\Config::get('uploadPath').'/cto_layout/css/customize.css'))
 				{
-					// backup an existing customize.css
-					$blnCustomizeCss = false;
-					if(file_exists(TL_ROOT.'/'.\Config::get('uploadPath').'/cto_layout/css/customize.css'))
+					if( \Files::getInstance()->copy(\Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
 					{
-						if( \Files::getInstance()->copy(\Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
-						{
-							$blnCustomizeCss = true;
-						}
+						$blnCustomizeCss = true;
+					}
+				}
+
+				$scan = scandir(TL_ROOT.'/'.$strFolder);
+
+				// check for consistancy of the folder. If the unziped folder does not contain the mandatory files, quit
+				if( count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) != count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) )
+				{
+					$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'],implode(', ', $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory']));
+					\System::log($log,__METHOD__,TL_ERROR);
+
+					// ajax done
+					die('Content of the extracted file in '.$strFolder.' does not match the mandatory content');
+				}
+
+				$objFiles = \Files::getInstance();
+				$arrIgnore = array('.ds_store');
+
+				// folder to copy
+				$arrFolders = scan(TL_ROOT.'/'.$strFolder.'/upload');
+
+				foreach($arrFolders as $f)
+				{
+					if(in_array(strtolower($f), $arrIgnore))
+					{
+						continue;
 					}
 
-					$scan = scandir(TL_ROOT.'/'.$strFolder);
-
-					// check for consistancy of the folder. If the unziped folder does not contain the mandatory files, quit
-					if( count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) != count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) )
+					//-- copy the /upload/files/ folder
+					$strSource = $strFolder.'/upload/'.$f;
+					$strDestination = $f;
+					if($f == 'files')
 					{
-						$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'],implode(', ', $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory']));
-						\System::log($log,__METHOD__,TL_ERROR);
-
-						// ajax done
-						die('Content of the extracted file in '.$strFolder.' does not match the mandatory content');
+						$strDestination = \Config::get('uploadPath') ?: 'files';
 					}
-
-					$objFiles = \Files::getInstance();
-					$arrIgnore = array('.ds_store');
-
-					// folder to copy
-					$arrFolders = scan(TL_ROOT.'/'.$strFolder.'/upload');
-
-					foreach($arrFolders as $f)
+					
+					if($objFiles->rcopy($strSource,$strDestination) !== true)
 					{
-						if(in_array(strtolower($f), $arrIgnore))
-						{
-							continue;
-						}
-
-						//-- copy the /upload/files/ folder
-						$strSource = $strFolder.'/upload/'.$f;
-						$strDestination = $f;
-						if($f == 'files')
-						{
-							$strDestination = \Config::get('uploadPath');
-						}
-
-						if($objFiles->rcopy($strSource,$strDestination) !== true)
-						{
-							$arrErrors[] = 'Copy '.$strSource.' to '.$strDestination.' failed';
-						}
+						$arrErrors[] = 'Copy "'.$strSource.'" to "'.$strDestination.'" failed';
 					}
+				}
 
-					// reinstall the customize.css
-					if($blnCustomizeCss)
+				// reinstall the customize.css
+				if($blnCustomizeCss)
+				{
+					\Files::getInstance()->copy($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css',\Config::get('uploadPath') ?: 'files'.'/cto_layout/css/customize.css');
+				}
+				
+				// log errors
+				if(count($arrErrors) > 0)
+				{
+					\System::log('Theme Installer: Copy files: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+					
+					// track error				
+					$arrSession['errors'] = $arrErrors;
+					$objSession->set($this->strSession,$arrSession);
+					if(!$blnAjax)
 					{
-						\Files::getInstance()->copy($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css',\Config::get('uploadPath').'/cto_layout/css/customize.css');
-					}
-
-					// log errors
-					if(count($arrErrors) > 0)
-					{
-						\System::log('Theme Installer: Copy files: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-						
-						// track error				
-						$arrSession['errors'] = $arrErrors;
-						$objSession->set($this->strSession,$arrSession);
-
 						$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
 					}
-					// no errors
 					else
 					{
-						// write log
-						\System::log( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']),__METHOD__,TL_CRON);
-
-						// ajax done
-						if($blnAjax && \Environment::get('isAjaxRequest'))
-						{
-							die('Coping files completed');
-						}
+						die('Theme Installer: Copy files: '.implode(', ', $arrErrors));
 					}
 				}
+				// no errors
 				else
 				{
-					#die('Zip folder '.$strTargetDir.'/'.$strFolder.' does not exist or is not a directory');
-				}
+					// write log
+					\System::log( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']),__METHOD__,TL_CRON);
 
-				return ;
+					// ajax done
+					if($blnAjax)
+					{
+						die('Coping files completed');
+					}
+				}
 			}
+			else
+			{
+				#die('Zip folder '.$strTargetDir.'/'.$strFolder.' does not exist or is not a directory');
+			}
+
+			return ;
+		}
 		//! status: INSTALLATION | STEP 3.0 : Clear internal caches
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'clear_cache')
+		{
+			$this->Template->status = 'INSTALLATION';
+			$this->Template->step = 'CLEAR_CACHE';
+
+			if(\Input::get('action') == 'run')
 			{
-				$this->Template->status = 'INSTALLATION';
-				$this->Template->step = 'CLEAR_CACHE';
-
-				if(\Input::get('action') == 'run')
+				// clear internal cache of Contao 3.5
+				if(version_compare(VERSION, '3.5','<=') && (boolean)\Config::get('bypassCache') === false)
 				{
-					// clear internal cache of Contao 3.5
-					if(version_compare(VERSION, '3.5','<=') && (boolean)\Config::get('bypassCache') === false)
-					{
-						$objAutomator = new \Contao\Automator;
-						$objAutomator->purgeInternalCache();
+					$objAutomator = new \Contao\Automator;
+					$objAutomator->purgeInternalCache();
 
-						die('Internal cache cleared');
-					}
-					// clear Symphony cache of Contao 4.4
-					else if(version_compare(VERSION, '4.4','>='))
-						{
-							$objContainer = \System::getContainer();
-							$strCacheDir = \StringUtil::stripRootDir($objContainer->getParameter('kernel.cache_dir'));
-							$strRootDir = $objContainer->getParameter('kernel.project_dir');
-							$strWebDir = $objContainer->getParameter('contao.web_dir');
-							$arrBundles = $objContainer->getParameter('kernel.bundles');
-
-							// @var object Contao\Automator
-							$objAutomator = new \Contao\Automator;
-							// generate symlinks to /assets, /files, /system
-							$objAutomator->generateSymlinks();
-							// generate bundles symlinks
-							$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
-							$arrBundles = array('calendar','comments','core','faq','news','newsletter');
-							foreach($arrBundles as $bundle)
-							{
-								$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle';
-								$to = $strWebDir.'/bundles/contao'.$bundle;
-								$objSymlink::symlink($from, $to,$strRootDir);
-							}
-
-							// clear the internal cache
-							$objAutomator->purgeInternalCache();
-							// rebuild the internal cache
-							$objAutomator->generateInternalCache();
-							// purge the whole folder
-							\Files::getInstance()->rrdir($strCacheDir,true);
-
-							// try to rebuild the symphony cache
-							$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
-							$objInstallationController->call('purgeSymfonyCache');
-							$objInstallationController->call('warmUpSymfonyCache');
-
-							die('Symlinks created and Symphony cache cleared');
-						}
+					die('Internal cache cleared');
 				}
+				// clear Symphony cache of Contao 4.4
+				else if(version_compare(VERSION, '4.4','>='))
+				{
+					$objContainer = \System::getContainer();
+					$strCacheDir = \StringUtil::stripRootDir($objContainer->getParameter('kernel.cache_dir'));
+					$strRootDir = $objContainer->getParameter('kernel.project_dir');
+					$strWebDir = $objContainer->getParameter('contao.web_dir');
+					$arrBundles = $objContainer->getParameter('kernel.bundles');
 
-				return;
+					// @var object Contao\Automator
+					$objAutomator = new \Contao\Automator;
+					// generate symlinks to /assets, /files, /system
+					$objAutomator->generateSymlinks();
+					// generate bundles symlinks
+					$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
+					$arrBundles = array('calendar','comments','core','faq','news','newsletter');
+					foreach($arrBundles as $bundle)
+					{
+						$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle';
+						$to = $strWebDir.'/bundles/contao'.$bundle;
+						$objSymlink::symlink($from, $to,$strRootDir);
+					}
+
+					// clear the internal cache
+					$objAutomator->purgeInternalCache();
+					// rebuild the internal cache
+					$objAutomator->generateInternalCache();
+					// purge the whole folder
+					\Files::getInstance()->rrdir($strCacheDir,true);
+
+					// try to rebuild the symphony cache
+					$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
+					$objInstallationController->call('purgeSymfonyCache');
+					$objInstallationController->call('warmUpSymfonyCache');
+
+					die('Symlinks created and Symphony cache cleared');
+				}
 			}
+
+			return;
+		}
 
 		//! status: INSTALLATION | STEP 4.0 : DB Update for modules
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'db_update_modules')
