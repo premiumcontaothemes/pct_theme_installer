@@ -29,18 +29,19 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_status']			= 'Stat
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_step']			= 'Schritt: %s';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][0]		= 'Neustart'; // linktext
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][1]		= 'Die Installation erneut beginnen'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError']	= 'Abweichende Lizenznehmer-Domain (%s) zu anfragender Domain (%s).<br>Bitte updaten Sie Ihre Lizenzregistrierung in Ihrem Kundenbereich.'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_headline']	= 'Bereit zum Import der Demo-Webseite.'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_subheadline']	= 'Hinweis: Bestehende Daten gehen verloren. Ihr Benutzerprofil bleibt erhalten.'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_info']		= 'Der Import der Demo-Webseite (SQL-Template) '; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError']			= 'Abweichende Lizenznehmer-Domain (%s) zu anfragender Domain (%s).<br>Bitte updaten Sie Ihre Lizenzregistrierung in Ihrem Kundenbereich.'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_headline']				= 'Bereit zum Import der Demo-Webseite.'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_subheadline']			= 'Hinweis: Bestehende Daten gehen verloren. Ihr Benutzerprofil bleibt erhalten.'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_info']					= 'Der Import der Demo-Webseite (SQL-Template) '; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_sql_template_import']		= 'Import ausführen'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['choose_product_info']		= 'Bitte wählen Sie das Product aus, das installiert werden soll.'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['product_select_blankOption']	= 'Produkt wählen...'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_systemlog'][0] 		= 'Gehe zu Systemlog...';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] = 'Tragen Sie Ihre Bestellnummer und Bestell-E-Mail-Adresse ein und klicken Sie "Lizenz abfragen". Anschließend können Sie den 1-Click-Installer starten. Das Theme Eclipse wird automatisch vom Premium Contao Themes Server auf Ihren Server geladen und anschließend installiert.';		
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info'] = 'Der SQL-Import kann einige Minuten in Anspruch nehmen. Nach erfolgreichem Import werden Sie zum Contao-Login weitergeleitet.';		
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 		= 'Meldung: %s';		
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 				= 'Fehler: %s';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['choose_product_info']				= 'Bitte wählen Sie das Product aus, das installiert werden soll.'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['product_select_blankOption']		= 'Produkt wählen...'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_systemlog'][0] 				= 'Gehe zu Systemlog...';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= 'Tragen Sie Ihre Bestellnummer und Bestell-E-Mail-Adresse ein und klicken Sie "Lizenz abfragen". Anschließend können Sie den 1-Click-Installer starten. Das Theme Eclipse wird automatisch vom Premium Contao Themes Server auf Ihren Server geladen und anschließend installiert.';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info'] 			= 'Der SQL-Import kann einige Minuten in Anspruch nehmen. Nach erfolgreichem Import werden Sie zum Contao-Login weitergeleitet.';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Meldung: %s';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Fehler: %s';		
+
 
 /**
  * Breadcrumb
@@ -48,9 +49,9 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 				= 'Fehler: 
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['welcome'][0] 							= 'Start';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['welcome'][1] 							= 'Hier beginnt alles';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['validation'][0]						= 'Lizenzabfrage';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['validation'][1] 						= "Hier trennt sich die Spreu vom Weizen.";
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['validation'][1] 						= "Ihre Lizenz wird überprüft.";
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['accepted'][0] 						= 'Lizenz valide';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['accepted'][1] 						= 'Da hast du aber Glück gehabt!';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['accepted'][1] 						= 'Ihre Lizenz ist validiert.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['not_accepted'][0] 					= 'Lizenz nicht valide';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['not_accepted'][1] 					= 'Ihre Lizenz konnte nicht validiert werden.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['loading'][0] 							= 'Lade Daten';
@@ -67,6 +68,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_templ
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_import'][1]	= 'Installation des SQL-Installations-Templates der Demo-Daten';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_wait'][0] 	= 'Installations-Template importieren...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_wait'][1] 	= 'Installations-Template importieren...';
+
 
 /**
  * Status

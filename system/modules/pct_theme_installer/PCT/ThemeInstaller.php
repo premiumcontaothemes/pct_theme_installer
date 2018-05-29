@@ -229,11 +229,9 @@ class ThemeInstaller extends \BackendModule
 				return;
 			}
 
-			$this->Template->ajax_action = 'unzip';
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'UNZIP';
-			$this->Template->num_step = 1;
-
+			
 			$objFile = new \File($arrSession['file'],true);
 			$this->Template->file = $objFile;
 
@@ -423,7 +421,7 @@ class ThemeInstaller extends \BackendModule
 					$arrBundles = array('calendar','comments','core','faq','news','newsletter');
 					foreach($arrBundles as $bundle)
 					{
-						$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle';
+						$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle/src/Resources/public';
 						$to = $strWebDir.'/bundles/contao'.$bundle;
 						$objSymlink::symlink($from, $to,$strRootDir);
 					}
@@ -452,8 +450,7 @@ class ThemeInstaller extends \BackendModule
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'DB_UPDATE_MODULES';
-			$this->Template->num_step = 3.1;
-
+			
 			$arrErrors = array();
 
 			try
@@ -493,50 +490,50 @@ class ThemeInstaller extends \BackendModule
 				}
 				// Contao 4.4 >=
 				else if(version_compare(VERSION, '4.4','>='))
+				{
+					// @var object \PCT\ThemeInstaller\InstallationController
+					#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
+					$objContainer = \System::getContainer();
+					$objInstaller = $objContainer->get('contao.installer');
+					// compile sql
+					$arrSQL = $objInstaller->getCommands();
+					if(!empty($arrSQL) && is_array($arrSQL))
 					{
-						// @var object \PCT\ThemeInstaller\InstallationController
-						#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
-						$objContainer = \System::getContainer();
-						$objInstaller = $objContainer->get('contao.installer');
-						// compile sql
-						$arrSQL = $objInstaller->getCommands();
-						if(!empty($arrSQL) && is_array($arrSQL))
+						foreach($arrSQL as $operation => $sql)
 						{
-							foreach($arrSQL as $operation => $sql)
+							// never run operations
+							if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
 							{
-								// never run operations
-								if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
-								{
-									continue;
-								}
+								continue;
+							}
 
-								foreach($sql as $hash => $statement)
-								{
-									$objInstaller->execCommand($hash);
-								}
+							foreach($sql as $hash => $statement)
+							{
+								$objInstaller->execCommand($hash);
 							}
 						}
 					}
 				}
-				catch(\Exception $e)
-				{
-					$arrErrors[] = $e->getMessage();
-				}
-
-				// log errors and redirect
-				if(count($arrErrors) > 0)
-				{
-					\System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-					
-					// track error				
-					$arrSession['errors'] = $arrErrors;
-					$objSession->set($this->strSession,$arrSession);
-
-					$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
-				}
-
-				return;
 			}
+			catch(\Exception $e)
+			{
+				$arrErrors[] = $e->getMessage();
+			}
+
+			// log errors and redirect
+			if(count($arrErrors) > 0)
+			{
+				\System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
+				
+				// track error				
+				$arrSession['errors'] = $arrErrors;
+				$objSession->set($this->strSession,$arrSession);
+
+				$this->redirect( \Backend::addToUrl('status=error',true,array('step','action')) );
+			}
+
+			return;
+		}
 		//! status: INSTALLATION | STEP 5.0 : SQL_TEMPLATE_WAIT : Wait for user input
 		else if(\Input::get('status') == 'installation' && \Input::get('step') == 'sql_template_wait')
 		{
@@ -605,8 +602,9 @@ class ThemeInstaller extends \BackendModule
 
 				$strTemplate = $strTmpTemplate;
 			}
-
-
+			
+			$this->Template->sqlFile = $strOrigTemplate;
+			
 			// Eclipse + CustomCatalog sqls
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
 			
@@ -750,9 +748,10 @@ class ThemeInstaller extends \BackendModule
 
 				// mark as being completed
 				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-				$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
+				$_SESSION['PCT_THEME_INSTALLER']['theme'] = $this->strTheme;
 				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-
+				$objSession->set('PCT_THEME_INSTALLER',$_SESSION['PCT_THEME_INSTALLER']);
+				
 				// log out
 				#$objUser = \BackendUser::getInstance();
 				#$objUser->logout();
@@ -760,7 +759,7 @@ class ThemeInstaller extends \BackendModule
 				// redirect to contao login if not from ajax
 				if(!\Environment::get('isAjaxRequest'))
 				{
-					$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?installation_completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
+					$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
 					$this->redirect($url);
 				}
 
@@ -769,6 +768,12 @@ class ThemeInstaller extends \BackendModule
 
 			if(\Input::get('action') == 'run')
 			{
+				// mark as being completed
+				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
+				$_SESSION['PCT_THEME_INSTALLER']['theme'] = $this->strTheme;
+				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
+				$objSession->set('PCT_THEME_INSTALLER',$_SESSION['PCT_THEME_INSTALLER']);
+					
 				if(version_compare(VERSION, '3.5','<='))
 				{
 					// @var object \PCT\ThemeInstaller\BackendInstall to simulate the install tool
@@ -777,40 +782,22 @@ class ThemeInstaller extends \BackendModule
 					\Input::setPost('template',$strTemplate);
 					\Input::setPost('FORM_SUBMIT','tl_tutorial');
 					// let the install tool import the sql templates
-					try
-					{
-						// mark as being completed
-						$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-						$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
-						$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-
-						$objBackendInstall->call('importExampleWebsite');
-					}
-					catch(\Exception $e)
-					{
-						unset($_SESSION['PCT_THEME_INSTALLER']);
-					}
+					$objBackendInstall->call('importExampleWebsite');
 				}
 				else if(version_compare(VERSION, '4.4','>='))
+				{
+					$objContainer = \System::getContainer();
+					$objInstall = $objContainer->get('contao.install_tool');
+					// let the install tool import the sql templates
+					$objInstall->importTemplate($strTemplate);
+					#$objInstall->persistConfig('exampleWebsite', time());
+					
+					if(!\Environment::get('isAjaxRequest'))
 					{
-						$objContainer = \System::getContainer();
-						$objInstall = $objContainer->get('contao.install_tool');
-						// let the install tool import the sql templates
-						try
-						{
-							// mark as being completed
-							$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-							$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
-							$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-
-							$objInstall->importTemplate($strTemplate);
-							$objInstall->persistConfig('exampleWebsite', time());
-						}
-						catch(\Exception $e)
-						{
-							unset($_SESSION['PCT_THEME_INSTALLER']);
-						}
+						$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
+						$this->redirect($url);
 					}
+				}
 			}
 
 			return;

@@ -3,22 +3,25 @@
 $this->l_status = strtolower($this->status);
 $this->l_step = strtolower($this->step);
 $this->l_status_step = strtolower($this->status).($this->step ? '.'.strtolower($this->step) : '');
-
 $arrLang = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER'];
 $arrLangTpl = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE'];
 $strStatus = $arrLang['STATUS'][$this->l_status];
 $strStep = $arrLang['STATUS'][$this->l_status_step];
+if(strlen($strStatus) < 1 && strlen($strStep) > 0)
+{
+	$strStatus = $strStep;
+}
 if(isset($this->license->registration->domains) && !is_array($this->license->registration->domains))
 {
 	$this->license->registration->domains = (array)$this->license->registration->domains;
-}		
+}
 ?>
 
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
 			<?php if($strStatus): ?>
-			<span class="status"><?= sprintf($arrLangTpl['label_status'],$strStatus); ?></span> <?php if($this->step): ?><span class="step"><?= sprintf($arrLangTpl['label_status'],$strStep); ?></span><?php endif; ?>
+			<span class="status hidden"><?= sprintf($arrLangTpl['label_status'],$strStatus); ?></span>
 			<?php endif; ?>
 			<a href="<?= $this->resetUrl; ?>" class="tl_button reset header_back" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a>
 		</div>
@@ -311,7 +314,12 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=completed&theme='.$this->theme) );
+		#$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=completed&theme='.$this->theme) );
+		$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
+		if(version_compare(VERSION, '4.4','>='))
+		{
+			$url = \StringUtil::decodeEntities( \Environment::get('base').'contao/login?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
+		}
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});

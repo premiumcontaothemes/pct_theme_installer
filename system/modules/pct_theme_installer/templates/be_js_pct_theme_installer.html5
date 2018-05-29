@@ -90,10 +90,6 @@ var PCT_ThemeInstaller =
 		     // loading successful
 			onSuccess: function(response)
 			{
-				//console.log(response);
-				// hide Contaos loading box
-				AjaxRequest.hideBox();
-				
 				// redirct on success
 				if(objData.redirectTo != undefined && objData.redirectTo != '')
 				{
@@ -112,6 +108,9 @@ var PCT_ThemeInstaller =
 				{
 					console.log(response);
 				}
+				
+				// hide Contaos loading box
+				AjaxRequest.hideBox();
 			},
 		});
 		objRequest.get(objData);
@@ -145,7 +144,9 @@ var PCT_ThemeInstaller =
 		{
 			// hide Contaos loading box
 			PCT_ThemeInstaller.hideAjaxInfobox();
-			
+			// log
+			console.log('ThemeInstaller redirect: '+strUrl);
+			// redirect
 			window.location = strUrl;		
 		}, intDelay);
 	},
