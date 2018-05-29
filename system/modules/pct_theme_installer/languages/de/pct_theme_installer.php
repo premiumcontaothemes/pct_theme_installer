@@ -41,6 +41,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= '
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info'] 			= 'Der SQL-Import kann einige Minuten in Anspruch nehmen. Nach erfolgreichem Import werden Sie zum Contao-Login weitergeleitet.';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Meldung: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Fehler: %s';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_supported'] 					= 'Der Installer unterstützt die folgenden Produkte: %s';		
 
 
 /**
@@ -77,6 +78,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['welcome'] = '';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['validation'] = 'Lizenzabfrage';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['accepted'] = 'Lizenz valide';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['not_accepted'] = 'Lizenz nicht valide';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['not_supported'] = 'Dieses Produkt wird nicht unterstützt.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['choose_product'] = 'Produkt wählen...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['loading'] = 'Lade Daten';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['session_lost'] = 'Lizenz-Session abgelaufen';
@@ -109,6 +111,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['choose_produc
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['error'] 								= 'Während der Installation sind Fehler aufgetreten.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['file_not_exists'] 					= 'Datei existiert nicht mehr';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['access_denied'] 						= 'Die Lizenz konnte nicht validiert werden.';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['not_supported'] 						= 'Das gewählte Produkt wird nicht unterstützt.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['session_lost'] 						= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.unzip'] 				= 'Das Daten-Zip wird entpackt...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.copy_files'] 			= 'Die Dateien werden an ihren Zielort kopiert...';

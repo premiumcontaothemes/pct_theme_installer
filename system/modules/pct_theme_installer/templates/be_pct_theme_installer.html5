@@ -363,11 +363,24 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <!-- ! LICENSE NOT_ACCEPTED... -->
 		
 		<p class="backend_explanation_additional error"><?= sprintf($arrLangTpl['access_denied'], $this->license->error); ?></p>
-			
 		<p class="tl_message header_back"><a class="reset" href="<?= \Backend::addToUrl('status=reset',true,array('status','step')); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 
+<?php elseif($this->status == 'NOT_SUPPORTED'): ?>
+<!-- ! THEME NOT SUPPORTED... -->
+		
+		<?php 
+		$themes = array();
+		foreach($GLOBALS['PCT_THEME_INSTALLER']['THEMES'] as $data)
+		{
+			$themes[] = $data['label'];
+		}	
+		?>
+		
+		<p class="backend_explanation_additional error"><?= sprintf($arrLangTpl['not_supported'], implode(', ', $themes)); ?></p>
+		<p class="tl_message header_back"><a class="reset" href="<?= \Backend::addToUrl('status=reset',true,array('status','step')); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 						
 <?php endif; ?>
+
 
 	</div>
 

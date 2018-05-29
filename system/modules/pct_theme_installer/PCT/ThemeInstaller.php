@@ -98,7 +98,7 @@ class ThemeInstaller extends \BackendModule
 		$this->Template->ajax_running = $blnAjax;
 
 
-		//! status : SESSION_LOST
+//! status : SESSION_LOST
 
 
 		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset','error')))
@@ -120,8 +120,8 @@ class ThemeInstaller extends \BackendModule
 			$this->strTheme = basename($objLicense->file->name,'.zip');
 			$this->Template->theme = $this->strTheme;
 		}
-
-
+		
+		
 //! status : COMPLETED
 
 
@@ -134,6 +134,36 @@ class ThemeInstaller extends \BackendModule
 			$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?installation_completed=1&theme='.\Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
 			$this->redirect($url);
 
+			return;
+		}
+
+
+//! status : RESET
+
+
+		// clear the session on status reset
+		if(\Input::get('status') == 'reset' || \Input::get('status') == '')
+		{
+			$objLicense = null;
+			$objSession->remove('pct_theme_installer');
+
+			// redirect to the beginning
+			$this->redirect( \Backend::addToUrl('status=welcome',true,array('step')) );
+		}
+				
+
+//! status : NOT_SUPPORTED
+
+		
+		if($objLicense->status == 'NOT_SUPPORTED' && \Input::get('status') != 'not_supported')
+		{
+			// redirect to the not supported page
+			$this->redirect( \Backend::addToUrl('status=not_supported',true,array('step')) );
+		}
+		
+		if(\Input::get('status') == 'not_supported')
+		{
+			$this->Template->status = 'NOT_SUPPORTED';
 			return;
 		}
 
@@ -158,20 +188,6 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->status = 'WELCOME';
 			$this->Template->breadcrumb = '';
 			return;
-		}
-
-
-//! status : RESET
-
-
-		// clear the session on status reset
-		if(\Input::get('status') == 'reset' || \Input::get('status') == '')
-		{
-			$objLicense = null;
-			$objSession->remove('pct_theme_installer');
-
-			// redirect to the beginning
-			$this->redirect( \Backend::addToUrl('status=welcome',true,array('step')) );
 		}
 
 
@@ -851,8 +867,8 @@ class ThemeInstaller extends \BackendModule
 
 			$arrParams = array
 			(
-				'key'   => \Input::post('license'),
-				'email'  => \Input::post('email'),
+				'key'   => trim(\Input::post('license')),
+				'email'  => trim(\Input::post('email')),
 				'domain' => \Environment::get('url'),
 			);
 
