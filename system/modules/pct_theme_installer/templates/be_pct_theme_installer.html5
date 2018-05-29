@@ -7,6 +7,7 @@ $arrLang = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER'];
 $arrLangTpl = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE'];
 $strStatus = $arrLang['STATUS'][$this->l_status];
 $strStep = $arrLang['STATUS'][$this->l_status_step];
+$strTheme = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->theme]['label'] ?: '';
 if(strlen($strStatus) < 1 && strlen($strStep) > 0)
 {
 	$strStatus = $strStep;
@@ -26,7 +27,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<a href="<?= $this->resetUrl; ?>" class="tl_button reset header_back" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a>
 		</div>
 		
-		<div class="backend_explanation"><?= $arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]; ?></div>
+		<div class="backend_explanation"><?= sprintf($arrLang['BACKEND_DESCRIPTION'][$this->l_status_step],$strTheme); ?></div>
 
 <!-- ! WELCOME screen -->
 <?php if($this->status == 'WELCOME'): ?>

@@ -27,6 +27,7 @@
 #pct_eclipse_installer #contao_theme_select h3 {margin: 0; margin-bottom: 5px;}
 #pct_eclipse_installer #contao_theme_select select, #pct_eclipse_installer #contao_theme_select .tl_select {min-width: 120px;}
 #pct_eclipse_installer .backend_explanation {padding: 15px; color:#444; font-size: 0.95rem; font-weight: bold;}
+#pct_eclipse_installer .backend_explanation .italic {font-style: italic;}
 #pct_eclipse_installer .backend_explanation_additional {padding: 15px; margin-bottom: 15px; line-height: 17px; color: #4b85ba; background: #eff5fa;}
 #pct_eclipse_installer .backend_explanation_additional.error {color: #c33; background: #faeeee;}
 #pct_eclipse_installer .licence_check {overflow: hidden; border-top: 1px solid silver; padding: 15px 15px 25px 15px;}
