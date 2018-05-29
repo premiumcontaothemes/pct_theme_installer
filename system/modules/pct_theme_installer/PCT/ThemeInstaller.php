@@ -690,7 +690,7 @@ class ThemeInstaller extends \BackendModule
 					{
 						if($objDatabase->tableExists($table,null,true) === true)
 						{
-							$objDatabase->execute('DROP TABLE '.$table);
+							$objDatabase->query('DROP TABLE '.$table);
 						}
 					}
 
@@ -730,7 +730,7 @@ class ThemeInstaller extends \BackendModule
 						{
 							if($objDatabase->tableExists( $result[1],null,true ) === true && !in_array($result[1], $truncated))
 							{
-								$objDatabase->execute('TRUNCATE TABLE '.$result[1]);
+								$objDatabase->query('TRUNCATE TABLE '.$result[1]);
 								$truncated[] = $result[1];
 							}
 
