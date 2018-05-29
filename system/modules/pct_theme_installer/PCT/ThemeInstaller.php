@@ -623,7 +623,6 @@ class ThemeInstaller extends \BackendModule
 			
 			// Eclipse + CustomCatalog sqls
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
-			
 			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
 			{
 				$skipTables = array('tl_user','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
@@ -688,7 +687,7 @@ class ThemeInstaller extends \BackendModule
 					// DROP tables that will be created anyways
 					foreach(array_keys($create_sql) as $table)
 					{
-						if($objDatabase->tableExists($table,null,true) === true)
+						if($objDatabase->tableExists($table,null,true) === true && !in_array($table, $skipTables))
 						{
 							$objDatabase->query('DROP TABLE '.$table);
 						}
@@ -697,7 +696,7 @@ class ThemeInstaller extends \BackendModule
 					// CREATE tables
 					foreach($create_sql as $table => $query)
 					{
-						if($objDatabase->tableExists($table,null,true) === false)
+						if($objDatabase->tableExists($table,null,true) === false && !in_array($table, $skipTables))
 						{
 							$objDatabase->query($query);
 						}
@@ -706,7 +705,7 @@ class ThemeInstaller extends \BackendModule
 					// ALTER tables
 					foreach($alter_sql as $table => $query)
 					{
-						if($objDatabase->tableExists($table,null,true) === false)
+						if($objDatabase->tableExists($table,null,true) === false || in_array($table, $skipTables))
 						{
 							continue;
 						}
@@ -728,7 +727,7 @@ class ThemeInstaller extends \BackendModule
 					{
 						if(preg_match('/`(.*?)\`/', $query,$result))
 						{
-							if($objDatabase->tableExists( $result[1],null,true ) === true && !in_array($result[1], $truncated))
+							if($objDatabase->tableExists( $result[1],null,true ) === true && !in_array($result[1], $truncated) && !in_array($result[1], $skipTables))
 							{
 								$objDatabase->query('TRUNCATE TABLE '.$result[1]);
 								$truncated[] = $result[1];
