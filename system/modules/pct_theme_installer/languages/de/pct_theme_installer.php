@@ -34,7 +34,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_headline']	
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_subheadline']			= 'Hinweis: Bestehende Daten gehen verloren. Ihr Benutzerprofil bleibt erhalten.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_info']					= 'Der Import der Demo-Webseite (SQL-Template) '; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_sql_template_import']		= 'Import ausführen'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['choose_product_info']				= 'Bitte wählen Sie das Product aus, das installiert werden soll.'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['choose_product_info']				= 'Bitte wählen Sie das Produkt aus, das installiert werden soll.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['product_select_blankOption']		= 'Produkt wählen...'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_systemlog'][0] 				= 'Gehe zu Systemlog...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= 'Tragen Sie Ihre Bestellnummer und Bestell-E-Mail-Adresse ein und klicken Sie "Lizenz abfragen". Anschließend können Sie den 1-Click-Installer starten. Das Theme Eclipse wird automatisch vom Premium Contao Themes Server auf Ihren Server geladen und anschließend installiert.';		

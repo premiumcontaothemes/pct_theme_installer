@@ -50,6 +50,8 @@
 #pct_eclipse_installer .tl_info,
 #pct_eclipse_installer .tl_message {margin: 15px;}
 
+#pct_eclipse_installer .select_container {margin: 15px;}
+#pct_eclipse_installer .select_container .styled_select {min-width: 200px;}
 
 #tl_ajaxOverlay {opacity: 0 !important;}
 #tl_ajaxBox {display: none !important;}
