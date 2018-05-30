@@ -46,6 +46,6 @@
 	},	
 	"extra":
 	{
-		"contao-manager-plugin": "Contao\\PCT\\ThemeInstaller\\ContaoManager"
+		"contao-manager-plugin": "Contao\\PCT\\ThemeInstaller\\ContaoManager\\Plugin"
 	}
 }
