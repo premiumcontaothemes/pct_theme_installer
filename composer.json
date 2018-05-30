@@ -1,10 +1,10 @@
 {
 	"name":"timgatzky/pct_theme_installer",
-	"description":"Installation manager for the PCT Eclipse theme. https://www.premium-contao-themes.com/",
-	"keywords":["contao","themes","premiumcontaothemes"],
+	"description":"Installation manager for the Premium Conta Theme (PCT) Eclipse theme. https://www.premium-contao-themes.com/",
+	"keywords":["contao","themes","premiumcontaothemes","premium-contao-themes"],
 	"type":"contao-module",
     "license": "LGPL-3.0-or-later",
-	"homepage":"https://github.com/timgatzky/pct_eclipse_installer",
+	"homepage":"https://github.com/timgatzky/pct_theme_installer",
 	"authors":
 	[
 		{
@@ -20,8 +20,8 @@
 	],
 	"support":
 	{
-		"issues":"https://github.com/timgatzky/pct_eclipse_installer/issues",
-		"source":"https://github.com/timgatzky/pct_eclipse_installer"
+		"issues":"https://github.com/timgatzky/pct_theme_installer/issues",
+		"source":"https://github.com/timgatzky/pct_theme_installer"
 	},
 	"require":
 	{
@@ -52,7 +52,7 @@
 		{
 			"sources":
 			{
-				"":"system/modules/pct_eclipse_installer"
+				"":"system/modules/pct_theme_installer"
 			}
 		}
 	}
