@@ -22,7 +22,7 @@
 	{
 		"issues":"https://github.com/timgatzky/pct_theme_installer/issues",
 		"source":"https://github.com/timgatzky/pct_theme_installer",
-		"forum":"forum.premium-contao-themes.com"
+		"forum":"https://forum.premium-contao-themes.com"
 	},
 	"require":
 	{
