@@ -4,7 +4,7 @@
  * Contao 
  * German translation file 
  * 
- * copyright  Tim Gatzky 2016
+ * copyright  Tim Gatzky 2018
  * author     Tim Gatzky <info@tim-gatzky.de>
  * Translator:  
  * 
@@ -16,7 +16,7 @@
 /**
  * Errors
  */
-$GLOBALS['TL_LANG']['XPT']['pct_themer']['no_active_pages_found'] 		= 'Keine aktiven Seiten gefunden';
-$GLOBALS['TL_LANG']['XPT']['pct_themer']['no_export_data']			 	= 'Keine Export-Daten in der Session gefunden. Bitte führen Sie die Datensammlung erneut durch.';
-$GLOBALS['TL_LANG']['XPT']['pct_themer']['import_already_done']			= 'Import wurde bereits ausgeführt. Leeren Sie Ihre Benutzer-Session für einen erneuten Import.';
-$GLOBALS['TL_LANG']['XPT']['pct_themer']['no_theme_record_selected'] 	= 'Bitte wählen Sie einen Theme-Datensatz als Ziel für Modul-Datensätze.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'] 				= 'Das Entpacken der Datei %s ist fehlgeschlagen.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'] 			= 'Pflichtinhalte (%s) in dem entpackten Verzeichnis nicht gefunden.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'] 				= 'SQL-Installations-Template nicht gefunden.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'] 				= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';

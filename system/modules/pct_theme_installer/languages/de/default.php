@@ -14,34 +14,7 @@
  */
  
 /**
- * Defaults
+ * Status
  */
-$GLOBALS['TL_LANG']['pct_themer']['headline'] 					= 'PCT Theme Export: %s';
-$GLOBALS['TL_LANG']['pct_themer']['infos']['collecting_data'] 	= 'Sammle Daten...';
-$GLOBALS['TL_LANG']['pct_themer']['infos']['file_created'] 		= 'Das Demo-Template (%s) wurde in /templates gespeichert.';
-$GLOBALS['TL_LANG']['pct_themer']['submit_complete'] 			= 'Fertigstellen';
-$GLOBALS['TL_LANG']['pct_themer']['submit_download'] 			= 'Download';
-$GLOBALS['TL_LANG']['pct_themer']['alert_no_theme_selected'] 	= 'Export nicht möglich, da für diese Wurzelseite kein Theme ausgewählt ist!';
-$GLOBALS['TL_LANG']['pct_themer']['import_success'] 			= 'Theme Demo-Daten erfolgreich angelegt.';
-$GLOBALS['TL_LANG']['pct_themedesigner']['backend_info']		= '<span style="line-height:24px;">ThemeDesigner ist <strong>aktiv</strong>. Deaktivieren Sie den ThemeDesigner, wenn die Website "live" gehen soll.</span>';
-$GLOBALS['TL_LANG']['pct_themedesigner']['backend_info_green']	= '<span style="line-height:24px;">ThemeDesigner ist im <strong>Live-Modus</strong>.';
-
-$GLOBALS['TL_LANG']['pct_themedesigner']['nosave_info']			= 'Sie haben noch keine Version gespeichert.';
-
-/**
- * Demoinstaller
- */
-$GLOBALS['TL_LANG']['pct_demoinstaller']['contao_theme']				= 'Es sind mehr als ein Contao-Theme-Datensatz installiert, wählen Sie das Ziel-Theme:';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['counter']						= 'Demos: %s';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['submit_install']				= 'Installieren';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['submit_show']					= 'Anschauen';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['submit_customize']			= 'Anpassen';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories'][0] 				= 'Kategorien';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories'][1] 				= 'Kategorien auswählen';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['business'] 		= 'Business';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['creative'] 		= 'Kreativ';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['portfolio'] 	= 'Portfolio';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['blog'] 			= 'Blog';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['onepage'] 		= 'OnePage';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['other'] 		= 'Sonstiges';
-$GLOBALS['TL_LANG']['pct_demoinstaller']['categories']['new'] 		= 'Neu in Eclipse 7';
+$GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed']	= 'Installation (%s) : Kopieren der Daten abgeschlossen.';
+$GLOBALS['TL_LANG']['pct_theme_installer']['completeStatusMessage']	= 'Installation (%s) abgeschlossen';
