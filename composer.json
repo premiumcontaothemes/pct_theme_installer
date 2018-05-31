@@ -4,7 +4,7 @@
 	"keywords":["contao","themes","premiumcontaothemes","premium-contao-themes"],
 	"type":"contao-module",
     "homepage":"https://github.com/timgatzky/pct_theme_installer",
-	"license": "MIT",
+	"license": "LGPL-3.0+",
 	"authors":
 	[
 		{
@@ -34,18 +34,25 @@
 	{
 		"contao/manager-plugin": "^2.0"
 	},
-	"autoload": {
-        "psr-4": 
-        {
-            "PCT\\ThemeInstaller\\": "PCT/"
-        }
-    },
 	"replace":
 	{
 		"contao-legacy/pct_theme_installer":"self.version"
 	},	
+	"autoload": 
+	{
+        "psr-0": 
+        {
+            "PCT\\ThemeInstaller\\": "PCT/"
+        }
+    },
 	"extra":
 	{
-		"contao-manager-plugin": "Contao\\PCT\\ThemeInstaller\\ContaoManager\\Plugin"
+		"contao": 
+		{
+            "sources": 
+            {
+                "": "system/modules/pct_theme_installer"
+            }
+        }
 	}
 }
