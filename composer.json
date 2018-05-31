@@ -51,7 +51,7 @@
 		{
             "sources": 
             {
-                "": "system/modules/pct_theme_installer"
+                "system/modules/pct_theme_installer": "system/modules/pct_theme_installer"
             }
         }
 	}
