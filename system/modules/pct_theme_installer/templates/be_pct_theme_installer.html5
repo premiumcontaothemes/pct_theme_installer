@@ -111,7 +111,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<?php if($this->license->products): ?>
 			<p class="tl_message"><?= $arrLangTpl['choose_product_info']; ?></p>
 			<div class="select_container">
-				<select name="product">
+				<select name="product" class="tl_select">
 					<option value="-"><?= $arrLangTpl['product_select_blankOption']; ?></option>
 					<?php foreach($this->license->products as $product): ?>
 					<option value="<?= $product->value; ?>"><?= $product->name; ?></option>
