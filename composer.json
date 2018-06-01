@@ -1,5 +1,5 @@
 {
-	"name":"timgatzky/pct_theme_installer",
+	"name":"premium-contao-themes/pct_theme_installer",
 	"description":"Installation manager for the Premium Contao Themes: Eclipse, Eclipse + CustomCatalog Bundle. https://www.premium-contao-themes.com/",
 	"keywords":["contao","themes","premiumcontaothemes","premium-contao-themes"],
 	"type":"contao-module",
