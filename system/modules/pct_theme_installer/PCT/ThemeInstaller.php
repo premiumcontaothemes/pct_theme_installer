@@ -126,7 +126,7 @@ class ThemeInstaller extends \BackendModule
 
 
 		// support current LTS 3.5, 4.4 only
-		if(\Input::get('status') != 'version_conflict' && (version_compare(VERSION, '3.5','<') || version_compare(VERSION, '4.4','>') || $hallo=true) )
+		if(\Input::get('status') != 'version_conflict' && (version_compare(VERSION, '3.5','<') || version_compare(VERSION, '4.4','>')) )
 		{
 			$this->redirect( \Backend::addToUrl('status=version_conflict',true,array('step','action')) );
 		}
