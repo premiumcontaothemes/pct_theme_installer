@@ -120,6 +120,23 @@ class ThemeInstaller extends \BackendModule
 			$this->strTheme = basename($objLicense->file->name,'.zip');
 			$this->Template->theme = $this->strTheme;
 		}
+
+
+//! status : VERSION_CONFLICT
+
+
+		// support current LTS 3.5, 4.4 only
+		if(\Input::get('status') != 'version_conflict' && (version_compare(VERSION, '3.5','<') || version_compare(VERSION, '4.4','>')) )
+		{
+			$this->redirect( \Backend::addToUrl('status=version_conflict',true,array('step','action')) );
+		}
+		
+		if(\Input::get('status') == 'version_conflict')
+		{
+			$this->Template->status = 'VERSION_CONFLICT';
+			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the LTS versions 3.5 or 4.4');
+			return;
+		}
 		
 		
 //! status : COMPLETED
@@ -877,7 +894,7 @@ class ThemeInstaller extends \BackendModule
 			}
 
 			$strRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
-
+			
 			// validate the license
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -969,17 +986,17 @@ class ThemeInstaller extends \BackendModule
 				$arrParams['product'] = $objLicense->file->id;
 
 				$strFileRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
-
-				$curl = curl_init();
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($curl, CURLOPT_URL, $strFileRequest);
-				curl_setopt($curl, CURLOPT_HEADER, 0);
-				$strFileResponse = curl_exec($curl);
-				curl_close($curl);
-				unset($curl);
 				
 				try
 				{
+					$curl = curl_init();
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($curl, CURLOPT_URL, $strFileRequest);
+					curl_setopt($curl, CURLOPT_HEADER, 0);
+					$strFileResponse = curl_exec($curl);
+					curl_close($curl);
+					unset($curl);
+				
 					// response is a json object and not the file content
 					$_test = json_decode($strFileResponse);
 					
@@ -991,21 +1008,21 @@ class ThemeInstaller extends \BackendModule
 						//\System::log('Theme Installer: '. $objResponse->error,__METHOD__,TL_ERROR);
 					}
 					else if(!empty($strFileResponse))
-						{
-							$objFile = new \File($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
-							$objFile->write( $strFileResponse );
-							$objFile->close();
+					{
+						$objFile = new \File($GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$objLicense->file->name);
+						$objFile->write( $strFileResponse );
+						$objFile->close();
 
-							$arrSession['status'] = 'FILE_CREATED';
-							$arrSession['file'] = $objFile->path;
-							$objSession->set($this->strSession,$arrSession);
+						$arrSession['status'] = 'FILE_CREATED';
+						$arrSession['file'] = $objFile->path;
+						$objSession->set($this->strSession,$arrSession);
 
-							// tell ajax that the file has been written
-							die($this->Template->file_written_response);
+						// tell ajax that the file has been written
+						die($this->Template->file_written_response);
 
-							#// flush post and make session active
-							#$this->reload();
-						}
+						#// flush post and make session active
+						#$this->reload();
+					}
 				}
 				catch(\Exception $e)
 				{
