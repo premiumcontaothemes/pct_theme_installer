@@ -1,3 +1,6 @@
+### 1.1.1
+Fixed: Request urls should be html_entity_decode to avoid wrong parameters in curl request (#37)
+
 ### 1.1.0
 Added: Version conflict page (#35)
 Update: The curl file request is now inside a try statement to catch php exceptions like timeouts
