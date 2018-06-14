@@ -893,7 +893,7 @@ class ThemeInstaller extends \BackendModule
 				$arrParams['product'] = \Input::post('product');
 			}
 
-			$strRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
+			$strRequest = html_entity_decode(  $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams) );
 			
 			// validate the license
 			$curl = curl_init();
@@ -985,7 +985,7 @@ class ThemeInstaller extends \BackendModule
 				$arrParams['sendToAjax'] = 1;
 				$arrParams['product'] = $objLicense->file->id;
 
-				$strFileRequest = $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams);
+				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams) );
 				
 				try
 				{
