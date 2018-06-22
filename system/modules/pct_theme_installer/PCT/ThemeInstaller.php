@@ -101,7 +101,7 @@ class ThemeInstaller extends \BackendModule
 //! status : SESSION_LOST
 
 
-		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset','error')))
+		if(empty($objLicense) && !in_array(\Input::get('status'),array('welcome','reset','error','version_conflict')))
 		{
 			$this->Template->status = 'SESSION_LOST';
 			$this->Template->content = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'];
