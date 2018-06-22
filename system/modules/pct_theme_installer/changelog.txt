@@ -1,3 +1,6 @@
+### 1.2.1
+Fixed: Unlimited redirects under Contao 4.5
+
 ### 1.2.0
 Added: English language files (#39)
 
