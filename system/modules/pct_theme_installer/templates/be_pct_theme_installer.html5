@@ -21,6 +21,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
+			<a class="shop_link" href="https://premium-contao-themes.com" target="_blank">Premium Contao Themes</a>
 			<?php if($strStatus): ?>
 			<span class="status hidden"><?= sprintf($arrLangTpl['label_status'],$strStatus); ?></span>
 			<?php endif; ?>
