@@ -13,7 +13,7 @@
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '1.2.2');
+define('PCT_THEME_INSTALLER', '1.2.3');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 
@@ -156,5 +156,5 @@ $GLOBALS['BE_MOD']['system']['pct_theme_installer'] = array
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['parseTemplate'][] = array('PCT\ThemeInstaller','injectScripts');
+$GLOBALS['TL_HOOKS']['parseTemplate'][] = array('PCT\ThemeInstaller\SystemCallbacks','injectScripts');
 $GLOBALS['TL_HOOKS']['initializeSystem'][] = array('PCT\ThemeInstaller\SystemCallbacks','installationCompletedStatus');
