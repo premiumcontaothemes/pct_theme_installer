@@ -29,6 +29,11 @@ class SystemCallbacks extends \System
 	 */
 	public function installationCompletedStatus()
 	{
+		if(version_compare(VERSION, '3.5', '<=') && \Config::get('dbHost') == '')
+		{
+			return;
+		}
+		
 		if(TL_MODE != 'BE' || \Environment::get('isAjaxRequest'))
 		{
 			return;
@@ -124,6 +129,23 @@ class SystemCallbacks extends \System
 			
 			$url = \StringUtil::decodeEntities( \Controller::addToUrl('welcome='.\Input::get('theme'),false,array('completed','theme','sql','referer','rt','ref')) );
 			$this->redirect($url);
+		}
+	}
+	
+	
+	/**
+	 * Inject javascript templates in the backend page
+	 * @param object
+	 *
+	 * Called from [parseTemplate] Hook
+	 */
+	public function injectScripts($objTemplate)
+	{
+		if(TL_MODE == 'BE' && $objTemplate->getName() == 'be_main')
+		{
+			$objScripts = new \BackendTemplate('be_js_pct_theme_installer');
+			$objScripts->texts = json_encode($arrTexts);
+			$objTemplate->javascripts .= $objScripts->parse();
 		}
 	}
 }
