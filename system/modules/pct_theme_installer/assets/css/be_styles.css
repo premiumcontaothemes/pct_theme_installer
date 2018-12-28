@@ -54,6 +54,8 @@
 #pct_eclipse_installer .select_container {margin: 15px;}
 #pct_eclipse_installer .select_container .styled_select {min-width: 200px;}
 
+#pct_eclipse_installer .shop_link {background: url(../img/store.svg) left center no-repeat; padding: 3px 0 3px 21px}
+
 #tl_ajaxOverlay {opacity: 0 !important;}
 #tl_ajaxBox {display: none !important;}
 
