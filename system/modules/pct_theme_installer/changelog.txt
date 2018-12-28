@@ -1,3 +1,6 @@
+### 1.2.2
+Added: Shop link (#43)
+
 ### 1.2.1
 Fixed: Unlimited redirects under Contao 4.5
 
