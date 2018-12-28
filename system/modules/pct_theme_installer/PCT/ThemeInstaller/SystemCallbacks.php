@@ -29,7 +29,7 @@ class SystemCallbacks extends \System
 	 */
 	public function installationCompletedStatus()
 	{
-		if(version_compare(VERSION, '3.5', '<=') && \Config::get('dbHost') == '')
+		if(version_compare(VERSION, '3.5', '<=') && \Config::get('adminEmail') == '')
 		{
 			return;
 		}
