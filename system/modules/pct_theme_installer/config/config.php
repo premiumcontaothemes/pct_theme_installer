@@ -156,5 +156,8 @@ $GLOBALS['BE_MOD']['system']['pct_theme_installer'] = array
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['parseTemplate'][] = array('PCT\ThemeInstaller','injectScripts');
-$GLOBALS['TL_HOOKS']['initializeSystem'][] = array('PCT\ThemeInstaller\SystemCallbacks','installationCompletedStatus');
+if(TL_MODE == 'BE' && strpos(\Environment::get('request'), 'install') === false)
+{
+	$GLOBALS['TL_HOOKS']['parseTemplate'][] = array('PCT\ThemeInstaller','injectScripts');
+	$GLOBALS['TL_HOOKS']['initializeSystem'][] = array('PCT\ThemeInstaller\SystemCallbacks','installationCompletedStatus');
+}
