@@ -1,3 +1,6 @@
+### 1.2.3
+Fixed: Support PCT contao installer under Contao 3.5 installation
+
 ### 1.2.2
 Added: Shop link (#43)
 
