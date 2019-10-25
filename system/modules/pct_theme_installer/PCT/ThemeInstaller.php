@@ -639,8 +639,10 @@ class ThemeInstaller extends \BackendModule
 			$this->Template->sqlFile = $strOrigTemplate;
 			
 			// Eclipse + CustomCatalog sqls
-			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/eclipse_cc_zip/'.$strTemplate;
-			if(\Input::get('action') == 'run' && $this->strTheme == 'eclipse_cc' && file_exists($strFileCC))
+			$strZipFolder = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['zip_folder'];
+			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
+			
+			if(\Input::get('action') == 'run' && (boolean)$GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['isCustomCatalog'] === true && file_exists($strFileCC))
 			{
 				$skipTables = array('tl_user','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
 
@@ -919,6 +921,7 @@ class ThemeInstaller extends \BackendModule
 
 //! status: CHOOSE_PRODUCT, waiting for user to choose the product
 
+
 		if(\Input::get('status') == 'choose_product' && $objLicense->status == 'OK')
 		{
 			$this->Template->status = 'CHOOSE_PRODUCT';
@@ -933,7 +936,6 @@ class ThemeInstaller extends \BackendModule
 
 			return;
 		}
-
 
 
 //! status: READY, waiting for installation GO

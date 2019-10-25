@@ -42,7 +42,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Message: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Error: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_supported'] 					= 'The installer supports the following products: %s';		
-
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_buy'] 						= 'Buy the EclipseX theme';
 
 /**
  * Breadcrumb
