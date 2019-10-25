@@ -13,7 +13,7 @@
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '1.2.3');
+define('PCT_THEME_INSTALLER', '1.3.0');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 
