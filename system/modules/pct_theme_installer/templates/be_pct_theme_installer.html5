@@ -103,7 +103,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<!-- wrong domain registration -->
 			<?php if($this->hasRegistrationError): ?>
 			<div class="tl_message">
-				<p class="tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain); ?></p>
+				<p class="tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain,$this->license->domain); ?></p>
 			</div>
 			<?php endif; ?>
 			<!-- file information -->
@@ -169,7 +169,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<!-- wrong domain registration -->
 			<?php if($this->hasRegistrationError): ?>
 			<div class="tl_message">
-				<p class="tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain); ?></p>
+				<p class="tl_error"><?= sprintf($arrLangTpl['domainRegistrationError'],implode(',',$this->license->registration->domains),$this->license->domain,$this->license->domain); ?></p>
 			</div>
 			<?php endif; ?>
 			<!-- file information -->

@@ -29,7 +29,10 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_status']			= 'Stat
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_step']			= 'Step: %s';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][0]		= 'Restart'; // linktext
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][1]		= 'Restart the installation'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError']			= 'License domain (%s) does not match requesting domain (%s).<br>Please update the license registration in your account.'; // title
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError'] = 'The licensee domain (<strong>%s</strong>) differs from the installation domain (<strong>%s</strong>).<br><br>
+By starting the installation "Start installation" you accept the  <a href="https://www.premium-contao-themes.com/lizenzbestimmungen.html" target="_blank" style="text-decoration:underline;">license agreement</a> and that the installation request from the domain (<strong>%s</strong>) is saved in our system.
+<br><br>Please update your licensee domain in your <a href="https://login.premium-contao-themes.com/" target="_blank" style="text-decoration:underline;">customer area</a>.
+';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_headline']				= 'Ready to import the demo website.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_subheadline']			= 'Attention: The current data will be lost. Your account remains the same.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_info']					= 'Import of the demo website (SQL-Template) '; // title
@@ -37,7 +40,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_sql_template_impo
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['choose_product_info']				= 'Please choose the product.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['product_select_blankOption']		= 'Choose produkct...'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_systemlog'][0] 				= 'Go to system log...';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= 'Tragen Sie Ihre Bestellnummer und Bestell-E-Mail-Adresse ein und klicken Sie "Lizenz abfragen". Anschließend können Sie den 1-Click-Installer starten. Das Theme Eclipse wird automatisch vom Premium Contao Themes Server auf Ihren Server geladen und anschließend installiert.';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= 'Enter your order number and order e-mail address and click "Request license". Then you can start the 1-Click-Installer. The Theme Eclipse is automatically downloaded from the Premium Contao Themes Server to your server and then installed.';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info'] 			= 'The sql import might take a couple minutes. You will be redirected the the Contao login.';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Message: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Error: %s';		
