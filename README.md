@@ -3,7 +3,7 @@ Premium Contao Themes (PCT) Eclipse theme installer
 
 About
 -----
-Install-manager for the PCT Eclipse theme, Eclipse + CustomCatalog bundle
+Install-manager for the PCT Eclipse theme, Eclipse + CustomCatalog bundle, PCT Eclipse X theme, Eclipse X + CustomCatalog bundle
 
 License
 -------
