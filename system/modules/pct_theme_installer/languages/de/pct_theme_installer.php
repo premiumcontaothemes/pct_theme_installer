@@ -29,11 +29,10 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_status']			= 'Stat
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['label_step']			= 'Schritt: %s';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][0]		= 'Neustart'; // linktext
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_reset'][1]		= 'Die Installation erneut beginnen'; // title
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError'] = 'Die Lizenznehmerdomain (<strong>%s</strong>) weicht von der Installationsdomain (<strong>%s</strong>) ab.<br><br>
-Mit dem Beginn der Installation "Installation starten" akzeptieren Sie 
-die <a href="https://www.premium-contao-themes.com/lizenzbestimmungen.html" target="_blank" style="text-decoration:underline;">Lizenzbestimmungen</a> und dass die Installationsanfrage von der Domain (<strong>%s</strong>) in unserem System gespeichert wird.
-<br><br>Bitte updaten Sie Ihre Lizenznehmerdomain in Ihrem <a href="https://login.premium-contao-themes.com/" target="_blank" style="text-decoration:underline;">Kundenbereich</a>.
-';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['domainRegistrationError'] = '
+Die Lizenznehmerdomain weicht von der Installationsdomain ab.<br><br>Bitte updaten Sie Ihre Lizenznehmerdomain in Ihrem <a href="https://login.premium-contao-themes.com/" target="_blank" style="text-decoration:underline;">Kundenbereich</a>.<br>
+Die Lizenzbestimmungen, sowie Antworten auf häufig gestellte Fragen (FAQ) finden Sie <a href="https://www.premium-contao-themes.com/lizenzbestimmungen.html" target="_blank" style="text-decoration:underline;">hier</a>.<br><br>
+Mit dem Beginn der Installation "Installation starten" wird die Installationsanfrage von der Domain (%s) in unserem System gespeichert.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_headline']				= 'Bereit zum Import der Demo-Webseite.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_subheadline']			= 'Hinweis: Bestehende Daten gehen verloren. Ihr Benutzerprofil bleibt erhalten.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_info']					= 'Der Import der Demo-Webseite (SQL-Template) '; // title
@@ -46,7 +45,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Meldung: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Fehler: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_supported'] 					= 'Der Installer unterstützt die folgenden Produkte: %s';		
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_buy'] 					= 'Theme EclipseX kaufen';		
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_buy'] 						= 'Theme EclipseX kaufen';		
 
 
 /**
