@@ -29,7 +29,7 @@ class BackendInstall extends \Contao\BackendInstall
 		}
 		if($this->Template === null)
 		{
-			$this->Template = new \BackendTemplate('be_install');
+			$this->Template = new \Contao\BackendTemplate('be_install');
 		}
 	}
 	

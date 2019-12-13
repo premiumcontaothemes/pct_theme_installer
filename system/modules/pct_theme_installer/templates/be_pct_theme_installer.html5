@@ -77,8 +77,8 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 	<?php endif; ?>
 	
 	
-	<p class="tl_message"><a href="<?= \StringUtil::decodeEntities( \Controller::addToUrl('do=log',true,array('step','status')) ); ?>" title="<?= $arrLangTpl['button_systemlog'][0]; ?>"><?= $arrLangTpl['button_systemlog'][0]; ?></a></p>
-	<p class="tl_message header_back"><a class="reset" href="<?= \StringUtil::decodeEntities( \Controller::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+	<p class="tl_message"><a href="<?= \Contao\StringUtil::decodeEntities( \Controller::addToUrl('do=log',true,array('step','status')) ); ?>" title="<?= $arrLangTpl['button_systemlog'][0]; ?>"><?= $arrLangTpl['button_systemlog'][0]; ?></a></p>
+	<p class="tl_message header_back"><a class="reset" href="<?= \Contao\StringUtil::decodeEntities( \Controller::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 	</div>
 
 <?php elseif($this->status == 'VERSION_CONFLICT'): ?>
@@ -94,7 +94,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <?php elseif($this->status == 'SESSION_LOST'): ?>
 <!-- ! SESSION LOST -->
 	
-	<p class="tl_message header_back"><a class="reset" href="<?= \StringUtil::decodeEntities( \Backend::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+	<p class="tl_message header_back"><a class="reset" href="<?= \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 	
 <?php elseif($this->status == 'CHOOSE_PRODUCT'): ?>
 <!-- ! CHOOSE_PRODUCT  -->
@@ -211,7 +211,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=copy_files') );
+		$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=copy_files') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['unzip']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -233,7 +233,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=clear_cache') );
+		$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=clear_cache') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['copy_files']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -254,7 +254,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=db_update_modules') );
+		$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=db_update_modules') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['clear_cache']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});
@@ -274,7 +274,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=sql_template_wait') );
+		$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=sql_template_wait') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['db_update_modules']; ?>';
 		PCT_ThemeInstaller.redirectTo('<?= $url; ?>',3000);
@@ -297,7 +297,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<h3 class="tl_info"><?= $arrLangTpl['sql_template_subheadline']; ?></h3>
 		
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=sql_template_import') );
+		$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=sql_template_import') );
 		?>
 		
 		<p><a class="tl_button tl_submit button import" href="<?= $url; ?>"><?= $arrLangTpl['button_sql_template_import']; ?></a></p>
@@ -326,11 +326,11 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		#$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=completed&theme='.$this->theme) );
-		$url = \StringUtil::decodeEntities( \Environment::get('base').'contao?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
+		#$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=completed&theme='.$this->theme) );
+		$url = \Contao\StringUtil::decodeEntities( \Environment::get('base').'contao?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
 		if(version_compare(VERSION, '4.4','>='))
 		{
-			$url = \StringUtil::decodeEntities( \Environment::get('base').'contao/login?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
+			$url = \Contao\StringUtil::decodeEntities( \Environment::get('base').'contao/login?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
 		}
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
@@ -363,7 +363,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		/* <![CDATA[ */
 		
 		<?php 
-		$url = \StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=unzip') );
+		$url = \Contao\StringUtil::decodeEntities( \Backend::addToUrl('status=installation&step=unzip') );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= sprintf($arrLang['AJAX_INFO']['loading'],$this->license->file->name); ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});

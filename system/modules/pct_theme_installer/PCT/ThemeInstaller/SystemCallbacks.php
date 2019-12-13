@@ -75,7 +75,7 @@ class SystemCallbacks extends \System
 		#   // redirect to make backend message appear under Contao lower than 4.4
 		#   if(version_compare(VERSION, '4.4','<') && version_compare(VERSION, '3.5','>='))
 		#   {
-		#	  $url = \StringUtil::decodeEntities( \Controller::addToUrl('completed=1&theme='.$arrSession['theme'].'&sql='.$arrSession['sql'],false,array('referer','rt','ref')) );
+		#	  $url = \Contao\StringUtil::decodeEntities( \Controller::addToUrl('completed=1&theme='.$arrSession['theme'].'&sql='.$arrSession['sql'],false,array('referer','rt','ref')) );
 		#	  $this->redirect($url);
 		#   }
 		#   
@@ -87,7 +87,7 @@ class SystemCallbacks extends \System
 			// check if theme data exists
 			if(!isset($GLOBALS['PCT_THEME_INSTALLER']['THEMES'][ \Input::get('welcome') ]))
 			{
-				$url = \StringUtil::decodeEntities( \Controller::addToUrl('',false,array('welcome')) );
+				$url = \Contao\StringUtil::decodeEntities( \Controller::addToUrl('',false,array('welcome')) );
 				$this->redirect($url);
 			}
 			
@@ -127,7 +127,7 @@ class SystemCallbacks extends \System
 			#	$remove_params[] = 'sql';
 			#}
 			
-			$url = \StringUtil::decodeEntities( \Controller::addToUrl('welcome='.\Input::get('theme'),false,array('completed','theme','sql','referer','rt','ref')) );
+			$url = \Contao\StringUtil::decodeEntities( \Controller::addToUrl('welcome='.\Input::get('theme'),false,array('completed','theme','sql','referer','rt','ref')) );
 			$this->redirect($url);
 		}
 	}
@@ -143,7 +143,7 @@ class SystemCallbacks extends \System
 	{
 		if(TL_MODE == 'BE' && $objTemplate->getName() == 'be_main')
 		{
-			$objScripts = new \BackendTemplate('be_js_pct_theme_installer');
+			$objScripts = new \Contao\BackendTemplate('be_js_pct_theme_installer');
 			$objScripts->texts = json_encode($arrTexts);
 			$objTemplate->javascripts .= $objScripts->parse();
 		}
