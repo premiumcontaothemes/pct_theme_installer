@@ -25,7 +25,7 @@ class InstallationController extends \Contao\InstallationBundle\Controller\Insta
 	{
 		if($this->container === null)
 		{
-			$this->container = \System::getContainer();
+			$this->container = \Contao\System::getContainer();
 		}
 	}
 	
