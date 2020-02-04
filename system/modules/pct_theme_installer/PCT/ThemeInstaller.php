@@ -145,7 +145,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 		// support current LTS 4.4, 4.9 only
-		if(Input::get('status') != 'version_conflict' && (version_compare(VERSION, '4.4','<') || version_compare(VERSION, '4.9','<') || version_compare(VERSION, '4.9','>')) )
+		if(Input::get('status') != 'version_conflict' && (version_compare(VERSION, '4.4','<') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','>')) )
 		{
 			$this->redirect( Backend::addToUrl('status=version_conflict',true,array('step','action')) );
 		}
