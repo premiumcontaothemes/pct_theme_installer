@@ -1,6 +1,7 @@
 ### 1.4.0
 Update: Open for Contao 4.9, next LTS compatibility (#56)
 Update: Use Contao classes in strict \Contao\ namespace
+Update: Support collations corretly in customcatalog sqls (#57)
 
 ### 1.3.1
 Added: Display further license information when domains not match (#53)
