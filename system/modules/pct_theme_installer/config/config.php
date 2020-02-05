@@ -36,7 +36,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 	'sql_templates' => array
 	(
 		'4.4' => 'eclipse_contao_4_4.sql',
-		'4.9' => 'eclipse_contao_4_9.sql'
+	#	'4.9' => 'eclipse_contao_4_9.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
@@ -48,7 +48,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
 	'sql_templates' => array
 	(
 		'4.4' => 'eclipse_contao_4_4.sql',
-		'4.9' => 'eclipse_contao_4_9.sql'
+	#	'4.9' => 'eclipse_contao_4_9.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
@@ -59,7 +59,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
 	'sql_templates' => array
 	(
 		'4.4' => 'eclipse_contao_4_4.sql',
-		'4.9' => 'eclipse_contao_4_9.sql'
+	#	'4.9' => 'eclipse_contao_4_9.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
@@ -71,7 +71,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
 	'sql_templates' => array
 	(
 		'4.4' => 'eclipse_contao_4_4.sql',
-		'4.9' => 'eclipse_contao_4_9.sql'
+	#	'4.9' => 'eclipse_contao_4_9.sql'
 	),
 );
 
