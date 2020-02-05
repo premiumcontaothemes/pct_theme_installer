@@ -17,7 +17,7 @@ var PCT_ThemeInstaller =
 	 * Misc texts
 	 * @var object json
 	 */
-	texts : <?= $this->texts; ?>,
+	texts : '<?= $this->texts ?: ''; ?>',
 	
 	/**
 	 * Default delay before redirects

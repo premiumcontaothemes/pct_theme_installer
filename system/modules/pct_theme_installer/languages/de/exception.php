@@ -20,4 +20,4 @@ $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'] 				= 'Das Entp
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'] 			= 'Pflichtinhalte (%s) in dem entpackten Verzeichnis nicht gefunden.';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'] 				= 'SQL-Installations-Template nicht gefunden.';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'] 				= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';
-$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] 			= 'Bitte nutzen Sie Contaos LTS Versionen: 3.5 oder 4.4';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] 			= 'Bitte nutzen Sie Contaos LTS Versionen: 4.4 oder 4.9';
