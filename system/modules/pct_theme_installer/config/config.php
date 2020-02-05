@@ -36,7 +36,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
 	'sql_templates' => array
 	(
 		'4.4' => 'eclipse_contao_4_4.sql',
-	#	'4.9' => 'eclipse_contao_4_9.sql'
+		'4.9' => 'eclipse_contao_4_9.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
@@ -47,8 +47,8 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
 	'mandatory' => array('upload'), // mandatory zip content on first level
 	'sql_templates' => array
 	(
-		'4.4' => 'eclipse_contao_4_4.sql',
-	#	'4.9' => 'eclipse_contao_4_9.sql'
+		'4.4' => 'eclipse_cc_contao_4_4.sql',
+		'4.9' => 'eclipse_cc_contao_4_9.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
@@ -58,8 +58,8 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
 	'mandatory' => array('upload'), // mandatory zip content on first level
 	'sql_templates' => array
 	(
-		'4.4' => 'eclipse_contao_4_4.sql',
-	#	'4.9' => 'eclipse_contao_4_9.sql'
+		'4.4' => 'eclipsex_contao_4_4.sql',
+		'4.9' => 'eclipsex_contao_4_9.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
@@ -70,8 +70,8 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
 	'mandatory' => array('upload'), // mandatory zip content on first level
 	'sql_templates' => array
 	(
-		'4.4' => 'eclipse_contao_4_4.sql',
-	#	'4.9' => 'eclipse_contao_4_9.sql'
+		'4.4' => 'eclipsex_cc_contao_4_4.sql',
+		'4.9' => 'eclipsex_cc_contao_4_9.sql'
 	),
 );
 
