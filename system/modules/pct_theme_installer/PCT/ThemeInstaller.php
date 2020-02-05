@@ -577,42 +577,46 @@ class ThemeInstaller extends \Contao\BackendModule
 				$this->Template->error = $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'];
 				return;
 			}
-
 			// create a tmp copy
 			$strTmpTemplate = 'tmp_'.$strTemplate;
 			$strOrigTemplate = $strTemplate;
-			if(Files::getInstance()->copy('templates/'.$strTemplate,'templates/tmp_'.$strTemplate))
+			$blnIsCustomCatalog = (boolean)$GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['isCustomCatalog'];
+			
+			if( $blnIsCustomCatalog === false && \file_exists(TL_ROOT.'/templates/'.$strOrigTemplate) )
 			{
-				$file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
-
-				$str = '';
-				while(!feof($file))
+				if(Files::getInstance()->copy('templates/'.$strTemplate,'templates/tmp_'.$strTemplate))
 				{
-					$line = fgets($file);
-					if(strlen(strpos($line, 'INSERT INTO `tl_user`')) > 0)
+					$file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
+
+					$str = '';
+					while(!feof($file))
 					{
-						continue;
+						$line = fgets($file);
+						if(strlen(strpos($line, 'INSERT INTO `tl_user`')) > 0)
+						{
+							continue;
+						}
+
+						$str .= $line;
+					}
+					fclose($file);
+					unset($file);
+
+					// fetch tl_user information
+					$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
+					while($objUsers->next())
+					{
+						$str .= $objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->__get('query') . "\n";
 					}
 
-					$str .= $line;
+					$objFile = new File('templates/tmp_'.$strTemplate);
+					$objFile->write($str);
+					$objFile->close();
+
+					unset($str);
+
+					$strTemplate = $strTmpTemplate;
 				}
-				fclose($file);
-				unset($file);
-
-				// fetch tl_user information
-				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
-				while($objUsers->next())
-				{
-					$str .= $objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->__get('query') . "\n";
-				}
-
-				$objFile = new File('templates/tmp_'.$strTemplate);
-				$objFile->write($str);
-				$objFile->close();
-
-				unset($str);
-
-				$strTemplate = $strTmpTemplate;
 			}
 			
 			$this->Template->sqlFile = $strOrigTemplate;
@@ -620,11 +624,10 @@ class ThemeInstaller extends \Contao\BackendModule
 			// Eclipse + CustomCatalog sqls
 			$strZipFolder = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['zip_folder'];
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
-			
-			if(Input::get('action') == 'run' && (boolean)$GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['isCustomCatalog'] === true && file_exists($strFileCC))
+			if(Input::get('action') == 'run' && $blnIsCustomCatalog === true && file_exists($strFileCC))
 			{
-				$skipTables = array('tl_user','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log');
-
+				$skipTables = array('tl_user','tl_user_group','tl_member','tl_member_group','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log','tl_version');
+				
 				$objFile = fopen($strFileCC,'r');
 				
 				// find multiline CREATE, ALTER statements
@@ -666,7 +669,7 @@ class ThemeInstaller extends \Contao\BackendModule
 							$alter_sql[$alter_table] .= trim($line);
 						}
 
-						if(strpos($line, 'CHARSET=utf8;') !== false && strlen($create_table) > 0)
+						if(strpos($line, 'CHARSET=utf8') !== false && strlen($create_table) > 0)
 						{
 							$create_table = '';
 						}
