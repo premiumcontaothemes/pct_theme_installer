@@ -168,6 +168,12 @@ class ThemeInstaller extends \Contao\BackendModule
 			#$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
 			// redirect to contao login
 			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			
+			if( \version_compare(VERSION,'4.9','>=') )
+			{
+				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			}
+			
 			$this->redirect($url);
 
 			return;
