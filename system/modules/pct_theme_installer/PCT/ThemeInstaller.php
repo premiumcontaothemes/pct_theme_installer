@@ -627,6 +627,9 @@ class ThemeInstaller extends \Contao\BackendModule
 			
 			$this->Template->sqlFile = $strOrigTemplate;
 			
+			// @author Leo Feyer
+			$objDatabase->query("SET AUTOCOMMIT = 0");
+
 			// Eclipse + CustomCatalog sqls
 			$strZipFolder = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['zip_folder'];
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
@@ -756,6 +759,9 @@ class ThemeInstaller extends \Contao\BackendModule
 				unset($objFile);
 				unset($sql);
 				unset($truncated);
+
+				// @author Leo Feyer
+				$objDatabase->query("SET AUTOCOMMIT = 1")
 
 				if(!empty($arrErrors))
 				{
