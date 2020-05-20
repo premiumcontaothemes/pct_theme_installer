@@ -1,5 +1,6 @@
 ### 1.4.1
-Update: Redirect to login under Contao 4.9
+Fixed: Did not redirect to Contao login under 4.9 (#61)
+Update: Hostingwerk support for InnoDb imports (#60)
 
 ### 1.4.0
 Update: Open for Contao 4.9, next LTS compatibility (#56)
