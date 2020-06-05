@@ -761,7 +761,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				unset($truncated);
 
 				// @author Leo Feyer
-				$objDatabase->query("SET AUTOCOMMIT = 1")
+				$objDatabase->query("SET AUTOCOMMIT = 1");
 
 				if(!empty($arrErrors))
 				{
