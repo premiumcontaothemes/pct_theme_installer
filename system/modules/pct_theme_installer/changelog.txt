@@ -1,3 +1,7 @@
+### 1.4.1
+Fixed: Did not redirect to Contao login under 4.9 (#61)
+Update: Hostingwerk support for InnoDb imports (#60)
+
 ### 1.4.0
 Update: Open for Contao 4.9, next LTS compatibility (#56)
 Update: Use Contao classes in strict \Contao\ namespace

@@ -168,6 +168,12 @@ class ThemeInstaller extends \Contao\BackendModule
 			#$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
 			// redirect to contao login
 			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			
+			if( \version_compare(VERSION,'4.9','>=') )
+			{
+				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			}
+			
 			$this->redirect($url);
 
 			return;
@@ -621,6 +627,9 @@ class ThemeInstaller extends \Contao\BackendModule
 			
 			$this->Template->sqlFile = $strOrigTemplate;
 			
+			// @author Leo Feyer
+			$objDatabase->query("SET AUTOCOMMIT = 0");
+
 			// Eclipse + CustomCatalog sqls
 			$strZipFolder = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['zip_folder'];
 			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
@@ -750,6 +759,9 @@ class ThemeInstaller extends \Contao\BackendModule
 				unset($objFile);
 				unset($sql);
 				unset($truncated);
+
+				// @author Leo Feyer
+				$objDatabase->query("SET AUTOCOMMIT = 1");
 
 				if(!empty($arrErrors))
 				{
