@@ -15,6 +15,8 @@
  */
 namespace PCT\ThemeInstaller\Contao4;
 
+use ReflectionObject;
+
 /**
  * Class file
  * InstallationController
@@ -49,4 +51,15 @@ class InstallationController extends \Contao\InstallationBundle\Controller\Insta
 		throw new \RuntimeException('undefined method: '.get_class($this).'::'.$strMethod);
 	}
 	
+	
+	/** @return void  */
+	public function purgeSymfonyCache()
+	{
+		$obj = new parent;
+		$obj->container = $this->container;
+		$reflector = new ReflectionObject( $obj );
+		$method = $reflector->getMethod('purgeSymfonyCache');
+		$method->setAccessible(true);
+		$method->invoke($obj);
+	}
 }

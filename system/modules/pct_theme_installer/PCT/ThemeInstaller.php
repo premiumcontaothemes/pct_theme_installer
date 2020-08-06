@@ -482,12 +482,12 @@ class ThemeInstaller extends \Contao\BackendModule
 					$objAutomator->generateInternalCache();
 				}
 				// purge the whole folder
-				Files::getInstance()->rrdir($strCacheDir,true);
+				#Files::getInstance()->rrdir($strCacheDir,true);
 
 				// try to rebuild the symphony cache
 				$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
 				$objInstallationController->call('purgeSymfonyCache');
-				$objInstallationController->call('warmUpSymfonyCache');
+				#$objInstallationController->call('warmUpSymfonyCache');
 
 				die('Symlinks created and Symphony cache cleared');
 			
