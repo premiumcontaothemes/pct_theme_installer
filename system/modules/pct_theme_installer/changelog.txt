@@ -1,3 +1,7 @@
+### 1.4.2
+Update: Use reflection to access private methods in InstallerController class (#63)
+Update: Do not purge the whole Symfony cache folder (#63)
+
 ### 1.4.1
 Fixed: Did not redirect to Contao login under 4.9 (#61)
 Update: Hostingwerk support for InnoDb imports (#60)
