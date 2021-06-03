@@ -144,8 +144,8 @@ class ThemeInstaller extends \Contao\BackendModule
 //! status : VERSION_CONFLICT
 
 
-		// support current LTS 4.4, 4.9 only
-		if(Input::get('status') != 'version_conflict' && (version_compare(VERSION, '4.4','<') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','>')) )
+		// support current LTS 4.9
+		if(Input::get('status') != 'version_conflict' && (version_compare(VERSION, '4.4','<=') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','>')) )
 		{
 			$this->redirect( Backend::addToUrl('status=version_conflict',true,array('step','action')) );
 		}
@@ -153,7 +153,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		if(Input::get('status') == 'version_conflict')
 		{
 			$this->Template->status = 'VERSION_CONFLICT';
-			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the LTS versions 3.5 or 4.4');
+			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the LTS version 4.9');
 			return;
 		}
 		
