@@ -13,7 +13,7 @@
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '1.4.2');
+define('PCT_THEME_INSTALLER', '1.5.0');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 
@@ -28,29 +28,6 @@ if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
 	$GLOBALS['PCT_THEME_INSTALLER']['test_license'] = array();
 }
 
-$GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse'] = array
-(
-	'label'	=> 'Eclipse',
-	'zip_folder' => 'eclipse_zip',
-	'mandatory' => array('upload'), // mandatory zip content on first level
-	'sql_templates' => array
-	(
-		'4.4' => 'eclipse_contao_4_4.sql',
-		'4.9' => 'eclipse_contao_4_9.sql'
-	),
-);
-$GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse_cc'] = array
-(
-	'label'	=> 'Eclipse + CustomCatalog Pro',
-	'isCustomCatalog' => true,
-	'zip_folder' => 'eclipse_cc_zip',
-	'mandatory' => array('upload'), // mandatory zip content on first level
-	'sql_templates' => array
-	(
-		'4.4' => 'eclipse_cc_contao_4_4.sql',
-		'4.9' => 'eclipse_cc_contao_4_9.sql'
-	),
-);
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
 (
 	'label'	=> 'EclipseX',
@@ -71,7 +48,8 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
 	'sql_templates' => array
 	(
 		'4.4' => 'eclipsex_cc_contao_4_4.sql',
-		'4.9' => 'eclipsex_cc_contao_4_9.sql'
+		'4.9' => 'eclipsex_cc_contao_4_9.sql',
+		'4.10' => 'eclipsex_cc_contao_4_9.sql'
 	),
 );
 
