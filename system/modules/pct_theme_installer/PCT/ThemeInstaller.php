@@ -156,8 +156,19 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the LTS version 4.9');
 			return;
 		}
-		
-		
+
+
+//! status: MIN. REQUIREMENTS
+
+		// min memory_limit
+		if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
+		{
+			$this->Template->status = 'MIN_REQUIREMENT';
+			$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
+			return;
+		}
+
+	
 //! status : COMPLETED
 
 

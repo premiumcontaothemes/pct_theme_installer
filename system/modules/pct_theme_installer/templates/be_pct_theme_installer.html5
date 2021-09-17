@@ -81,7 +81,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 	<p class="tl_message header_back"><a class="reset" href="<?= \Contao\StringUtil::decodeEntities( \Controller::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 	</div>
 
-<?php elseif($this->status == 'VERSION_CONFLICT'): ?>
+<?php elseif( in_array($this->status, array('VERSION_CONFLICT', 'MIN_REQUIREMENT')) ): ?>
 <!-- ! VERSION_CONFLICT screen -->
 	
 	<div class="tl_formbody_middle">
