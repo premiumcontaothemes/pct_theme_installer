@@ -74,7 +74,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		System::loadLanguageFile('exception');
 
 		// @var object Session
-		$objSession = Session::getInstance();
+		$objSession = System::getContainer()->get('session');
 		if(version_compare(VERSION, '4','>='))
 		{
 			$objSession = System::getContainer()->get('session');
@@ -88,12 +88,12 @@ class ThemeInstaller extends \Contao\BackendModule
 		// template vars
 		$strForm = 'pct_theme_installer';
 		$this->Template->status = '';
-		$this->Template->action = Environment::getInstance()->request;
+		$this->Template->action = Environment::get('request');
 		$this->Template->formId = $strForm;
 		$this->Template->content = '';
 		$this->Template->breadcrumb = $this->getBreadcrumb(Input::get('status'), Input::get('step'));
 		$this->Template->href = $this->getReferer(true);
-		$this->Template->title = specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
+		$this->Template->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 		$this->Template->resetUrl = Backend::addToUrl('status=reset');
 		$this->Template->messages = Message::generate();
@@ -156,8 +156,19 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the LTS version 4.9');
 			return;
 		}
-		
-		
+
+
+//! status: MIN. REQUIREMENTS
+
+		// min memory_limit
+		if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
+		{
+			$this->Template->status = 'MIN_REQUIREMENT';
+			$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
+			return;
+		}
+
+	
 //! status : COMPLETED
 
 
@@ -1063,11 +1074,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		$arrItems = array();
 		$i = 0;
 
-		$objSession = Session::getInstance();
-		if(version_compare(VERSION, '4','>='))
-		{
-			$objSession = System::getContainer()->get('session');
-		}
+		$objSession = System::getContainer()->get('session');
 		$arrSession = $objSession->get($this->strSession);
 		
 		// store the processed steps
