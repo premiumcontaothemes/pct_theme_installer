@@ -34,6 +34,7 @@ The licensee domain differs from the installation domain.<br><br>
 Please update your licensee domain in your <a href="https://login.premium-contao-themes.com/" target="_blank" style="text-decoration:underline;">customer area</a>.<br>
 The license terms, as well as answers to frequently asked questions (FAQ) can be found <a href="https://www.premium-contao-themes.com/lizenzbestimmungen.html" target="_blank" style="text-decoration:underline;">here</a>.<br><br>
 The installation request from the domain (%s) is saved in our system with the start of the installation "Start installation".';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['dataOverwriteMsg']			= 'Important: All data will be overwritten.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_headline']				= 'Ready to import the demo website.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_subheadline']			= 'Attention: The current data will be lost. Your account remains the same.'; // title
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_info']					= 'Import of the demo website (SQL-Template) '; // title
