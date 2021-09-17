@@ -74,7 +74,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		System::loadLanguageFile('exception');
 
 		// @var object Session
-		$objSession = Session::getInstance();
+		$objSession = System::getContainer()->get('session');
 		if(version_compare(VERSION, '4','>='))
 		{
 			$objSession = System::getContainer()->get('session');
@@ -88,12 +88,12 @@ class ThemeInstaller extends \Contao\BackendModule
 		// template vars
 		$strForm = 'pct_theme_installer';
 		$this->Template->status = '';
-		$this->Template->action = Environment::getInstance()->request;
+		$this->Template->action = Environment::get('request');
 		$this->Template->formId = $strForm;
 		$this->Template->content = '';
 		$this->Template->breadcrumb = $this->getBreadcrumb(Input::get('status'), Input::get('step'));
 		$this->Template->href = $this->getReferer(true);
-		$this->Template->title = specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
+		$this->Template->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 		$this->Template->resetUrl = Backend::addToUrl('status=reset');
 		$this->Template->messages = Message::generate();
@@ -1074,11 +1074,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		$arrItems = array();
 		$i = 0;
 
-		$objSession = Session::getInstance();
-		if(version_compare(VERSION, '4','>='))
-		{
-			$objSession = System::getContainer()->get('session');
-		}
+		$objSession = System::getContainer()->get('session');
 		$arrSession = $objSession->get($this->strSession);
 		
 		// store the processed steps
