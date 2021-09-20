@@ -374,18 +374,6 @@ class ThemeInstaller extends \Contao\BackendModule
 					}
 				}
 
-				$scan = scandir(TL_ROOT.'/'.$strFolder);
-
-				// check for consistancy of the folder. If the unziped folder does not contain the mandatory files, quit
-				if( count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) != count(array_intersect($scan, $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory'])) )
-				{
-					$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['zip_content_error'],implode(', ', $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipse']['mandatory']));
-					System::log($log,__METHOD__,TL_ERROR);
-
-					// ajax done
-					die('Content of the extracted file in '.$strFolder.' does not match the mandatory content');
-				}
-
 				$objFiles = Files::getInstance();
 				$arrIgnore = array('.ds_store');
 
