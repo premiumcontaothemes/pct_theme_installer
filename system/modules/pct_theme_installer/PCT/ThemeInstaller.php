@@ -871,6 +871,9 @@ class ThemeInstaller extends \Contao\BackendModule
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $strRequest);
 			curl_setopt($curl, CURLOPT_HEADER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		
 			$strResponse = curl_exec($curl);
 			curl_close($curl);
 			unset($curl);
@@ -970,6 +973,9 @@ class ThemeInstaller extends \Contao\BackendModule
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($curl, CURLOPT_URL, $strFileRequest);
 					curl_setopt($curl, CURLOPT_HEADER, 0);
+					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+					curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		
 					$strFileResponse = curl_exec($curl);
 					curl_close($curl);
 					unset($curl);
