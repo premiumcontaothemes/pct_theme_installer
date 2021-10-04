@@ -955,6 +955,11 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->license = $objLicense;
 			$arrErrors = array();
 
+			// write license file
+			$objFile = new File('var/'.md5($objLicense->key));
+			$objFile->write( md5($objLicense->key) );
+			$objFile->close();
+		
 			// coming from ajax request
 			if(Input::get('action') == 'run')
 			{
