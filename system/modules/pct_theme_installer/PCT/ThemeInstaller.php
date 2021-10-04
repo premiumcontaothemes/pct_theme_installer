@@ -157,17 +157,6 @@ class ThemeInstaller extends \Contao\BackendModule
 			return;
 		}
 
-
-//! status: MIN. REQUIREMENTS
-
-		// min memory_limit
-		if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
-		{
-			$this->Template->status = 'MIN_REQUIREMENT';
-			$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
-			return;
-		}
-
 	
 //! status : COMPLETED
 
@@ -925,6 +914,12 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$this->Template->status = 'READY';
 			$this->Template->license = $objLicense;
+
+			// min memory_limit
+			if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
+			{
+				$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
+			}
 
 			// registration error
 			if($objLicense->registration->hasError)
