@@ -167,6 +167,13 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 <!-- ! READY  -->
 		
 		<div class="license_information tl_formbody_middle">
+				
+			<?php if($this->errors): ?>
+			<div class="tl_message">
+				<p class="tl_error"><?= implode("\n", $this->errors); ?></p>
+			</div>
+			<?php endif; ?>
+
 			<!-- wrong domain registration -->
 			<?php if($this->hasRegistrationError): ?>
 			<div class="tl_message">

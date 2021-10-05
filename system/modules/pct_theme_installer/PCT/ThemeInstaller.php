@@ -157,17 +157,6 @@ class ThemeInstaller extends \Contao\BackendModule
 			return;
 		}
 
-
-//! status: MIN. REQUIREMENTS
-
-		// min memory_limit
-		if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
-		{
-			$this->Template->status = 'MIN_REQUIREMENT';
-			$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
-			return;
-		}
-
 	
 //! status : COMPLETED
 
@@ -882,6 +871,9 @@ class ThemeInstaller extends \Contao\BackendModule
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $strRequest);
 			curl_setopt($curl, CURLOPT_HEADER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		
 			$strResponse = curl_exec($curl);
 			curl_close($curl);
 			unset($curl);
@@ -926,6 +918,12 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->status = 'READY';
 			$this->Template->license = $objLicense;
 
+			// min memory_limit
+			if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
+			{
+				$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
+			}
+
 			// registration error
 			if($objLicense->registration->hasError)
 			{
@@ -957,6 +955,11 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->license = $objLicense;
 			$arrErrors = array();
 
+			// write license file
+			$objFile = new File('var/'.md5($objLicense->key));
+			$objFile->write( md5($objLicense->key) );
+			$objFile->close();
+		
 			// coming from ajax request
 			if(Input::get('action') == 'run')
 			{
@@ -975,6 +978,9 @@ class ThemeInstaller extends \Contao\BackendModule
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($curl, CURLOPT_URL, $strFileRequest);
 					curl_setopt($curl, CURLOPT_HEADER, 0);
+					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+					curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		
 					$strFileResponse = curl_exec($curl);
 					curl_close($curl);
 					unset($curl);

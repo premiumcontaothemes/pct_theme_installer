@@ -1,3 +1,8 @@
+### 1.5.2
+Update: memory_limit is not only an advice not a stop anymore (#78)
+Update: Higher license security (#76)
+Update: Improved curl (#77)
+
 ### 1.5.1
 Added: Check memory_limit. Min. required is 512M (#70)
 Added: "All data will be overwritten" information (#65)
