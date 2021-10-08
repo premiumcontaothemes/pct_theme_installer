@@ -1,5 +1,5 @@
 ### 1.5.3
-Update: Use a license file instead of an md5 hash. It is just more convenient (#80)
+Update: Use a license file instead of a md5 hash. It is just more convenient (#80)
 
 ### 1.5.2
 Update: memory_limit is not only an advice not a stop anymore (#78)
