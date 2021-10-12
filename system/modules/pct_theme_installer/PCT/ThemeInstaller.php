@@ -142,10 +142,18 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 //! status : VERSION_CONFLICT
+		$blnAllowed = false;
+		if ( (version_compare(VERSION, '4.4','<=') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','==')) )
+		{
+			$blnAllowed = true;
+		}
+		else if( version_compare(VERSION, '4.12','==') )
+		{
+			$blnAllowed = true;
+		}
 
-
-		// support current LTS 4.9
-		if(Input::get('status') != 'version_conflict' && (version_compare(VERSION, '4.4','<=') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','>')) )
+		// support current LTS 4.9, 4.12
+		if(Input::get('status') != 'version_conflict' && $blnAllowed === false)
 		{
 			$this->redirect( Backend::addToUrl('status=version_conflict',true,array('step','action')) );
 		}
