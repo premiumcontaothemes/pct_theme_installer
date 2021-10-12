@@ -67,11 +67,7 @@ class SystemCallbacks extends System
 		}
 		
 		$arrSession = $objSession->get('PCT_THEME_INSTALLER');
-		if(isset($_SESSION['PCT_THEME_INSTALLER']))
-		{
-			$arrSession = $_SESSION['PCT_THEME_INSTALLER'];
-		}
-		
+			
 		#// session still exists
 		#if(!empty($arrSession))
 		#{

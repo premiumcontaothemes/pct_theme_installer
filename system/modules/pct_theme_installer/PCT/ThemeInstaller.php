@@ -171,15 +171,13 @@ class ThemeInstaller extends \Contao\BackendModule
 
 		if(Input::get('status') == 'completed')
 		{
-			#$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-			#$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
-			#$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
+			$arrSession = $objSession->get('PCT_THEME_INSTALLER');
 			// redirect to contao login
-			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
 			
 			if( \version_compare(VERSION,'4.9','>=') )
 			{
-				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
 			}
 			
 			$this->redirect($url);
@@ -771,10 +769,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				}
 
 				// mark as being completed
-				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-				$_SESSION['PCT_THEME_INSTALLER']['theme'] = $this->strTheme;
-				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-				$objSession->set('PCT_THEME_INSTALLER',$_SESSION['PCT_THEME_INSTALLER']);
+				$objSession->set('PCT_THEME_INSTALLER',array('completed'=>true,'theme'=>$this->strTheme,'sql'=>$strOrigTemplate));
 				
 				// log out
 				#$objUser = \BackendUser::getInstance();
@@ -793,10 +788,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			if(Input::get('action') == 'run')
 			{
 				// mark as being completed
-				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-				$_SESSION['PCT_THEME_INSTALLER']['theme'] = $this->strTheme;
-				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-				$objSession->set('PCT_THEME_INSTALLER',$_SESSION['PCT_THEME_INSTALLER']);		
+				$arrSession = array('completed'=>true,'theme'=>$this->strTheme,'sql'=>$strOrigTemplate);
+				$objSession->set('PCT_THEME_INSTALLER',$arrSession);		
 				
 				$objContainer = System::getContainer();
 				$objInstall = $objContainer->get('contao.install_tool');
