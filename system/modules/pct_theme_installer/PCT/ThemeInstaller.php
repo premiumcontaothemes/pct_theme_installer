@@ -142,12 +142,10 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 //! status : VERSION_CONFLICT
+
+
 		$blnAllowed = false;
-		if ( (version_compare(VERSION, '4.4','<=') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','==')) )
-		{
-			$blnAllowed = true;
-		}
-		else if( version_compare(VERSION, '4.12','==') )
+		if( version_compare(VERSION, '4.9','==') || version_compare(VERSION, '4.13','==') )
 		{
 			$blnAllowed = true;
 		}
