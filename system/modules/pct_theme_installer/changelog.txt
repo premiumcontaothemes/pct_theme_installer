@@ -1,3 +1,10 @@
+### 1.6.0
+New: Support for Contao 4.13
+Update: Allow installation on 4.9 and 4.13 (#85)
+Update: Show version number in backend (#86)
+Update: Removed $_SESSION usage (#87)
+Update: Minor text updates (#88)
+
 ### 1.5.3
 Update: Use a license file instead of a md5 hash. It is just more convenient (#80)
 Update: Removed the 4.10 key in config
