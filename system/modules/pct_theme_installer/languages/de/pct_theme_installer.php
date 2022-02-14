@@ -111,7 +111,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['AJAX_INFO']['db_update_modules'] = '
  */
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['welcome'] 							= 'Willkommen im Theme-Installer ('.\PCT_THEME_INSTALLER.')';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['ready'] 								= 'Bereit zur Installation: <span class="italic">%s</span>';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['loading'] 							= 'Ihre Lizenz ist bestätigt. Die Daten werden geladen...';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['loading'] 							= 'Die Daten werden geladen...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['choose_product'] 					= 'Ihre Lizenz beinhalte mehr als ein Produkt.<br>Bitte wählen sie das zu installierende Produkt aus.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['error'] 								= 'Während der Installation sind Fehler aufgetreten.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['file_not_exists'] 					= 'Datei existiert nicht mehr';
