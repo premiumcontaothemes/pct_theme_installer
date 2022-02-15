@@ -75,16 +75,13 @@ class ThemeInstaller extends \Contao\BackendModule
 
 		// @var object Session
 		$objSession = System::getContainer()->get('session');
-		if(version_compare(VERSION, '4','>='))
-		{
-			$objSession = System::getContainer()->get('session');
-		}
 		$arrSession = $objSession->get($this->strSession);
 		
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
 		$arrParams = array();
 		$objLicense = $arrSession['license'] ? json_decode($arrSession['license']) : null;
+		
 		// template vars
 		$strForm = 'pct_theme_installer';
 		$this->Template->status = '';
@@ -97,12 +94,12 @@ class ThemeInstaller extends \Contao\BackendModule
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 		$this->Template->resetUrl = Backend::addToUrl('status=reset');
 		$this->Template->messages = Message::generate();
-		$this->Template->label_key = $GLOBALS['TL_LANG']['pct_theme_installer']['label_key'] ?: 'License / Order number';
-		$this->Template->label_email = $GLOBALS['TL_LANG']['pct_theme_installer']['label_email'] ?: 'Order email address';
+		$this->Template->label_key = isset($GLOBALS['TL_LANG']['pct_theme_installer']['label_key']) ?: 'License / Order number';
+		$this->Template->label_email = isset($GLOBALS['TL_LANG']['pct_theme_installer']['label_email']) ?: 'Order email address';
 		$this->Template->placeholder_license = '';
 		$this->Template->placeholder_email = '';
-		$this->Template->label_submit = $GLOBALS['TL_LANG']['pct_theme_installer']['label_submit'];
-		$this->Template->value_submit = $GLOBALS['TL_LANG']['pct_theme_installer']['value_submit'];
+		$this->Template->label_submit = isset($GLOBALS['TL_LANG']['pct_theme_installer']['label_submit']) ?: 'Submit';
+		$this->Template->value_submit = isset($GLOBALS['TL_LANG']['pct_theme_installer']['value_submit']) ?: 'submit';
 		$this->Template->file_written_response = 'file_written';
 		$this->Template->file_target_directory = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'];
 		$this->Template->ajax_action = 'theme_installer_loading'; // just a simple action status message
@@ -116,6 +113,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		}
 		$this->Template->ajax_running = $blnAjax;
 
+		
 
 //! status : SESSION_LOST
 
@@ -133,7 +131,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		}
 
 		// the theme or module name of this lizence
-		$this->strTheme = $objLicense->name ?: $objLicense->file->name ?: '';
+		$this->strTheme = isset($objLicense->name) ?: $objLicense->file->name ?: '';
 		if($objLicense->file->name)
 		{
 			$this->strTheme = basename($objLicense->file->name,'.zip');
@@ -144,8 +142,14 @@ class ThemeInstaller extends \Contao\BackendModule
 //! status : VERSION_CONFLICT
 
 
-		// support current LTS 4.9
-		if(Input::get('status') != 'version_conflict' && (version_compare(VERSION, '4.4','<=') || (version_compare(VERSION, '4.5','>=') && version_compare(VERSION, '4.8','<=')) || version_compare(VERSION, '4.9','>')) )
+		$blnAllowed = false;
+		if( version_compare(VERSION, '4.9','==') || version_compare(VERSION, '4.13','==') )
+		{
+			$blnAllowed = true;
+		}
+
+		// support current LTS 4.9, 4.12
+		if(Input::get('status') != 'version_conflict' && $blnAllowed === false)
 		{
 			$this->redirect( Backend::addToUrl('status=version_conflict',true,array('step','action')) );
 		}
@@ -163,15 +167,13 @@ class ThemeInstaller extends \Contao\BackendModule
 
 		if(Input::get('status') == 'completed')
 		{
-			#$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-			#$_SESSION['PCT_THEME_INSTALLER']['license']['name'] = $objLicense->name;
-			#$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
+			$arrSession = $objSession->get('PCT_THEME_INSTALLER');
 			// redirect to contao login
-			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
 			
 			if( \version_compare(VERSION,'4.9','>=') )
 			{
-				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$_SESSION['PCT_THEME_INSTALLER']['sql']);
+				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
 			}
 			
 			$this->redirect($url);
@@ -461,14 +463,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					$to = $strWebDir.'/bundles/contao'.$bundle;
 					$objSymlink::symlink($from, $to,$strRootDir);
 				}
-
-				// clear the internal cache
-				if ( \version_compare(VERSION,'4.4','<=') )
-				{
-					$objAutomator->purgeInternalCache();
-					// rebuild the internal cache
-					$objAutomator->generateInternalCache();
-				}
+				
 				// purge the whole folder
 				#Files::getInstance()->rrdir($strCacheDir,true);
 
@@ -489,33 +484,28 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'DB_UPDATE_MODULES';
-			
 			$arrErrors = array();
 			try
 			{
 				// Contao 4.4 >=
-				if(version_compare(VERSION, '4.4','>='))
+				$objContainer = System::getContainer();
+				$objInstaller = $objContainer->get('contao.installer');
+				// compile sql
+				$arrSQL = $objInstaller->getCommands();
+				
+				if(!empty($arrSQL) && is_array($arrSQL))
 				{
-					// @var object \PCT\ThemeInstaller\InstallationController
-					#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
-					$objContainer = System::getContainer();
-					$objInstaller = $objContainer->get('contao.installer');
-					// compile sql
-					$arrSQL = $objInstaller->getCommands();
-					if(!empty($arrSQL) && is_array($arrSQL))
+					foreach($arrSQL as $operation => $sql)
 					{
-						foreach($arrSQL as $operation => $sql)
+						// never run operations
+						if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
 						{
-							// never run operations
-							if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
-							{
-								continue;
-							}
+							continue;
+						}
 
-							foreach($sql as $hash => $statement)
-							{
-								$objInstaller->execCommand($hash);
-							}
+						foreach($sql as $hash => $statement)
+						{
+							$objInstaller->execCommand($hash);
 						}
 					}
 				}
@@ -763,10 +753,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				}
 
 				// mark as being completed
-				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-				$_SESSION['PCT_THEME_INSTALLER']['theme'] = $this->strTheme;
-				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-				$objSession->set('PCT_THEME_INSTALLER',$_SESSION['PCT_THEME_INSTALLER']);
+				$objSession->set('PCT_THEME_INSTALLER',array('completed'=>true,'theme'=>$this->strTheme,'sql'=>$strOrigTemplate));
 				
 				// log out
 				#$objUser = \BackendUser::getInstance();
@@ -785,10 +772,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			if(Input::get('action') == 'run')
 			{
 				// mark as being completed
-				$_SESSION['PCT_THEME_INSTALLER']['completed'] = true;
-				$_SESSION['PCT_THEME_INSTALLER']['theme'] = $this->strTheme;
-				$_SESSION['PCT_THEME_INSTALLER']['sql'] = $strOrigTemplate;
-				$objSession->set('PCT_THEME_INSTALLER',$_SESSION['PCT_THEME_INSTALLER']);		
+				$arrSession = array('completed'=>true,'theme'=>$this->strTheme,'sql'=>$strOrigTemplate);
+				$objSession->set('PCT_THEME_INSTALLER',$arrSession);		
 				
 				$objContainer = System::getContainer();
 				$objInstall = $objContainer->get('contao.install_tool');
@@ -1081,9 +1066,15 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$status = strtolower($k);
 
+			if( !isset($arrSession['BREADCRUMB']['completed'][$k]) )
+			{
+				$arrSession['BREADCRUMB']['completed'][$k] = false;
+			}
+
+
 			// css class
 			$class = array('item',$status);
-			if($data['protected'])
+			if( isset($data['protected']) )
 			{
 				$class[] = 'hidden';
 			}
@@ -1098,7 +1089,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			}
 
 			// title
-			if(!$data['title'])
+			if( !isset($data['title']) )
 			{
 				$data['title'] = $data['label'];
 			}
@@ -1114,14 +1105,14 @@ class ThemeInstaller extends \Contao\BackendModule
 			}
 
 			// completed
-			if($arrSession['BREADCRUMB']['completed'][$k] === true && $strCurrent != $status)
+			if( $arrSession['BREADCRUMB']['completed'][$k] === true && $strCurrent != $status)
 			{
 				$data['completed'] = true;
 				$class[] = 'completed';
 			}
 
 			// sill waiting
-			if(!$data['isActive'] && !$data['completed'])
+			if(!isset($data['isActive']) && !isset($data['completed']))
 			{
 				$data['pending'] = true;
 				$class[] = 'pending';
