@@ -15,7 +15,7 @@
 			<tr class="<?= $item['class']; ?>">
 				<td><i></i></td>
 				<td>
-					<?php if($item['isActive']): ?>
+					<?php if(isset($item['isActive'])): ?>
 					<span><?= $item['label']; ?></span>
 					<?php else: ?>
 					<span href="<?= $item['href']; ?>" title="<?= $item['title']; ?>"><?= $item['label']; ?></span>
