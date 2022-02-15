@@ -36,7 +36,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
 	'sql_templates' => array
 	(
 		'4.9' => 'eclipsex_contao_4_9.sql',
-		'4.13' => 'eclipsex_contao_4_12.sql'
+		'4.13' => 'eclipsex_contao_4_13.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
@@ -48,7 +48,7 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
 	'sql_templates' => array
 	(
 		'4.9' => 'eclipsex_cc_contao_4_9.sql',
-		'4.13' => 'eclipsex_cc_contao_4_12.sql',
+		'4.13' => 'eclipsex_cc_contao_4_13.sql',
 	),
 );
 
