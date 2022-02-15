@@ -485,37 +485,35 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'DB_UPDATE_MODULES';
 			$arrErrors = array();
-			#try
-			#{
-				// Contao 4.4 >=
-					// @var object \PCT\ThemeInstaller\InstallationController
-					#$objInstaller = new \PCT\ThemeInstaller\InstallationController;
-			$objContainer = System::getContainer();
-			$objInstaller = $objContainer->get('contao.installer');
-			// compile sql
-			$arrSQL = $objInstaller->getCommands();
-			
-			if(!empty($arrSQL) && is_array($arrSQL))
+			try
 			{
-				foreach($arrSQL as $operation => $sql)
+				// Contao 4.4 >=
+				$objContainer = System::getContainer();
+				$objInstaller = $objContainer->get('contao.installer');
+				// compile sql
+				$arrSQL = $objInstaller->getCommands();
+				
+				if(!empty($arrSQL) && is_array($arrSQL))
 				{
-					// never run operations
-					if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+					foreach($arrSQL as $operation => $sql)
 					{
-						continue;
-					}
+						// never run operations
+						if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+						{
+							continue;
+						}
 
-					foreach($sql as $hash => $statement)
-					{
-						$objInstaller->execCommand($hash);
+						foreach($sql as $hash => $statement)
+						{
+							$objInstaller->execCommand($hash);
+						}
 					}
 				}
 			}
-			#}
-			#catch(\Exception $e)
-			#{
-			#	$arrErrors[] = $e->getMessage();
-			#}
+			catch(\Exception $e)
+			{
+				$arrErrors[] = $e->getMessage();
+			}
 			
 			// log errors and redirect
 			if(count($arrErrors) > 0)
