@@ -13,7 +13,7 @@
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '1.5.3');
+define('PCT_THEME_INSTALLER', '1.6.1');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 
@@ -35,8 +35,8 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
 	'mandatory' => array('upload'), // mandatory zip content on first level
 	'sql_templates' => array
 	(
-		'4.4' => 'eclipsex_contao_4_4.sql',
-		'4.9' => 'eclipsex_contao_4_9.sql'
+		'4.9' => 'eclipsex_contao_4_9.sql',
+		'4.13' => 'eclipsex_contao_4_13.sql'
 	),
 );
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
@@ -47,8 +47,8 @@ $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX_cc'] = array
 	'mandatory' => array('upload'), // mandatory zip content on first level
 	'sql_templates' => array
 	(
-		'4.4' => 'eclipsex_cc_contao_4_4.sql',
 		'4.9' => 'eclipsex_cc_contao_4_9.sql',
+		'4.13' => 'eclipsex_cc_contao_4_13.sql',
 	),
 );
 
