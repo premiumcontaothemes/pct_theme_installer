@@ -1,3 +1,6 @@
+### 1.6.1
+Update: tl_user information created directly (#91)
+
 ### 1.6.0
 New: Support for Contao 4.13
 Update: Allow installation on 4.9 and 4.13 (#85)

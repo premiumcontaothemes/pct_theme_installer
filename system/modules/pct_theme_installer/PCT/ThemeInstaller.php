@@ -562,46 +562,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				return;
 			}
 			// create a tmp copy
-			$strTmpTemplate = 'tmp_'.$strTemplate;
 			$strOrigTemplate = $strTemplate;
 			$blnIsCustomCatalog = (boolean)$GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['isCustomCatalog'];
-			
-			if( $blnIsCustomCatalog === false && \file_exists(TL_ROOT.'/templates/'.$strOrigTemplate) )
-			{
-				if(Files::getInstance()->copy('templates/'.$strTemplate,'templates/tmp_'.$strTemplate))
-				{
-					$file = fopen(TL_ROOT.'/templates/tmp_'.$strTemplate,'r');
-
-					$str = '';
-					while(!feof($file))
-					{
-						$line = fgets($file);
-						if(strlen(strpos($line, 'INSERT INTO `tl_user`')) > 0)
-						{
-							continue;
-						}
-
-						$str .= $line;
-					}
-					fclose($file);
-					unset($file);
-
-					// fetch tl_user information
-					$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
-					while($objUsers->next())
-					{
-						$str .= $objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->__get('query') . "\n";
-					}
-
-					$objFile = new File('templates/tmp_'.$strTemplate);
-					$objFile->write($str);
-					$objFile->close();
-
-					unset($str);
-
-					$strTemplate = $strTmpTemplate;
-				}
-			}
 			
 			$this->Template->sqlFile = $strOrigTemplate;
 			
@@ -775,12 +737,21 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrSession = array('completed'=>true,'theme'=>$this->strTheme,'sql'=>$strOrigTemplate);
 				$objSession->set('PCT_THEME_INSTALLER',$arrSession);		
 				
+				// fetch tl_user information
+				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
+				
 				$objContainer = System::getContainer();
 				$objInstall = $objContainer->get('contao.install_tool');
 				// let the install tool import the sql templates
 				$objInstall->importTemplate($strTemplate);
 				#$objInstall->persistConfig('exampleWebsite', time());
 				
+				// recreate tl_user
+				while($objUsers->next())
+				{
+					$objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->execute();
+				}
+
 				if(!Environment::get('isAjaxRequest'))
 				{
 					$url = StringUtil::decodeEntities( Environment::get('base').'contao?completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
