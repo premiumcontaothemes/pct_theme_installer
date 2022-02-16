@@ -689,6 +689,10 @@ class ThemeInstaller extends \Contao\BackendModule
 							}
 						}
 					}
+
+					// set ssl
+					$objDatabase->prepare("UPDATE tl_page %s WHERE type='root'")->set( array('useSSL'=> Environment::get('ssl') ) )->execute();
+				
 				}
 				catch(\Exception $e)
 				{
