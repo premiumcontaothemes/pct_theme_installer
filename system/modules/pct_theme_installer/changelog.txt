@@ -1,5 +1,6 @@
 ### 1.6.1
 Update: tl_user information created directly (#91)
+Update: Set ssl on root pages in relation to the current protocoll (#92)
 
 ### 1.6.0
 New: Support for Contao 4.13
