@@ -1,6 +1,4 @@
 <script type='text/javascript'>
-/* <![CDATA[ */
-
 /**
  * Class
  * PCT_ThemeInstaller
@@ -70,8 +68,6 @@ var PCT_ThemeInstaller =
 			// start
 			onRequest: function()
 			{
-		    	//console.log('Start loading: <?= $this->license->file->name; ?>');
-		    	//console.log('Please wait...');
 		    	// show Contaos loading box
 		    	PCT_ThemeInstaller.showAjaxInfobox( PCT_ThemeInstaller.ajax_infotext );
 		    },
@@ -100,7 +96,6 @@ var PCT_ThemeInstaller =
 				// reload on success
 				if(blnReload)
 				{
-					//console.log('File successfully created in: <?= $this->file_target_directory; ?>. You will be redirected...');
 					// reload page
 					location.reload();
 				}
@@ -174,6 +169,4 @@ var PCT_ThemeInstaller =
 		AjaxRequest.hideBox();
 	}
 }
-
-/* ]]> */
 </script>
