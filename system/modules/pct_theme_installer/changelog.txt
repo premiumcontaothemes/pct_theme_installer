@@ -1,3 +1,7 @@
+### 1.6.2
+Update: Removed commented out javascript code from be_js_pct_theme_installer.html5 template (#98)
+Update: Language files (#96)
+
 ### 1.6.1
 Update: tl_user information created directly (#91)
 Update: Set ssl on root pages in relation to the current protocoll (#92)
