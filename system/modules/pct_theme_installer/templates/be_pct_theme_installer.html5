@@ -6,9 +6,9 @@ $this->l_step = strtolower($this->step);
 $this->l_status_step = strtolower($this->status).($this->step ? '.'.strtolower($this->step) : '');
 $arrLang = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER'];
 $arrLangTpl = $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE'];
-$strStatus = $arrLang['STATUS'][$this->l_status];
-$strStep = $arrLang['STATUS'][$this->l_status_step];
-$strTheme = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->theme]['label'] ?: '';
+$strStatus = $arrLang['STATUS'][$this->l_status] ?? $this->l_status ?? '';
+$strStep = $arrLang['STATUS'][$this->l_status_step] ?? $this->l_status_step ?? '';
+$strTheme = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->theme]['label'] ?? '';
 if(strlen($strStatus) < 1 && strlen($strStep) > 0)
 {
 	$strStatus = $strStep;
@@ -45,12 +45,12 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 				<div class="input_wrapper licence_check">
 					<div class="widget field w50 license">
 						<h3><?= $arrLangTpl['input_license'][0]; ?></h3>
-						<input type="text" name="license" value="<?= $this->test_license[0]; ?>" class="tl_text" placeholder="">
+						<input type="text" name="license" value="" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_license'][1]; ?></p>
 					</div>
 					<div class="widget field w50 email">
 						<h3><?= $arrLangTpl['input_email'][0]; ?></h3>
-						<input type="text" name="email" value="<?= $this->test_license[1]; ?>" class="tl_text" placeholder="">
+						<input type="text" name="email" value="" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_email'][1]; ?></p>
 					</div>
 				</div>
