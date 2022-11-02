@@ -70,6 +70,8 @@ class ThemeInstaller extends \Contao\BackendModule
 	 */
 	protected function compile()
 	{
+		\error_reporting(E_ERROR | E_PARSE | E_NOTICE);
+		
 		System::loadLanguageFile('pct_theme_installer');
 		System::loadLanguageFile('exception');
 
