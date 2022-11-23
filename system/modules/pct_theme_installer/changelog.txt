@@ -1,3 +1,7 @@
+### 1.6.3
+Update: Set error_reporting(E_ERROR | E_PARSE | E_NOTICE) when runing (#101)
+Update: General PHP8 updates (#100)
+
 ### 1.6.2
 Update: Removed commented out javascript code from be_js_pct_theme_installer.html5 template (#98)
 Update: Language files (#96)

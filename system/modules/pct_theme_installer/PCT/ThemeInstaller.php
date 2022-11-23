@@ -70,6 +70,8 @@ class ThemeInstaller extends \Contao\BackendModule
 	 */
 	protected function compile()
 	{
+		\error_reporting(E_ERROR | E_PARSE | E_NOTICE);
+		
 		System::loadLanguageFile('pct_theme_installer');
 		System::loadLanguageFile('exception');
 
@@ -80,7 +82,11 @@ class ThemeInstaller extends \Contao\BackendModule
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
 		$arrParams = array();
-		$objLicense = $arrSession['license'] ? json_decode($arrSession['license']) : null;
+		$objLicense = $arrSession['license'] ?? null;
+		if( isset($arrSession['license']) && \is_string($arrSession['license']) && empty($arrSession['license']) === false)
+		{
+			$objLicense = \json_decode($arrSession['license']);
+		}
 		
 		// template vars
 		$strForm = 'pct_theme_installer';
@@ -131,8 +137,8 @@ class ThemeInstaller extends \Contao\BackendModule
 		}
 
 		// the theme or module name of this lizence
-		$this->strTheme = isset($objLicense->name) ?: $objLicense->file->name ?: '';
-		if($objLicense->file->name)
+		$this->strTheme = isset($objLicense->name) ?? $objLicense->file->name ?? '';
+		if( isset($objLicense->file) && $objLicense->file->name)
 		{
 			$this->strTheme = basename($objLicense->file->name,'.zip');
 			$this->Template->theme = $this->strTheme;
@@ -199,7 +205,7 @@ class ThemeInstaller extends \Contao\BackendModule
 //! status : NOT_SUPPORTED
 
 		
-		if($objLicense->status == 'NOT_SUPPORTED' && Input::get('status') != 'not_supported')
+		if( $objLicense !== null && $objLicense->status == 'NOT_SUPPORTED' && Input::get('status') != 'not_supported')
 		{
 			// redirect to the not supported page
 			$this->redirect( Backend::addToUrl('status=not_supported',true,array('step')) );
@@ -771,7 +777,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 		// file loaded
-		if($arrSession['status'] == 'FILE_CREATED' && !empty($arrSession['file']))
+		if( isset($arrSession['status']) && $arrSession['status'] == 'FILE_CREATED' && !empty($arrSession['file']))
 		{
 			// check if file still exists
 			if(!file_exists(TL_ROOT.'/'.$arrSession['file']))
@@ -1032,7 +1038,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		$arrSession = $objSession->get($this->strSession);
 		
 		// store the processed steps
-		if(!is_array($arrSession['BREADCRUMB']['completed']))
+		if( !isset($arrSession['BREADCRUMB']['completed']) || !is_array($arrSession['BREADCRUMB']['completed']))
 		{
 			$arrSession['BREADCRUMB']['completed'] = array();
 		}
@@ -1070,6 +1076,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			}
 
 			// active
+			$data['isActive'] = false;
 			if($strCurrent == $status)
 			{
 				$data['isActive'] = true;
@@ -1080,7 +1087,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			}
 
 			// completed
-			if( $arrSession['BREADCRUMB']['completed'][$k] === true && $strCurrent != $status)
+			$data['completed'] = false;
+			if( isset($arrSession['BREADCRUMB']['completed'][$k]) && $arrSession['BREADCRUMB']['completed'][$k] === true && $strCurrent != $status)
 			{
 				$data['completed'] = true;
 				$class[] = 'completed';
