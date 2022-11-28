@@ -1,3 +1,6 @@
+### 1.6.4
+Update: Refuse installation when license has registration errors (#103)
+
 ### 1.6.3
 Update: Set error_reporting(E_ERROR | E_PARSE | E_NOTICE) when runing (#101)
 Update: General PHP8 updates (#100)
