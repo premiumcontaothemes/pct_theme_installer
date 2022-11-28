@@ -204,8 +204,12 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			
 			<div class="tl_formbody_bottom tl_formbody_submit">
 				<div class="tl_submit_container">
-					<input type="submit" name="install" class="tl_submit" value="<?= $arrLangTpl['submit_install']; ?>">
-				</div>
+				<?php if($this->hasRegistrationError): ?>	
+				<div><?= \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['registration_error'], Environment::get('host'), $this->license->key); ?></div>
+				<?php else: ?>
+				<input type="submit" name="install" class="tl_submit" value="<?= $arrLangTpl['submit_install']; ?>">
+				<?php endif; ?>
+			</div>
 			</div>
 			
 		</form>

@@ -22,3 +22,4 @@ $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['sql_not_found'] 				= 'SQL-In
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'] 				= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] 			= 'Bitte nutzen Sie Contaos LTS Versionen: 4.9';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit']				= 'Memory Limit (memory_limit) zu gering (%s). Min.: 512M';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['registration_error'] 		= 'Installation verweigert! Installations-Domain (%s) nicht in Lizenz (%s) gefunden.';
