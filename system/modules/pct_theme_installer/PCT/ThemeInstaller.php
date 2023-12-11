@@ -32,7 +32,7 @@ use Contao\File;
 use Contao\StringUtil;
 use Contao\Session;
 use Contao\BackendTemplate;
-
+use Contao\Folder;
 
 /**
  * Class file
@@ -76,9 +76,12 @@ class ThemeInstaller extends \Contao\BackendModule
 		System::loadLanguageFile('exception');
 
 		// @var object Session
-		$objSession = System::getContainer()->get('session');
+		$objContainer = System::getContainer();
+		$objSession = $objContainer->get('request_stack')->getSession();
 		$arrSession = $objSession->get($this->strSession);
-		
+		$rootDir = $objContainer->getParameter('kernel.project_dir');
+
+
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
 		$arrParams = array();
@@ -278,13 +281,13 @@ class ThemeInstaller extends \Contao\BackendModule
 		if(Input::get('status') == 'installation' && Input::get('step') == 'unzip')
 		{
 			// check if file still exists
-			if(empty($arrSession['file']) || !file_exists(TL_ROOT.'/'.$arrSession['file']))
+			if(empty($arrSession['file']) || !file_exists($rootDir.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
 
 				// log
-				System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info('Theme Installer: File not found');
+
 				// track error				
 				$arrSession['errors'] = array('File not found');
 				$objSession->set($this->strSession,$arrSession);
@@ -318,9 +321,9 @@ class ThemeInstaller extends \Contao\BackendModule
 			{
 				// extract zip
 				$objZip = new \ZipArchive;
-				if($objZip->open(TL_ROOT.'/'.$objFile->path) === true && !$arrSession['unzipped'])
+				if($objZip->open($rootDir.'/'.$objFile->path) === true && !$arrSession['unzipped'])
 				{
-					$objZip->extractTo(TL_ROOT.'/'.$strTargetDir);
+					$objZip->extractTo($rootDir.'/'.$strTargetDir);
 					$objZip->close();
 
 					// flag that the zip file has been extracted
@@ -331,7 +334,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					die('Zip extracted to: '.$strTargetDir);
 				}
 				// zip already extracted
-				elseif($arrSession['unzipped'] && is_dir(TL_ROOT.'/'.$strTargetDir))
+				elseif($arrSession['unzipped'] && is_dir($rootDir.'/'.$strTargetDir))
 				{
 					// ajax done
 					die('Zip extracted to: '.$strTargetDir);
@@ -339,8 +342,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				// extraction failed
 				else
 				{
-					$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'],$arrSession['file']);
-					System::log($log,__METHOD__,TL_ERROR);
+					$objContainer->get('monolog.logger.contao.error')->info( sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'],$arrSession['file']) );
 				}
 
 				// redirect to the beginning
@@ -359,11 +361,11 @@ class ThemeInstaller extends \Contao\BackendModule
 			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
 			$strFolder = $strTargetDir; #$strTargetDir.'/'.basename($arrSession['file'], ".zip");
 
-			if(Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
+			if(Input::get('action') == 'run' && is_dir($rootDir.'/'.$strFolder))
 			{
 				// backup an existing customize.css
 				$blnCustomizeCss = false;
-				if(file_exists(TL_ROOT.'/'.Config::get('uploadPath').'/cto_layout/css/customize.css'))
+				if(file_exists($rootDir.'/'.Config::get('uploadPath').'/cto_layout/css/customize.css'))
 				{
 					if( Files::getInstance()->copy(Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
 					{
@@ -375,7 +377,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrIgnore = array('.ds_store');
 
 				// folder to copy
-				$arrFolders = scan(TL_ROOT.'/'.$strFolder.'/upload');
+				$arrFolders = Folder::scan($rootDir.'/'.$strFolder.'/upload');
 
 				foreach($arrFolders as $f)
 				{
@@ -407,8 +409,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				// log errors
 				if(count($arrErrors) > 0)
 				{
-					System::log('Theme Installer: Copy files: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-					
+					$objContainer->get('monolog.logger.contao.error')->info('Theme Installer: Copy files: '.implode(', ', $arrErrors));
+
 					// track error				
 					$arrSession['errors'] = $arrErrors;
 					$objSession->set($this->strSession,$arrSession);
@@ -425,7 +427,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				else
 				{
 					// write log
-					System::log( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']),__METHOD__,TL_CRON);
+					$objContainer->get('monolog.logger.contao.error')->info( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']) );
 
 					// ajax done
 					if($blnAjax)
@@ -524,8 +526,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			// log errors and redirect
 			if(count($arrErrors) > 0)
 			{
-				System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info( 'Theme Installer: Database update returned errors: '.implode(', ', $arrErrors) );
+
 				// track error				
 				$arrSession['errors'] = $arrErrors;
 				$objSession->set($this->strSession,$arrSession);
@@ -578,7 +580,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 			// Eclipse + CustomCatalog sqls
 			$strZipFolder = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['zip_folder'];
-			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
+			$strFileCC = $rootDir.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
 			if(Input::get('action') == 'run' && $blnIsCustomCatalog === true && file_exists($strFileCC))
 			{
 				$skipTables = array('tl_user','tl_user_group','tl_member','tl_member_group','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log','tl_version');
@@ -715,8 +717,8 @@ class ThemeInstaller extends \Contao\BackendModule
 
 				if(!empty($arrErrors))
 				{
-					System::log('Theme installation finished with errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-					
+					$objContainer->get('monolog.logger.contao.error')->info( 'Theme installation finished with errors: '.implode(', ', $arrErrors) );
+
 					// track error				
 					$arrSession['errors'] = $arrErrors;
 					$objSession->set($this->strSession,$arrSession);
@@ -780,13 +782,13 @@ class ThemeInstaller extends \Contao\BackendModule
 		if( isset($arrSession['status']) && $arrSession['status'] == 'FILE_CREATED' && !empty($arrSession['file']))
 		{
 			// check if file still exists
-			if(!file_exists(TL_ROOT.'/'.$arrSession['file']))
+			if(!file_exists($rootDir.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
 
 				// log
-				System::log('Theme Installer: File not found or file could not be created',__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info('Theme Installer: File not found or file could not be created');
+
 				// track error				
 				$arrSession['errors'] = array('File not found or file could not be created');
 				$objSession->set($this->strSession,$arrSession);
@@ -987,8 +989,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			// log errors and redirect to error page
 			if(count($arrErrors) > 0)
 			{
-				System::log('Theme Installer: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info( 'Theme Installer: '.implode(', ', $arrErrors) );
+
 				// track error				
 				$arrSession['errors'] = $arrErrors;
 				$objSession->set($this->strSession,$arrSession);

@@ -27,6 +27,7 @@ use Contao\Controller;
 use Contao\Message;
 use Contao\Files;
 use Contao\Session;
+use Contao\StringUtil;
 
 /**
  * Class file
@@ -45,8 +46,11 @@ class SystemCallbacks extends System
 		{
 			return;
 		}
+
+		$objContainer = System::getContainer();
+		$request = $objContainer->get('request_stack')->getCurrentRequest();
 		
-		if(TL_MODE != 'BE' || Environment::get('isAjaxRequest'))
+		if( ($request && $objContainer->get('contao.routing.scope_matcher')->isFrontendRequest($request) )  || Environment::get('isAjaxRequest'))
 		{
 			return;
 		}
@@ -60,12 +64,7 @@ class SystemCallbacks extends System
 		// load language files
 		System::loadLanguageFile('default');
 		
-		$objSession = Session::getInstance();
-		if(version_compare(VERSION, '4','>='))
-		{
-			$objSession = System::getContainer()->get('session');
-		}
-		
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrSession = $objSession->get('PCT_THEME_INSTALLER');
 			
 		#// session still exists
@@ -95,8 +94,8 @@ class SystemCallbacks extends System
 			// check if theme data exists
 			if(!isset($GLOBALS['PCT_THEME_INSTALLER']['THEMES'][ Input::get('welcome') ]))
 			{
-				$url = \Contao\StringUtil::decodeEntities( Controller::addToUrl('',false,array('welcome')) );
-				$this->redirect($url);
+				$url = StringUtil::decodeEntities( Controller::addToUrl('',false,array('welcome')) );
+				Controller::redirect($url);
 			}
 			
 			$strName = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][ Input::get('welcome') ]['label'] ?: Input::get('welcome');
@@ -111,7 +110,8 @@ class SystemCallbacks extends System
 		{
 			// remove the tmp.SQL file
 			$strTemplate = Input::get('sql');
-			if(file_exists(TL_ROOT.'/templates/tmp_'.$strTemplate))
+			$rootDir = $objContainer->getParameter('kernel.project_dir');
+			if(file_exists($rootDir.'/templates/tmp_'.$strTemplate))
 			{
 				Files::getInstance()->delete('templates/tmp_'.$strTemplate);
 			}
@@ -135,8 +135,8 @@ class SystemCallbacks extends System
 			#	$remove_params[] = 'sql';
 			#}
 			
-			$url = \Contao\StringUtil::decodeEntities( Controller::addToUrl('welcome='.Input::get('theme'),false,array('completed','theme','sql','referer','rt','ref')) );
-			$this->redirect($url);
+			$url = StringUtil::decodeEntities( Controller::addToUrl('welcome='.Input::get('theme'),false,array('completed','theme','sql','referer','rt','ref')) );
+			Controller::redirect($url);
 		}
 	}
 	
