@@ -1012,7 +1012,8 @@ class ThemeInstaller extends \Contao\BackendModule
 	 */
 	public function injectScripts($objTemplate)
 	{
-		if(TL_MODE == 'BE' && $objTemplate->getName() == 'be_main')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		if($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request) && $objTemplate->getName() == 'be_main')
 		{
 			$objScripts = new BackendTemplate('be_js_pct_theme_installer');
 
