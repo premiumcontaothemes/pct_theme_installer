@@ -1,6 +1,10 @@
 <?php
 namespace Contao;
 
+use Contao\CoreBundle\ContaoCoreBundle;
+
+$version = ContaoCoreBundle::getVersion();
+$strToken = \Contao\System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 $this->l_status = strtolower($this->status);
 $this->l_step = strtolower($this->step);
 $this->l_status_step = strtolower($this->status).($this->step ? '.'.strtolower($this->step) : '');
@@ -19,7 +23,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 }
 ?>
 
-<div id="pct_eclipse_installer" class="<?php if(version_compare(VERSION, '3.5','>')): ?>contao-ht35<?php endif; ?>">
+<div id="pct_eclipse_installer" class="contao-ht35">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
 			<a class="shop_link" href="https://premium-contao-themes.com" target="_blank"><?= $arrLangTpl['button_buy']; ?></a>
@@ -39,7 +43,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		
 		<form action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
-			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+			<input type="hidden" name="REQUEST_TOKEN" value="<?= $strToken; ?>">
 			
 			<div class="tl_formbody_top">
 				<div class="input_wrapper licence_check">
@@ -113,7 +117,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		
 		<form id="form_pct_theme_installer" action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
-			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+			<input type="hidden" name="REQUEST_TOKEN" value="<?= $strToken; ?>">
 			<input type="hidden" name="license" value="<?= $this->license->key; ?>">
 			<input type="hidden" name="email" value="<?= $this->license->email; ?>">
 
@@ -197,7 +201,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		
 		<form id="form_pct_theme_installer" action="<?php echo $this->action; ?>" class="tl_form" method="post">
 			<input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId; ?>">
-			<input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN; ?>">
+			<input type="hidden" name="REQUEST_TOKEN" value="<?= $strToken; ?>">
 			
 			<div class="tl_formbody_top">
 			</div>
@@ -343,12 +347,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 		<script type="text/javascript">
 		/* <![CDATA[ */
 		<?php 
-		#$url = StringUtil::decodeEntities( \Backend::addToUrl('status=completed&theme='.$this->theme) );
-		$url = StringUtil::decodeEntities( Environment::get('base').'contao?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
-		if(version_compare(VERSION, '4.4','>='))
-		{
-			$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
-		}
+		$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?completed=1&theme='.$this->theme.'&sql='.$this->sqlFile );
 		?>
 		PCT_ThemeInstaller.ajax_infotext = '<?= $arrLang['AJAX_INFO']['sql_template_import']; ?>';
 		PCT_ThemeInstaller.request({'action':'run','redirectTo':'<?= $url; ?>'});

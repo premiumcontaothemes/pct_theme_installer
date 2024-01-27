@@ -32,6 +32,7 @@ use Contao\File;
 use Contao\StringUtil;
 use Contao\Session;
 use Contao\BackendTemplate;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Folder;
 
 /**
@@ -80,7 +81,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		$objSession = $objContainer->get('request_stack')->getSession();
 		$arrSession = $objSession->get($this->strSession);
 		$rootDir = $objContainer->getParameter('kernel.project_dir');
-
+		$version = ContaoCoreBundle::getVersion();
 
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
@@ -152,7 +153,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 		$blnAllowed = false;
-		if( version_compare(VERSION, '4.9','==') || version_compare(VERSION, '4.13','==') )
+		if( version_compare($version, '4.13','==') || version_compare($version, '5.2','>=') )
 		{
 			$blnAllowed = true;
 		}
@@ -178,12 +179,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$arrSession = $objSession->get('PCT_THEME_INSTALLER');
 			// redirect to contao login
-			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
-			
-			if( \version_compare(VERSION,'4.9','>=') )
-			{
-				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
-			}
+			$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
 			
 			$this->redirect($url);
 
@@ -541,7 +537,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		else if(Input::get('status') == 'installation' && Input::get('step') == 'sql_template_wait')
 		{
 			// get the template by contao version
-			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
+			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][$version];
 
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_WAIT';
@@ -562,7 +558,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->step = 'SQL_TEMPLATE_IMPORT';
 			
 			// get the template by contao version
-			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
+			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][$version];
 			
 			if(empty($strTemplate))
 			{
@@ -1037,7 +1033,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		$arrItems = array();
 		$i = 0;
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrSession = $objSession->get($this->strSession);
 		
 		// store the processed steps
@@ -1104,7 +1100,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				$class[] = 'pending';
 			}
 
-			$data['href'] = Controller::addToUrl($data['href'].'&rt='.REQUEST_TOKEN,true,array('step'));
+			$strToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$data['href'] = Controller::addToUrl($data['href'].'&rt='.$strToken,true,array('step'));
 			$data['class'] = implode(' ', array_unique($class));
 
 			$arrItems[ $k ] = $data;
