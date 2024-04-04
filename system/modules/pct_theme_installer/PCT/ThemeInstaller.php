@@ -759,7 +759,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				}
 							
 				// set ssl
-				$objDatabase->prepare("UPDATE tl_page %s WHERE type='root'")->set( array('useSSL'=> Environment::get('ssl') ) )->execute();
+				$objDatabase->prepare("UPDATE tl_page %s WHERE type='root' OR type='rootFallback'")->set( array('useSSL'=> Environment::get('ssl') ) )->execute();
 		
 				if(!Environment::get('isAjaxRequest'))
 				{
