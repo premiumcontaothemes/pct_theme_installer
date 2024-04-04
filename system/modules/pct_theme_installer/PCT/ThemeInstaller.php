@@ -34,6 +34,7 @@ use Contao\Session;
 use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Folder;
+use PCT\ThemeInstaller\InstallerHelper;
 
 /**
  * Class file
@@ -81,8 +82,9 @@ class ThemeInstaller extends \Contao\BackendModule
 		$objSession = $objContainer->get('request_stack')->getSession();
 		$arrSession = $objSession->get($this->strSession);
 		$rootDir = $objContainer->getParameter('kernel.project_dir');
-		$version = ContaoCoreBundle::getVersion();
-
+		$full_version = ContaoCoreBundle::getVersion();
+		$version = substr( $full_version, 0, strrpos($full_version, '.') );
+		
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
 		$arrParams = array();
@@ -455,27 +457,22 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrBundles = $objContainer->getParameter('kernel.bundles');
 				
 				// @var object Contao\Automator
-				$objAutomator = new Automator;
+				#$objAutomator = new Automator;
 				// generate symlinks to /assets, /files, /system
-				$objAutomator->generateSymlinks();
+				#$objAutomator->generateSymlinks();
 				// generate bundles symlinks
-				$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
-				$arrBundles = array('calendar','comments','core','faq','news','newsletter');
-				foreach($arrBundles as $bundle)
-				{
-					$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle/src/Resources/public';
-					$to = $strWebDir.'/bundles/contao'.$bundle;
-					$objSymlink::symlink($from, $to,$strRootDir);
-				}
+				#$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
+				#$arrBundles = array('calendar','comments','core','faq','news','newsletter');
+				#foreach($arrBundles as $bundle)
+				#{
+				#	$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle/src/Resources/public';
+				#	$to = $strWebDir.'/bundles/contao'.$bundle;
+				#	$objSymlink::symlink($from, $to,$strRootDir);
+				#}
 				
 				// purge the whole folder
-				#Files::getInstance()->rrdir($strCacheDir,true);
-
-				// try to rebuild the symphony cache
-				$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
-				$objInstallationController->call('purgeSymfonyCache');
-				#$objInstallationController->call('warmUpSymfonyCache');
-
+				Files::getInstance()->rrdir($strCacheDir,true);
+				
 				die('Symlinks created and Symphony cache cleared');
 			
 			}
@@ -491,34 +488,38 @@ class ThemeInstaller extends \Contao\BackendModule
 			$arrErrors = array();
 			try
 			{
-				// Contao 4.4 >=
-				$objContainer = System::getContainer();
-				$objInstaller = $objContainer->get('contao.installer');
-				// compile sql
-				$arrSQL = $objInstaller->getCommands();
-				
+				$objInstallHelper = new InstallerHelper;
+				$arrSQL = $objInstallHelper->sqlCompileCommandsCallback(array());
+
 				if(!empty($arrSQL) && is_array($arrSQL))
 				{
 					foreach($arrSQL as $operation => $sql)
 					{
 						// never run operations
-						if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+						if(in_array($operation, array('DELETE','DROP','ALTER_DROP','ALTER_CHANGE')))
 						{
 							continue;
 						}
-
-						foreach($sql as $hash => $statement)
+						
+						foreach($sql as $statement)
 						{
-							$objInstaller->execCommand($hash);
+							if( \strpos($statement,'ADD KEY') || \strpos($statement,'ADD UNIQUE KEY') )
+							{
+								continue;
+							}	
+							// track the statements executed
+							$arrStatements[] = $statement;
+							// execute
+							$this->Database->query( $statement );
 						}
 					}
-				}
+				}		
 			}
 			catch(\Exception $e)
 			{
 				$arrErrors[] = $e->getMessage();
 			}
-			
+						
 			// log errors and redirect
 			if(count($arrErrors) > 0)
 			{
@@ -556,7 +557,6 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_IMPORT';
-			
 			// get the template by contao version
 			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][$version];
 			
@@ -748,10 +748,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				// fetch tl_user information
 				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
 				
-				$objContainer = System::getContainer();
-				$objInstall = $objContainer->get('contao.install_tool');
-				// let the install tool import the sql templates
-				$objInstall->importTemplate($strTemplate);
+				$objInstallHelper = new InstallerHelper;
+				$objInstallHelper->importTemplate($strTemplate);
 				#$objInstall->persistConfig('exampleWebsite', time());
 				
 				// recreate tl_user
@@ -760,11 +758,14 @@ class ThemeInstaller extends \Contao\BackendModule
 					$objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->execute();
 				}
 
+
 				if(!Environment::get('isAjaxRequest'))
 				{
 					$url = StringUtil::decodeEntities( Environment::get('base').'contao?completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
 					$this->redirect($url);
-				}	
+				}
+				
+				
 			}
 
 			return;

@@ -58,11 +58,7 @@ class SystemCallbacks extends System
 		}
 		
 		$objUser = BackendUser::getInstance();
-		if((int)$objUser->id > 0)
-		{
-			return;
-		}
-		
+				
 		// load language files
 		System::loadLanguageFile('default');
 		
