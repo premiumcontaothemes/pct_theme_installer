@@ -757,14 +757,15 @@ class ThemeInstaller extends \Contao\BackendModule
 				{
 					$objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->execute();
 				}
-
-
+							
+				// set ssl
+				$objDatabase->prepare("UPDATE tl_page %s WHERE type='root'")->set( array('useSSL'=> Environment::get('ssl') ) )->execute();
+		
 				if(!Environment::get('isAjaxRequest'))
 				{
 					$url = StringUtil::decodeEntities( Environment::get('base').'contao?completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
 					$this->redirect($url);
 				}
-				
 				
 			}
 
