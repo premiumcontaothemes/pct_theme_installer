@@ -457,9 +457,10 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrBundles = $objContainer->getParameter('kernel.bundles');
 				
 				// @var object Contao\Automator
-				#$objAutomator = new Automator;
+				$objAutomator = new Automator;
 				// generate symlinks to /assets, /files, /system
-				#$objAutomator->generateSymlinks();
+				$objAutomator->generateSymlinks();
+				
 				// generate bundles symlinks
 				#$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
 				#$arrBundles = array('calendar','comments','core','faq','news','newsletter');
