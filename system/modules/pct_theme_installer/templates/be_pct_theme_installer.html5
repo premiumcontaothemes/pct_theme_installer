@@ -54,7 +54,7 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 					</div>
 					<div class="widget field w50 email">
 						<h3><?= $arrLangTpl['input_email'][0]; ?></h3>
-						<input type="text" name="email" value="" class="tl_text" placeholder="">
+						<input type="email" name="email" value="" class="tl_text" placeholder="">
 						<p class="tl_help tl_tip"><?= $arrLangTpl['input_email'][1]; ?></p>
 					</div>
 				</div>
