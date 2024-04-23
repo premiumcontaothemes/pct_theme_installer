@@ -1,3 +1,7 @@
+### 2.0.0
+New: Support for Contao 4.13, 5.3 (#105)
+Removed: Contao 4.9 support (#105)
+
 ### 1.6.4
 Update: Refuse installation when license has registration errors (#103)
 

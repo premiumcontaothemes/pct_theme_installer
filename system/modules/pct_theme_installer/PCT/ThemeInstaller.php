@@ -32,7 +32,9 @@ use Contao\File;
 use Contao\StringUtil;
 use Contao\Session;
 use Contao\BackendTemplate;
-
+use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\Folder;
+use PCT\ThemeInstaller\InstallerHelper;
 
 /**
  * Class file
@@ -76,8 +78,12 @@ class ThemeInstaller extends \Contao\BackendModule
 		System::loadLanguageFile('exception');
 
 		// @var object Session
-		$objSession = System::getContainer()->get('session');
+		$objContainer = System::getContainer();
+		$objSession = $objContainer->get('request_stack')->getSession();
 		$arrSession = $objSession->get($this->strSession);
+		$rootDir = $objContainer->getParameter('kernel.project_dir');
+		$full_version = ContaoCoreBundle::getVersion();
+		$version = substr( $full_version, 0, strrpos($full_version, '.') );
 		
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
@@ -149,7 +155,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 		$blnAllowed = false;
-		if( version_compare(VERSION, '4.9','==') || version_compare(VERSION, '4.13','==') )
+		if( version_compare($version, '4.13','==') || version_compare($version, '5.2','>=') )
 		{
 			$blnAllowed = true;
 		}
@@ -175,12 +181,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$arrSession = $objSession->get('PCT_THEME_INSTALLER');
 			// redirect to contao login
-			$url = StringUtil::decodeEntities( Environment::get('base').'contao?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
-			
-			if( \version_compare(VERSION,'4.9','>=') )
-			{
-				$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
-			}
+			$url = StringUtil::decodeEntities( Environment::get('base').'contao/login?installation_completed=1&theme='.Input::get('theme').'&sql='.$arrSession['sql']);
 			
 			$this->redirect($url);
 
@@ -278,13 +279,13 @@ class ThemeInstaller extends \Contao\BackendModule
 		if(Input::get('status') == 'installation' && Input::get('step') == 'unzip')
 		{
 			// check if file still exists
-			if(empty($arrSession['file']) || !file_exists(TL_ROOT.'/'.$arrSession['file']))
+			if(empty($arrSession['file']) || !file_exists($rootDir.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
 
 				// log
-				System::log('Theme Installer: File not found',__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info('Theme Installer: File not found');
+
 				// track error				
 				$arrSession['errors'] = array('File not found');
 				$objSession->set($this->strSession,$arrSession);
@@ -318,9 +319,9 @@ class ThemeInstaller extends \Contao\BackendModule
 			{
 				// extract zip
 				$objZip = new \ZipArchive;
-				if($objZip->open(TL_ROOT.'/'.$objFile->path) === true && !$arrSession['unzipped'])
+				if($objZip->open($rootDir.'/'.$objFile->path) === true && !$arrSession['unzipped'])
 				{
-					$objZip->extractTo(TL_ROOT.'/'.$strTargetDir);
+					$objZip->extractTo($rootDir.'/'.$strTargetDir);
 					$objZip->close();
 
 					// flag that the zip file has been extracted
@@ -331,7 +332,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					die('Zip extracted to: '.$strTargetDir);
 				}
 				// zip already extracted
-				elseif($arrSession['unzipped'] && is_dir(TL_ROOT.'/'.$strTargetDir))
+				elseif($arrSession['unzipped'] && is_dir($rootDir.'/'.$strTargetDir))
 				{
 					// ajax done
 					die('Zip extracted to: '.$strTargetDir);
@@ -339,8 +340,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				// extraction failed
 				else
 				{
-					$log = sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'],$arrSession['file']);
-					System::log($log,__METHOD__,TL_ERROR);
+					$objContainer->get('monolog.logger.contao.error')->info( sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['unzip_error'],$arrSession['file']) );
 				}
 
 				// redirect to the beginning
@@ -359,11 +359,11 @@ class ThemeInstaller extends \Contao\BackendModule
 			$strTargetDir = $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.basename($arrSession['file'], ".zip").'_zip';
 			$strFolder = $strTargetDir; #$strTargetDir.'/'.basename($arrSession['file'], ".zip");
 
-			if(Input::get('action') == 'run' && is_dir(TL_ROOT.'/'.$strFolder))
+			if(Input::get('action') == 'run' && is_dir($rootDir.'/'.$strFolder))
 			{
 				// backup an existing customize.css
 				$blnCustomizeCss = false;
-				if(file_exists(TL_ROOT.'/'.Config::get('uploadPath').'/cto_layout/css/customize.css'))
+				if(file_exists($rootDir.'/'.Config::get('uploadPath').'/cto_layout/css/customize.css'))
 				{
 					if( Files::getInstance()->copy(Config::get('uploadPath').'/cto_layout/css/customize.css',$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/customize.css') )
 					{
@@ -375,7 +375,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrIgnore = array('.ds_store');
 
 				// folder to copy
-				$arrFolders = scan(TL_ROOT.'/'.$strFolder.'/upload');
+				$arrFolders = Folder::scan($rootDir.'/'.$strFolder.'/upload');
 
 				foreach($arrFolders as $f)
 				{
@@ -407,8 +407,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				// log errors
 				if(count($arrErrors) > 0)
 				{
-					System::log('Theme Installer: Copy files: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-					
+					$objContainer->get('monolog.logger.contao.error')->info('Theme Installer: Copy files: '.implode(', ', $arrErrors));
+
 					// track error				
 					$arrSession['errors'] = $arrErrors;
 					$objSession->set($this->strSession,$arrSession);
@@ -425,7 +425,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				else
 				{
 					// write log
-					System::log( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']),__METHOD__,TL_CRON);
+					$objContainer->get('monolog.logger.contao.error')->info( sprintf($GLOBALS['TL_LANG']['pct_theme_installer']['copy_files_completed'],$arrSession['file']) );
 
 					// ajax done
 					if($blnAjax)
@@ -460,24 +460,20 @@ class ThemeInstaller extends \Contao\BackendModule
 				$objAutomator = new Automator;
 				// generate symlinks to /assets, /files, /system
 				$objAutomator->generateSymlinks();
+				
 				// generate bundles symlinks
-				$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
-				$arrBundles = array('calendar','comments','core','faq','news','newsletter');
-				foreach($arrBundles as $bundle)
-				{
-					$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle/src/Resources/public';
-					$to = $strWebDir.'/bundles/contao'.$bundle;
-					$objSymlink::symlink($from, $to,$strRootDir);
-				}
+				#$objSymlink = new \Contao\CoreBundle\Util\SymlinkUtil;
+				#$arrBundles = array('calendar','comments','core','faq','news','newsletter');
+				#foreach($arrBundles as $bundle)
+				#{
+				#	$from = $strRootDir.'/vendor/contao/'.$bundle.'-bundle/src/Resources/public';
+				#	$to = $strWebDir.'/bundles/contao'.$bundle;
+				#	$objSymlink::symlink($from, $to,$strRootDir);
+				#}
 				
 				// purge the whole folder
-				#Files::getInstance()->rrdir($strCacheDir,true);
-
-				// try to rebuild the symphony cache
-				$objInstallationController = new \PCT\ThemeInstaller\Contao4\InstallationController;
-				$objInstallationController->call('purgeSymfonyCache');
-				#$objInstallationController->call('warmUpSymfonyCache');
-
+				Files::getInstance()->rrdir($strCacheDir,true);
+				
 				die('Symlinks created and Symphony cache cleared');
 			
 			}
@@ -493,39 +489,43 @@ class ThemeInstaller extends \Contao\BackendModule
 			$arrErrors = array();
 			try
 			{
-				// Contao 4.4 >=
-				$objContainer = System::getContainer();
-				$objInstaller = $objContainer->get('contao.installer');
-				// compile sql
-				$arrSQL = $objInstaller->getCommands();
-				
+				$objInstallHelper = new InstallerHelper;
+				$arrSQL = $objInstallHelper->sqlCompileCommandsCallback(array());
+
 				if(!empty($arrSQL) && is_array($arrSQL))
 				{
 					foreach($arrSQL as $operation => $sql)
 					{
 						// never run operations
-						if(in_array($operation, array('DELETE','DROP','ALTER_DROP')))
+						if(in_array($operation, array('DELETE','DROP','ALTER_DROP','ALTER_CHANGE')))
 						{
 							continue;
 						}
-
-						foreach($sql as $hash => $statement)
+						
+						foreach($sql as $statement)
 						{
-							$objInstaller->execCommand($hash);
+							if( \strpos($statement,'ADD KEY') || \strpos($statement,'ADD UNIQUE KEY') )
+							{
+								continue;
+							}	
+							// track the statements executed
+							$arrStatements[] = $statement;
+							// execute
+							$this->Database->query( $statement );
 						}
 					}
-				}
+				}		
 			}
 			catch(\Exception $e)
 			{
 				$arrErrors[] = $e->getMessage();
 			}
-			
+						
 			// log errors and redirect
 			if(count($arrErrors) > 0)
 			{
-				System::log('Theme Installer: Database update returned errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info( 'Theme Installer: Database update returned errors: '.implode(', ', $arrErrors) );
+
 				// track error				
 				$arrSession['errors'] = $arrErrors;
 				$objSession->set($this->strSession,$arrSession);
@@ -539,7 +539,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		else if(Input::get('status') == 'installation' && Input::get('step') == 'sql_template_wait')
 		{
 			// get the template by contao version
-			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
+			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][$version];
 
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_WAIT';
@@ -558,9 +558,8 @@ class ThemeInstaller extends \Contao\BackendModule
 		{
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'SQL_TEMPLATE_IMPORT';
-			
 			// get the template by contao version
-			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][VERSION];
+			$strTemplate = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['sql_templates'][$version];
 			
 			if(empty($strTemplate))
 			{
@@ -578,7 +577,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 			// Eclipse + CustomCatalog sqls
 			$strZipFolder = $GLOBALS['PCT_THEME_INSTALLER']['THEMES'][$this->strTheme]['zip_folder'];
-			$strFileCC = TL_ROOT.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
+			$strFileCC = $rootDir.'/'.$GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'].'/'.$strZipFolder.'/'.$strTemplate;
 			if(Input::get('action') == 'run' && $blnIsCustomCatalog === true && file_exists($strFileCC))
 			{
 				$skipTables = array('tl_user','tl_user_group','tl_member','tl_member_group','tl_session','tl_repository_installs','tl_repository_instfiles','tl_undo','tl_log','tl_version');
@@ -715,8 +714,8 @@ class ThemeInstaller extends \Contao\BackendModule
 
 				if(!empty($arrErrors))
 				{
-					System::log('Theme installation finished with errors: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-					
+					$objContainer->get('monolog.logger.contao.error')->info( 'Theme installation finished with errors: '.implode(', ', $arrErrors) );
+
 					// track error				
 					$arrSession['errors'] = $arrErrors;
 					$objSession->set($this->strSession,$arrSession);
@@ -750,10 +749,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				// fetch tl_user information
 				$objUsers = $objDatabase->prepare("SELECT * FROM tl_user")->execute();
 				
-				$objContainer = System::getContainer();
-				$objInstall = $objContainer->get('contao.install_tool');
-				// let the install tool import the sql templates
-				$objInstall->importTemplate($strTemplate);
+				$objInstallHelper = new InstallerHelper;
+				$objInstallHelper->importTemplate($strTemplate);
 				#$objInstall->persistConfig('exampleWebsite', time());
 				
 				// recreate tl_user
@@ -761,12 +758,16 @@ class ThemeInstaller extends \Contao\BackendModule
 				{
 					$objDatabase->prepare("INSERT INTO `tl_user` %s")->set( $objUsers->row() )->execute();
 				}
-
+							
+				// set ssl
+				$objDatabase->prepare("UPDATE tl_page %s WHERE type='root' OR type='rootFallback'")->set( array('useSSL'=> Environment::get('ssl') ) )->execute();
+		
 				if(!Environment::get('isAjaxRequest'))
 				{
 					$url = StringUtil::decodeEntities( Environment::get('base').'contao?completed=1&theme='.$this->strTheme.'&sql='.$strOrigTemplate );
 					$this->redirect($url);
-				}	
+				}
+				
 			}
 
 			return;
@@ -780,13 +781,13 @@ class ThemeInstaller extends \Contao\BackendModule
 		if( isset($arrSession['status']) && $arrSession['status'] == 'FILE_CREATED' && !empty($arrSession['file']))
 		{
 			// check if file still exists
-			if(!file_exists(TL_ROOT.'/'.$arrSession['file']))
+			if(!file_exists($rootDir.'/'.$arrSession['file']))
 			{
 				$this->Template->status = 'FILE_NOT_EXISTS';
 
 				// log
-				System::log('Theme Installer: File not found or file could not be created',__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info('Theme Installer: File not found or file could not be created');
+
 				// track error				
 				$arrSession['errors'] = array('File not found or file could not be created');
 				$objSession->set($this->strSession,$arrSession);
@@ -987,8 +988,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			// log errors and redirect to error page
 			if(count($arrErrors) > 0)
 			{
-				System::log('Theme Installer: '.implode(', ', $arrErrors),__METHOD__,TL_ERROR);
-				
+				$objContainer->get('monolog.logger.contao.error')->info( 'Theme Installer: '.implode(', ', $arrErrors) );
+
 				// track error				
 				$arrSession['errors'] = $arrErrors;
 				$objSession->set($this->strSession,$arrSession);
@@ -1010,7 +1011,8 @@ class ThemeInstaller extends \Contao\BackendModule
 	 */
 	public function injectScripts($objTemplate)
 	{
-		if(TL_MODE == 'BE' && $objTemplate->getName() == 'be_main')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		if($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request) && $objTemplate->getName() == 'be_main')
 		{
 			$objScripts = new BackendTemplate('be_js_pct_theme_installer');
 
@@ -1034,7 +1036,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		$arrItems = array();
 		$i = 0;
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrSession = $objSession->get($this->strSession);
 		
 		// store the processed steps
@@ -1101,7 +1103,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				$class[] = 'pending';
 			}
 
-			$data['href'] = Controller::addToUrl($data['href'].'&rt='.REQUEST_TOKEN,true,array('step'));
+			$strToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$data['href'] = Controller::addToUrl($data['href'].'&rt='.$strToken,true,array('step'));
 			$data['class'] = implode(' ', array_unique($class));
 
 			$arrItems[ $k ] = $data;
