@@ -1,5 +1,5 @@
 ### 2.0.1
-Update: Removed any session or backend user calles in initializeSystem hook (#110)
+Update: Removed any session or backend user calls in initializeSystem hook (#110)
 
 ### 2.0.0
 New: Support for Contao 4.13, 5.3 (#105)
