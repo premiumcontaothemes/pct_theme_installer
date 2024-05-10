@@ -52,18 +52,13 @@ class SystemCallbacks extends System
 		$objContainer = System::getContainer();
 		$request = $objContainer->get('request_stack')->getCurrentRequest();
 		
-		if( ($request && $objContainer->get('contao.routing.scope_matcher')->isFrontendRequest($request) )  || Environment::get('isAjaxRequest'))
+		if( ($request && $objContainer->get('contao.routing.scope_matcher')->isFrontendRequest($request) ) || Environment::get('isAjaxRequest'))
 		{
 			return;
 		}
 		
-		$objUser = BackendUser::getInstance();
-				
 		// load language files
 		System::loadLanguageFile('default');
-		
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$arrSession = $objSession->get('PCT_THEME_INSTALLER');
 			
 		if(Input::get('welcome') != '')
 		{
