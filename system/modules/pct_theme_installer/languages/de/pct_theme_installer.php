@@ -66,8 +66,8 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.unzip'][0
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.unzip'][1]				= 'Die Daten werden entpackt'; 
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.copy_files'][0] 			= 'Daten kopieren';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.copy_files'][1] 			= 'Die Daten werden an Ihre Zielverzeichnisse verteilt.';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.clear_cache'][0] 		= 'Internen Cache leeren';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.clear_cache'][1] 		= 'Contaos internen Cache leeren.';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.clear_cache'][0] 		= 'Prod. Cache leeren';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.clear_cache'][1] 		= 'Contaos prod. Cache leeren.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.db_update_modules'][0] 	= 'Datenbank-Update';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.db_update_modules'][1] 	= 'Die Datenbank wird mit den Modul-Informationen geupdated.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BREADCRUMB']['installation.sql_template_import'][0]	= 'Installations-Template Import ausführen...';
@@ -89,7 +89,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['loading'] = 'Lade Daten';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['session_lost'] = 'Lizenz-Session abgelaufen';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.unzip'] = 'Daten entpacken';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.copy_files'] = 'Daten kopieren';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.clear_cache'] = 'Internen Cache leeren';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.clear_cache'] = 'Prod. Cache leeren';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.db_update_modules'] = 'Datenbank-Update';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['STATUS']['installation.sql_template_import'] = 'Import Demo-Daten (SQL)';
 
@@ -120,7 +120,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['not_supported
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['session_lost'] 						= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.unzip'] 				= 'Das Daten-Zip wird entpackt...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.copy_files'] 			= 'Die Dateien werden an ihren Zielort kopiert...';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.clear_cache'] 			= 'Contaos interner Cache bzw. Symphony-Cache wird mit den neuen Informationen erstellen.';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.clear_cache'] 			= 'Cache wird mit den neuen Informationen erstell.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.db_update_modules'] 	= 'Die Datenbank wird mit den neuen Modulinformationen aktualisiert.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.sql_template_wait'] 	= 'Die Demo-Webseite (Installations-Template) ist bereit installiert zu werden.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.sql_template_import'] 	= 'Das Installations-Template wird importiert.';
