@@ -1,3 +1,7 @@
+### 2.0.2
+Update: Support Contao dark mode (#113)
+Update: Language files (#114)
+
 ### 2.0.1
 Update: Removed any session or backend user calls in initializeSystem hook (#110)
 

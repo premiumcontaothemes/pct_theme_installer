@@ -28,14 +28,14 @@
 #pct_eclipse_installer #contao_theme_select select, #pct_eclipse_installer #contao_theme_select .tl_select {min-width: 120px;}
 #pct_eclipse_installer .backend_explanation {padding: 15px; color:#444; font-size: 0.95rem; font-weight: bold;}
 #pct_eclipse_installer .backend_explanation .italic {font-style: italic;}
-#pct_eclipse_installer .backend_explanation_additional {padding: 15px; margin-bottom: 15px; line-height: 17px; color: #4b85ba; background: #eff5fa;}
+#pct_eclipse_installer .backend_explanation_additional {padding: 15px; margin-bottom: 15px; line-height: 17px; color: #4b85ba; background: var(--table-header);}
 #pct_eclipse_installer .backend_explanation_additional.error {color: #c33; background: #faeeee;}
 #pct_eclipse_installer .licence_check {overflow: hidden; border-top: 1px solid silver; padding: 15px 15px 25px 15px;}
 
 #pct_eclipse_installer .breadcrumb table {width: 100%;}
-#pct_eclipse_installer .breadcrumb table th {background: #f6f6f8; padding: 15px; border-top: 1px solid #e9e9e9; border-bottom: 1px solid #e9e9e9; font-weight: 700;}
-#pct_eclipse_installer .breadcrumb table td {border-bottom: 1px solid #e9e9e9; padding: 15px; line-height: 1.2;}
-#pct_eclipse_installer .breadcrumb table tr:nth-child(even) td {background: #fcfcfe;}
+#pct_eclipse_installer .breadcrumb table th {background: var(--table-header); padding: 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-weight: 700;}
+#pct_eclipse_installer .breadcrumb table td {border-bottom: 1px solid var(--border); padding: 15px; line-height: 1.2;}
+#pct_eclipse_installer .breadcrumb table tr:nth-child(even) td {background: var(--table-header);}
 #pct_eclipse_installer .breadcrumb table tr.last td {border-bottom: 0;}
 #pct_eclipse_installer .breadcrumb table th.col1 {width: 8%;}
 #pct_eclipse_installer .breadcrumb table th.col2 {width: 42%;}
