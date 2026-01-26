@@ -824,6 +824,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				'key'   => trim(Input::post('license')),
 				'email'  => trim(Input::post('email')),
 				'domain' => Environment::get('url'),
+				'caller' => 'theme_installer'
 			);
 
 			if(Input::post('product') != '')
