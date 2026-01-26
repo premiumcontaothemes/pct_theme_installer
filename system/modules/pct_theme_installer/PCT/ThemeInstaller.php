@@ -155,7 +155,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 		$blnAllowed = false;
-		if( version_compare($version, '4.13','==') || version_compare($version, '5.2','>=') )
+		if( version_compare($version, '5.2','>=') )
 		{
 			$blnAllowed = true;
 		}
@@ -201,7 +201,27 @@ class ThemeInstaller extends \Contao\BackendModule
 			// redirect to the beginning
 			$this->redirect( Backend::addToUrl('status=welcome',true,array('step')) );
 		}
-				
+
+
+//! status : THEME ALREADY INSTALLED
+
+
+        $bundles = array_keys( System::getContainer()->getParameter('kernel.bundles'));
+        if( Input::get('status') != 'error' && ( \in_array('pct_theme_settings',$bundles) || \in_array('pct_theme_templates',$bundles) ) )
+        {
+            $this->Template->status = 'ALREADY_INSTALLED';
+
+            // log
+            $objContainer->get('monolog.logger.contao.error')->info('Theme Installer: Theme already installed');
+
+            // track error              
+            $arrSession['errors'] = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['already_installed']?? 'Theme already installed');
+            $objSession->set($this->strSession,$arrSession);
+
+            // redirect
+            $this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+        }
+
 
 //! status : NOT_SUPPORTED
 
