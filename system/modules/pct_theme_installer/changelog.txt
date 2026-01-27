@@ -1,5 +1,8 @@
 ### 2.0.3
 Update: Removed AjaxRequest.displayBox,.hideBox (#117)
+Update: Request logic (#118)
+Update: Security updates (#116)
+Removed: Contao 4.13 support (#119)
 
 ### 2.0.2
 Update: Support Contao dark mode (#113)
