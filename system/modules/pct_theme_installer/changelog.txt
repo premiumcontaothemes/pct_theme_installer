@@ -1,4 +1,4 @@
-### 2.0.3
+### 3.0.0
 Update: Removed AjaxRequest.displayBox,.hideBox (#117)
 Update: Request logic (#118)
 Update: Security updates (#116)
