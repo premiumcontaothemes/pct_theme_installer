@@ -852,7 +852,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['product'] = Input::post('product');
 			}
 
-			$strRequest = html_entity_decode(  $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams) );
+			$strRequest = html_entity_decode(  $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
 			
 			// validate the license
 			$curl = curl_init();
@@ -959,7 +959,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['product'] = $objLicense->file->id;
 				$arrParams['caller'] = 'installer';
 
-				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams) );
+				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
 				
 				try
 				{
