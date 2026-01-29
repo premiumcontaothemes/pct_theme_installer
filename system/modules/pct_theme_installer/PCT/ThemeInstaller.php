@@ -155,7 +155,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
 		$blnAllowed = false;
-		if( version_compare($version, '4.13','==') || version_compare($version, '5.2','>=') )
+		if( version_compare($version, '5.2','>=') )
 		{
 			$blnAllowed = true;
 		}
@@ -201,20 +201,43 @@ class ThemeInstaller extends \Contao\BackendModule
 			// redirect to the beginning
 			$this->redirect( Backend::addToUrl('status=welcome',true,array('step')) );
 		}
-				
+
+
+//! status : THEME ALREADY INSTALLED
+
+
+        $bundles = array_keys( System::getContainer()->getParameter('kernel.bundles'));
+        if( Input::get('status') != 'error' && ( \in_array('pct_theme_settings',$bundles) || \in_array('pct_theme_templates',$bundles) ) )
+        {
+            $this->Template->status = 'ALREADY_INSTALLED';
+
+            // log
+            $objContainer->get('monolog.logger.contao.error')->info('Theme Installer: Theme already installed');
+
+            // track error              
+            $arrSession['errors'] = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['already_installed']?? 'Theme already installed');
+            $objSession->set($this->strSession,$arrSession);
+
+            // redirect
+            $this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+        }
+
 
 //! status : NOT_SUPPORTED
 
 		
-		if( $objLicense !== null && $objLicense->status == 'NOT_SUPPORTED' && Input::get('status') != 'not_supported')
+		if(Input::get('status') != 'not_compatible' && $objLicense !== null && $objLicense->status == 'NOT_COMPATIBLE' )
 		{
 			// redirect to the not supported page
-			$this->redirect( Backend::addToUrl('status=not_supported',true,array('step')) );
+			$this->redirect( Backend::addToUrl('status=not_compatible',true,array('step')) );
 		}
 		
-		if(Input::get('status') == 'not_supported')
+		if( Input::get('status') == 'not_compatible' )
 		{
-			$this->Template->status = 'NOT_SUPPORTED';
+			$this->Template->status = 'NOT_COMPATIBLE';
+			// track error				
+			$arrSession['errors'] = array($objLicense->error);
+			$objSession->set($this->strSession,$arrSession);
 			return;
 		}
 
@@ -824,6 +847,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				'key'   => trim(Input::post('license')),
 				'email'  => trim(Input::post('email')),
 				'domain' => Environment::get('url'),
+				'caller' => 'installer'
 			);
 
 			if(Input::post('product') != '')
@@ -831,7 +855,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['product'] = Input::post('product');
 			}
 
-			$strRequest = html_entity_decode(  $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams) );
+			$strRequest = html_entity_decode(  $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
 			
 			// validate the license
 			$curl = curl_init();
@@ -936,8 +960,9 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['domain'] = $objLicense->domain;
 				$arrParams['sendToAjax'] = 1;
 				$arrParams['product'] = $objLicense->file->id;
+				$arrParams['caller'] = 'installer';
 
-				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/api.php?'.http_build_query($arrParams) );
+				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
 				
 				try
 				{
