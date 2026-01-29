@@ -48,6 +48,7 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= '
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Error: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_supported'] 					= 'The installer supports the following products: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_buy'] 						= 'Buy the EclipseX theme';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_compatible'] 					= 'Order: %s</br>Order date: %s</br></br>The order date is more than three major versions old and therefore cannot be used for a new installation.</br>The care package can be activated in the customer area and provides new installations, theme updates, and support for 12 months.';
 
 /**
  * Breadcrumb

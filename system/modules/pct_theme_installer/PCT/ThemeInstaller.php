@@ -226,15 +226,18 @@ class ThemeInstaller extends \Contao\BackendModule
 //! status : NOT_SUPPORTED
 
 		
-		if( $objLicense !== null && $objLicense->status == 'NOT_SUPPORTED' && Input::get('status') != 'not_supported')
+		if(Input::get('status') != 'not_compatible' && $objLicense !== null && $objLicense->status == 'NOT_COMPATIBLE' )
 		{
 			// redirect to the not supported page
-			$this->redirect( Backend::addToUrl('status=not_supported',true,array('step')) );
+			$this->redirect( Backend::addToUrl('status=not_compatible',true,array('step')) );
 		}
 		
-		if(Input::get('status') == 'not_supported')
+		if( Input::get('status') == 'not_compatible' )
 		{
-			$this->Template->status = 'NOT_SUPPORTED';
+			$this->Template->status = 'NOT_COMPATIBLE';
+			// track error				
+			$arrSession['errors'] = array($objLicense->error);
+			$objSession->set($this->strSession,$arrSession);
 			return;
 		}
 
