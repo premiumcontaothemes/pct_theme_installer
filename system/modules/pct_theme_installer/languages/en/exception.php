@@ -23,3 +23,4 @@ $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'] 				= 'The lic
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] 			= 'Please use one of Contaos LTS versions: 4.9';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit']				= 'Memory Limit (memory_limit) too low (%s). Min.: 512M';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['registration_error'] 		= 'Installation refused! Installation domain (%s) not found in license (%s).';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['already_installed']		    = 'The theme is already installed. To reinstall it, please completely remove the theme data.';

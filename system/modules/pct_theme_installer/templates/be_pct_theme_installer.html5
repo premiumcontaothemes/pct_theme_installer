@@ -86,6 +86,27 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 	<p class="tl_message header_back"><a class="reset" href="<?= StringUtil::decodeEntities( Controller::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
 	</div>
 
+<?php elseif($this->status == 'NOT_COMPATIBLE'): ?>
+<!-- ! NOT_COMPATIBLE screen -->
+	
+	<div class="tl_formbody_middle">
+	
+		<div class="tl_message">
+			<?php 
+			$date_paid = Date::parse('d.m.Y',$this->license->order_date);
+			?>
+			<p class="tl_error"><?= sprintf($arrLangTpl['not_compatible'],$this->license->order_id,$date_paid); ?></p>
+		</div>
+	
+	
+	<?php if($this->errors): ?>
+	<div class="backend_explanation_additional error"><?= implode("\n", $this->errors); ?></div>
+	<?php endif; ?>
+	
+	<p class="tl_message"><a href="<?= StringUtil::decodeEntities( Controller::addToUrl('do=log',true,array('step','status')) ); ?>" title="<?= $arrLangTpl['button_systemlog'][0]; ?>"><?= $arrLangTpl['button_systemlog'][0]; ?></a></p>
+	<p class="tl_message header_back"><a class="reset" href="<?= StringUtil::decodeEntities( Controller::addToUrl('status=reset',true) ); ?>" title="<?= $arrLangTpl['button_reset'][1]; ?>"><?= $arrLangTpl['button_reset'][0]; ?></a></p>
+	</div>
+
 <?php elseif( in_array($this->status, array('VERSION_CONFLICT', 'MIN_REQUIREMENT')) ): ?>
 <!-- ! VERSION_CONFLICT screen -->
 	

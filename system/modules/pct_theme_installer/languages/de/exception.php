@@ -23,3 +23,4 @@ $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['session_lost'] 				= 'Die Liz
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] 			= 'Bitte nutzen Sie Contaos LTS Versionen: 4.9';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit']				= 'Memory Limit (memory_limit) zu gering (%s). Min.: 512M';
 $GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['registration_error'] 		= 'Installation verweigert! Installations-Domain (%s) nicht in Lizenz (%s) gefunden.';
+$GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['already_installed']			= 'Das Theme ist bereits installiert. Für eine Neuinstallation löschen Sie die Theme-Daten vollständig.';
