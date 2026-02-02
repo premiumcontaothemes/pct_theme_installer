@@ -207,7 +207,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 
         $bundles = array_keys( System::getContainer()->getParameter('kernel.bundles'));
-        if( Input::get('status') != 'error' && ( \in_array('pct_theme_settings',$bundles) || \in_array('pct_theme_templates',$bundles) ) )
+		if( Input::get('status') == 'welcome' && ( \in_array('pct_theme_settings',$bundles) || \in_array('pct_theme_templates',$bundles) ) )
         {
             $this->Template->status = 'ALREADY_INSTALLED';
 
