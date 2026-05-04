@@ -21,6 +21,8 @@
 #pct_theme_installer .label {color: #3c3d3c; font-size: 0.8rem; text-transform: uppercase; text-align: center; margin-bottom: 15px; font-weight: bold;}
 #pct_theme_installer .content {margin-top: 20px; border: 0;}
 #pct_theme_installer .submit_container {text-align: center; margin-top: 15px;}
+#pct_theme_installer .tl_submit_container {padding: 12px 15px;}
+#pct_theme_installer .tl_submit_container .tl_submit {height: auto; padding: 10px 18px; border-radius: 3px; font-weight: 600;}
 #pct_theme_installer a.di_submit, #pct_theme_installer input.di_submit {transition: All 0.3s ease; -webkit-transition: All 0.3s ease; cursor: pointer; height: 44px; box-sizing: border-box; -webkit-box-sizing: border-box; text-align: center; background: #009dcc; color: #fff; border: 0; padding: 15px 20px; text-shadow: none; display: inline-block; min-width: 130px; border-radius: 3px;}
 #pct_theme_installer a.di_submit:hover, #pct_theme_installer input.di_submit:hover {opacity: 0.9;}
 #pct_theme_installer a.di_submit {background: #e55a37;}
