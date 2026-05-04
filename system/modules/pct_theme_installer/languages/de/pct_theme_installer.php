@@ -45,7 +45,6 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= '
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info'] 			= 'Der SQL-Import kann einige Minuten in Anspruch nehmen.';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Meldung: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Fehler: %s';		
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_buy'] 						= 'Theme EclipseX kaufen';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_compatible'] 					= 'Bestellung: %s</br>Bestelldatum: %s</br></br>Das Bestelldatum liegt mehr als drei Major-Versionen zurück und kann daher nicht für eine Neuinstallation verwendet werden.</br>Das Care-Paket kann im Kundenbereich aktiviert werden und bietet für 12 Monate Neuinstallationen, Theme-Updater und Support.';		
 
 /**
