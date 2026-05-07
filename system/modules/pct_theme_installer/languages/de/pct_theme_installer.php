@@ -45,7 +45,6 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['welcome_info'] 						= '
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['sql_template_import_info'] 			= 'Der SQL-Import kann einige Minuten in Anspruch nehmen.';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['access_denied'] 					= 'Meldung: %s';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['errors'] 							= 'Fehler: %s';		
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['button_buy'] 						= 'Theme EclipseX kaufen';		
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['TEMPLATE']['not_compatible'] 					= 'Bestellung: %s</br>Bestelldatum: %s</br></br>Das Bestelldatum liegt mehr als drei Major-Versionen zurück und kann daher nicht für eine Neuinstallation verwendet werden.</br>Das Care-Paket kann im Kundenbereich aktiviert werden und bietet für 12 Monate Neuinstallationen, Theme-Updater und Support.';		
 
 /**
@@ -119,9 +118,8 @@ $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['not_supported
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['session_lost'] 						= 'Die Lizenz-Session ist abgelaufen. Bitte starten Sie die Installation erneut.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.unzip'] 				= 'Das Daten-Zip wird entpackt...';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.copy_files'] 			= 'Die Dateien werden an ihren Zielort kopiert...';
-$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.clear_cache'] 			= 'Cache wird mit den neuen Informationen erstell.';
+$GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.clear_cache'] 			= 'Cache wird mit den neuen Informationen erstellt.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.db_update_modules'] 	= 'Die Datenbank wird mit den neuen Modulinformationen aktualisiert.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.sql_template_wait'] 	= 'Die Demo-Webseite (Installations-Template) ist bereit installiert zu werden.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['installation.sql_template_import'] 	= 'Das Installations-Template wird importiert.';
 $GLOBALS['TL_LANG']['PCT_THEME_INSTALLER']['BACKEND_DESCRIPTION']['version_conflict'] 					= 'Versionskonflikt';
-

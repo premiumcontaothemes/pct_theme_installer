@@ -1,3 +1,10 @@
+### 4.0.0
+Added: Contao 5.3, Contao 5.7 installation support (#127)
+Update: Contao 5.7 update (#125)
+Update: Contao 5.7: Facelift (#126)
+Fixed: Minor spelling mistakes (#124)
+Removed: Contao 4.13 installation tree (#127)
+
 ### 3.0.1
 Fixed: Installation could not be completed (#122)
 

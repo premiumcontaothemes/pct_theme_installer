@@ -21,12 +21,16 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 {
 	$this->license->registration->domains = (array)$this->license->registration->domains;
 }
+if( !isset($arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]) )
+{
+	$arrLang['BACKEND_DESCRIPTION'][$this->l_status_step] = '';
+}
 ?>
 
-<div id="pct_eclipse_installer" class="contao-ht35">
+<div id="pct_theme_installer" class="<?= \strtolower($this->status); ?>">
 	<div class="tl_formbody">
 		<div id="tl_buttons">
-			<a class="shop_link" href="https://premium-contao-themes.com" target="_blank"><?= $arrLangTpl['button_buy']; ?></a>
+			<span class="version">Version: <?= \PCT_THEME_INSTALLER; ?></span>
 			<?php if($strStatus): ?>
 			<span class="status hidden"><?= sprintf($arrLangTpl['label_status'],$strStatus); ?></span>
 			<?php endif; ?>
@@ -66,10 +70,8 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 				<?php endif; ?>
 			</div>
 
-			<div class="tl_formbody_bottom tl_formbody_submit">
-				<div class="tl_submit_container">
-					<input type="submit" name="validate_license" class="tl_submit" value="<?= $arrLangTpl['submit_license']; ?>">
-				</div>
+			<div class="tl_submit_container">
+				<input type="submit" name="validate_license" class="tl_submit" value="<?= $arrLangTpl['submit_license']; ?>">
 			</div>
 		</form>
 
@@ -206,8 +208,8 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			</div>
 			<?php endif; ?>
 			
-			<div class="tl_message">
-				<p class="tl_error"><?= $arrLangTpl['dataOverwriteMsg']; ?></p>
+			<div class="tl_message data_overwrite">
+				<p><?= $arrLangTpl['dataOverwriteMsg']; ?></p>
 			</div>
 			
 			<!-- file information -->
@@ -227,16 +229,14 @@ if(isset($this->license->registration->domains) && !is_array($this->license->reg
 			<div class="tl_formbody_top">
 			</div>
 			
-			<div class="tl_formbody_bottom tl_formbody_submit">
-				<div class="tl_submit_container">
-				<?php if($this->hasRegistrationError): ?>	
+			<div class="tl_submit_container">
+				<?php if($this->hasRegistrationError): ?>
 				<div><?= \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['registration_error'], Environment::get('host'), $this->license->key); ?></div>
 				<?php else: ?>
 				<input type="submit" name="install" class="tl_submit" value="<?= $arrLangTpl['submit_install']; ?>">
 				<?php endif; ?>
 			</div>
-			</div>
-			
+
 		</form>
 		
 <?php elseif($this->status == 'INSTALLATION' && $this->step == 'UNZIP'): ?>
