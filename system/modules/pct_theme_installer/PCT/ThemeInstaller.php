@@ -910,7 +910,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->license = $objLicense;
 
 			// min memory_limit
-			if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
+			$min_memory_limit = $GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit'] ?? 512;
+			if( (int)ini_get('memory_limit') < $min_memory_limit && (int)ini_get('memory_limit') > 0)
 			{
 				$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
 			}

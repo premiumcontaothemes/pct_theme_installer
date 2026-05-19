@@ -35,6 +35,10 @@ if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
 {
 	$GLOBALS['PCT_THEME_INSTALLER']['test_license'] = array();
 }
+if( !isset($GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit']) )
+{
+	$GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit'] = 512;
+}
 
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array
 (
