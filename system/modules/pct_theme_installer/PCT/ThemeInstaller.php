@@ -847,7 +847,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				'key'   => trim(Input::post('license')),
 				'email'  => trim(Input::post('email')),
 				'domain' => Environment::get('url'),
-				'caller' => 'installer'
+				'caller' => 'installer',
+				'client_version' => \PCT_THEME_INSTALLER,
 			);
 
 			if(Input::post('product') != '')
@@ -962,7 +963,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['sendToAjax'] = 1;
 				$arrParams['product'] = $objLicense->file->id;
 				$arrParams['caller'] = 'installer';
-
+				$arrParams['client_version'] = \PCT_THEME_INSTALLER;
+			
 				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
 				
 				try
