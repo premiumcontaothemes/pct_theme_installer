@@ -16,7 +16,7 @@ use Contao\System;
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '4.0.0');
+define('PCT_THEME_INSTALLER', '4.0.1');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 if( version_compare(ContaoCoreBundle::getVersion(),'5.0','>=') )
@@ -34,6 +34,10 @@ $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
 if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
 {
 	$GLOBALS['PCT_THEME_INSTALLER']['test_license'] = array();
+}
+if( !isset($GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit']) )
+{
+	$GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit'] = 512;
 }
 
 $GLOBALS['PCT_THEME_INSTALLER']['THEMES']['eclipseX'] = array

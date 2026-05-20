@@ -847,7 +847,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				'key'   => trim(Input::post('license')),
 				'email'  => trim(Input::post('email')),
 				'domain' => Environment::get('url'),
-				'caller' => 'installer'
+				'caller' => 'installer',
+				'client_version' => \PCT_THEME_INSTALLER,
 			);
 
 			if(Input::post('product') != '')
@@ -910,7 +911,8 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->license = $objLicense;
 
 			// min memory_limit
-			if( (int)ini_get('memory_limit') < 512 && (int)ini_get('memory_limit') > 0)
+			$min_memory_limit = $GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit'] ?? 512;
+			if( (int)ini_get('memory_limit') < $min_memory_limit && (int)ini_get('memory_limit') > 0)
 			{
 				$this->Template->errors = array( \sprintf($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['memory_limit'],ini_get('memory_limit')) ?: 'Min. required memory_limit is 512M');
 			}
@@ -961,7 +963,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['sendToAjax'] = 1;
 				$arrParams['product'] = $objLicense->file->id;
 				$arrParams['caller'] = 'installer';
-
+				$arrParams['client_version'] = \PCT_THEME_INSTALLER;
+			
 				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
 				
 				try
@@ -1025,29 +1028,6 @@ class ThemeInstaller extends \Contao\BackendModule
 			return;
 		}
 
-	}
-
-
-	/**
-	 * Inject javascript templates in the backend page
-	 * @param object
-	 *
-	 * Called from [parseTemplate] Hook
-	 */
-	public function injectScripts($objTemplate)
-	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-		if($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request) && $objTemplate->getName() == 'be_main')
-		{
-			$objScripts = new BackendTemplate('be_js_pct_theme_installer');
-
-			$arrTexts = array
-			(
-				'hallo' => 'welt',
-			);
-			$objScripts->texts = json_encode($arrTexts);
-			$objTemplate->javascripts .= $objScripts->parse();
-		}
 	}
 
 

@@ -1,3 +1,8 @@
+### 4.0.1
+Added: $GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit'] configuration globale to adjust the memory_limit limitation (#129)
+Update: Removed deprecated code (#130)
+Update: Request logic (#132)
+
 ### 4.0.0
 Added: Contao 5.3, Contao 5.7 installation support (#127)
 Update: Contao 5.7 update (#125)
