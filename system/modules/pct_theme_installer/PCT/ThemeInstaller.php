@@ -267,7 +267,7 @@ class ThemeInstaller extends \Contao\BackendModule
 //! status : WELCOME
 
 
-		if(Input::get('status') == 'welcome' && !$_POST)
+		if(Input::get('status') == 'welcome' && Input::post('FORM_SUBMIT') === null )
 		{
 			$this->Template->status = 'WELCOME';
 			$this->Template->breadcrumb = '';
@@ -288,7 +288,7 @@ class ThemeInstaller extends \Contao\BackendModule
 //! status : ACCESS_DENIED
 
 
-		if($objLicense->status == 'ACCESS_DENIED' || Input::get('status') == 'access_denied')
+		if( (isset($objLicense) && $objLicense->status == 'ACCESS_DENIED') || Input::get('status') == 'access_denied')
 		{
 			$this->Template->status = 'ACCESS_DENIED';
 			
@@ -332,7 +332,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			$this->Template->status = 'INSTALLATION';
 			$this->Template->step = 'UNZIP';
 			
-			$objFile = new File($arrSession['file'],true);
+			$objFile = new File($arrSession['file']);
 			$this->Template->file = $objFile;
 
 			// check the file size
@@ -834,7 +834,7 @@ class ThemeInstaller extends \Contao\BackendModule
 
 			$this->Template->status = 'FILE_EXISTS';
 
-			$objFile = new File($arrSession['file'],true);
+			$objFile = new File($arrSession['file']);
 			$this->Template->file = $objFile;
 
 			// set file path
