@@ -209,7 +209,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			$objSession->remove('pct_theme_installer');
 
 			// redirect to the beginning
-			$this->redirect( Backend::addToUrl('status=welcome',true,array('step')) );
+			$this->redirect( Backend::addToUrl('status=welcome',true,array('step'),false) );
 		}
 
 
@@ -229,7 +229,7 @@ class ThemeInstaller extends \Contao\BackendModule
             $objSession->set($this->strSession,$arrSession);
 
             // redirect
-            $this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+            $this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
         }
 
 
@@ -239,7 +239,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		if(Input::get('status') != 'not_compatible' && $objLicense !== null && $objLicense->status == 'NOT_COMPATIBLE' )
 		{
 			// redirect to the not supported page
-			$this->redirect( Backend::addToUrl('status=not_compatible',true,array('step')) );
+			$this->redirect( Backend::addToUrl('status=not_compatible',true,array('step'),false) );
 		}
 		
 		if( Input::get('status') == 'not_compatible' )
@@ -324,7 +324,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$objSession->set($this->strSession,$arrSession);
 
 				// redirect
-				$this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+				$this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
 
 				return;
 			}
@@ -447,7 +447,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					$objSession->set($this->strSession,$arrSession);
 					if(!$blnAjax)
 					{
-						$this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+						$this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
 					}
 					else
 					{
@@ -563,7 +563,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrSession['errors'] = $arrErrors;
 				$objSession->set($this->strSession,$arrSession);
 
-				$this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+				$this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
 			}
 
 			return;
@@ -581,7 +581,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			// when not in "update" mode, continue sql template installation
 			if(Input::get('mode') == 'install' || Input::get('mode') == '')
 			{
-				$this->redirect( Backend::addToUrl('status=installation&step=sql_template_import') );
+				$this->redirect( Backend::addToUrl('status=installation&step=sql_template_import',true,array(),false) );
 			}
 			
 			return;
@@ -753,7 +753,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					$arrSession['errors'] = $arrErrors;
 					$objSession->set($this->strSession,$arrSession);
 					
-					$this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+					$this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
 				}
 
 				// mark as being completed
@@ -826,7 +826,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$objSession->set($this->strSession,$arrSession);
 				
 				// redirect
-				$this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+				$this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
 
 				return;
 			}
@@ -890,7 +890,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			
 			// flush post and make session active
 			// redirect to the beginning
-			$this->redirect( Backend::addToUrl('status=ready',true) );
+			$this->redirect( Backend::addToUrl('status=ready',true,array(),false) );
 		}
 
 
@@ -937,12 +937,12 @@ class ThemeInstaller extends \Contao\BackendModule
 			// has more than one product to choose
 			if(!empty($objLicense->products))
 			{
-				$this->redirect( Backend::addToUrl('status=choose_product',true) );
+				$this->redirect( Backend::addToUrl('status=choose_product',true,array(),false) );
 			}
 
 			if(Input::post('install') != '' && Input::post('FORM_SUBMIT') == $strForm)
 			{
-				$this->redirect( Backend::addToUrl('status=loading',true) );
+				$this->redirect( Backend::addToUrl('status=loading',true,array(),false) );
 			}
 
 			return;
@@ -1034,7 +1034,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrSession['errors'] = $arrErrors;
 				$objSession->set($this->strSession,$arrSession);
 				
-				$this->redirect( Backend::addToUrl('status=error',true,array('step','action')) );
+				$this->redirect( Backend::addToUrl('status=error',true,array('step','action'),false) );
 			}
 
 			return;
@@ -1120,8 +1120,8 @@ class ThemeInstaller extends \Contao\BackendModule
 				$class[] = 'pending';
 			}
 
-			$strToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
-			$data['href'] = Controller::addToUrl($data['href'].'&rt='.$strToken,true,array('step'));
+			#$strToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$data['href'] = Backend::addToUrl($data['href'],true,array('step'),false);
 			$data['class'] = implode(' ', array_unique($class));
 
 			$arrItems[ $k ] = $data;
