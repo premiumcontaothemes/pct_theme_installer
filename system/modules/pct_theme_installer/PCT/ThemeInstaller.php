@@ -876,6 +876,7 @@ class ThemeInstaller extends \Contao\BackendModule
 			curl_setopt($curl, CURLOPT_HEADER, 0);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? 'user' );
 		
 			$strResponse = curl_exec($curl);
 			curl_close($curl);
@@ -987,6 +988,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					curl_setopt($curl, CURLOPT_HEADER, 0);
 					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 					curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+					curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? 'user' );
 		
 					$strFileResponse = curl_exec($curl);
 					curl_close($curl);
