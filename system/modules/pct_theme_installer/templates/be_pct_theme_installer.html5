@@ -98,6 +98,9 @@ if( !isset($arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]) )
 			$date_paid = Date::parse('d.m.Y',$this->license->order_date);
 			?>
 			<p class="tl_error"><?= sprintf($arrLangTpl['not_compatible'],$this->license->order_id,$date_paid); ?></p>
+			<?php if($this->errors): ?>
+			<p class="tl_error"><?= implode("\n", $this->errors); ?></p>
+			<?php endif; ?>
 		</div>
 	
 	
