@@ -16,7 +16,7 @@ use Contao\System;
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '4.0.2');
+define('PCT_THEME_INSTALLER', '4.1.0');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 if( version_compare(ContaoCoreBundle::getVersion(),'5.0','>=') )
