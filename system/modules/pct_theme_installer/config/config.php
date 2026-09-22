@@ -16,7 +16,7 @@ use Contao\System;
 /**
  * Constants
  */
-define('PCT_THEME_INSTALLER', '4.0.1');
+define('PCT_THEME_INSTALLER', '4.1.0');
 define('PCT_THEME_INSTALLER_PATH','system/modules/pct_theme_installer');
 
 if( version_compare(ContaoCoreBundle::getVersion(),'5.0','>=') )
@@ -28,7 +28,7 @@ if( version_compare(ContaoCoreBundle::getVersion(),'5.0','>=') )
 /**
  * Globals
  */
-$GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'https://api.premium-contao-themes.com';
+$GLOBALS['PCT_THEME_INSTALLER']['api_url'] = 'https://api.premium-contao-themes.com/installer_api.php';
 $GLOBALS['PCT_THEME_INSTALLER']['tmpFolder'] = 'system/tmp/pct_theme_installer';
 
 if(!isset($GLOBALS['PCT_THEME_INSTALLER']['test_license']))
