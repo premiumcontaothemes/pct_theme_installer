@@ -66,6 +66,12 @@ class ThemeInstaller extends \Contao\BackendModule
 	 */
 	protected $strSession = 'pct_theme_installer';
 
+	/**
+	 * The api endpoint
+	 * @var string
+	 */
+	protected $strApiEndpoint = 'https://api.premium-contao-themes.com/installer_api.php';
+
 
 	/**
 	 * Generate the module
@@ -84,6 +90,10 @@ class ThemeInstaller extends \Contao\BackendModule
 		$rootDir = $objContainer->getParameter('kernel.project_dir');
 		$full_version = ContaoCoreBundle::getVersion();
 		$version = substr( $full_version, 0, strrpos($full_version, '.') );
+		if( isset($GLOBALS['PCT_THEME_INSTALLER']['api_url']) && !empty($GLOBALS['PCT_THEME_INSTALLER']['api_url']) )
+		{
+			$this->strApiEndpoint = $GLOBALS['PCT_THEME_INSTALLER']['api_url'];
+		}
 		
 		$objDatabase = Database::getInstance();
 		$arrErrors = array();
@@ -169,7 +179,7 @@ class ThemeInstaller extends \Contao\BackendModule
 		if(Input::get('status') == 'version_conflict')
 		{
 			$this->Template->status = 'VERSION_CONFLICT';
-			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the LTS version 4.9');
+			$this->Template->errors = array($GLOBALS['TL_LANG']['XPT']['pct_theme_installer']['version_conflict'] ?: 'Please use the latest Contao LTS version');
 			return;
 		}
 
@@ -849,6 +859,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				'domain' => Environment::get('url'),
 				'caller' => 'installer',
 				'client_version' => \PCT_THEME_INSTALLER,
+				'contao_version' => ContaoCoreBundle::getVersion()
 			);
 
 			if(Input::post('product') != '')
@@ -856,7 +867,7 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['product'] = Input::post('product');
 			}
 
-			$strRequest = html_entity_decode(  $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
+			$strRequest = html_entity_decode(  $this->strApiEndpoint.'?'.http_build_query($arrParams) );
 			
 			// validate the license
 			$curl = curl_init();
@@ -964,8 +975,9 @@ class ThemeInstaller extends \Contao\BackendModule
 				$arrParams['product'] = $objLicense->file->id;
 				$arrParams['caller'] = 'installer';
 				$arrParams['client_version'] = \PCT_THEME_INSTALLER;
+				$arrParams['contao_version'] = ContaoCoreBundle::getVersion();
 			
-				$strFileRequest = html_entity_decode( $GLOBALS['PCT_THEME_INSTALLER']['api_url'].'/installer_api.php?'.http_build_query($arrParams) );
+				$strFileRequest = html_entity_decode( $this->strApiEndpoint.'?'.http_build_query($arrParams) );
 				
 				try
 				{
