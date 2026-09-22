@@ -1,3 +1,7 @@
+### 4.0.2
+Update: Request logic (#134)
+Update: API endpoint logic (#135)
+
 ### 4.0.1
 Added: $GLOBALS['PCT_THEME_INSTALLER']['min_memory_limit'] configuration globale to adjust the memory_limit limitation (#129)
 Update: Removed deprecated code (#130)
