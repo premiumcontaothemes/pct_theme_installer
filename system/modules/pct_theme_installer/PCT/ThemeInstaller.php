@@ -870,11 +870,12 @@ class ThemeInstaller extends \Contao\BackendModule
 			$strRequest = html_entity_decode(  $this->strApiEndpoint.'?'.http_build_query($arrParams) );
 			
 			// validate the license
+
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $strRequest);
 			curl_setopt($curl, CURLOPT_HEADER, 0);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, strpos($strRequest,'https://') === 0 ? true : false);
 			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? 'user' );
 		
@@ -986,7 +987,7 @@ class ThemeInstaller extends \Contao\BackendModule
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($curl, CURLOPT_URL, $strFileRequest);
 					curl_setopt($curl, CURLOPT_HEADER, 0);
-					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, strpos($strFileRequest,'https://') === 0 ? true : false);
 					curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 					curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? 'user' );
 		
