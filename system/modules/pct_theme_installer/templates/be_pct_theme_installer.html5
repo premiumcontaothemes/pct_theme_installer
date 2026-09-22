@@ -96,8 +96,16 @@ if( !isset($arrLang['BACKEND_DESCRIPTION'][$this->l_status_step]) )
 		<div class="tl_message">
 			<?php 
 			$date_paid = Date::parse('d.m.Y',$this->license->order_date);
+			$theme = $this->license->theme;
 			?>
-			<p class="tl_error"><?= sprintf($arrLangTpl['not_compatible'],$this->license->order_id,$date_paid); ?></p>
+			
+			<p class="tl_error">
+				Bestellung: <?= $this->license->order_id; ?><br>
+				Bestelldatum: <?= $date_paid; ?>
+				<br><br>
+				<?= $theme; ?> nicht kompatibel mit dieser Contao-Version
+			</p>
+			
 			<?php if($this->errors): ?>
 			<p class="tl_error"><?= implode("\n", $this->errors); ?></p>
 			<?php endif; ?>
